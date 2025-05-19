@@ -1,0 +1,22 @@
+:root {
+    /*반응형을 위한 제한*/
+    --breakpoint: 720px;
+    --breakpoint-min: 370px;
+    --breakpoint-max: 1025px;
+
+    --base-color-1 : rgb(87, 60, 39);
+    --base-color-2 : rgb(169,131,96);
+    --base-color-3 : rgb(253, 238, 217);
+    --base-color-4 : rgb(255,173,198);
+    --base-color-5 : rgb(227,73,137);
+}
+
+body {
+    overflow-x: hidden;
+}
+
+@media screen and (max-width: 370px) {
+  body {
+    overflow-x: auto;
+  }
+}

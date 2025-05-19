@@ -1,0 +1,53 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: fit-content;
+}
+
+.layout .breakpoints {
+    width: clamp(
+        var(--breakpoint-min),
+        95%,
+        var(--breakpoint-max)
+    );
+    margin: 10px;
+}
+
+.layout header {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    height: 60px;
+    background: var(--base-color-3);
+    box-shadow: 0px 0px 10px rgb(0,0,0,0.1);
+}
+
+.layout .main {
+    min-height: calc(100vh - 60px);
+    margin-top: 60px;
+    margin-bottom: 0;
+    background: whitesmoke; /*확인용*/
+}
+
+.layout footer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-width: var(--breakpoint-min);
+    background: var(--base-color-1);
+    color: var(--base-color-3);
+    box-shadow: 0px 0px 10px rgb(0,0,0,0.5);
+}
+
+@media screen and (max-width: 370px) {
+    .layout { 
+        align-items: normal;
+    }
+    .layout .main {
+        margin: 0;
+        margin-top: 60px;
+    }
+}
