@@ -7,11 +7,9 @@
 }
 
 .layout .breakpoints {
-    width: clamp(
-        var(--breakpoint-min),
-        100%,
-        var(--breakpoint-max)
-    );
+    width: 100%;
+    min-width: var(--breakpoint-min);
+    max-width: var(--breakpoint-max);
     padding: 10px;
 }
 
@@ -26,6 +24,7 @@
 }
 
 .layout .main {
+    width: calc( 100% - 20px );
     min-height: calc(100vh - 50px);
     margin: 0;
     margin-top: 60px;
