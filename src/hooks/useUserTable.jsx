@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getUser } from "../utils/getUser";
 
 export const useUserTable = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -7,18 +8,22 @@ export const useUserTable = () => {
 
   const fetchUserInfo = async () => {
     try {
+      const user = await getUser();
       setLoading(true);
-      const res = await fetch("/functions/v1/userinfo", {
+      
+      const query = new URLSearchParams({ id: user.id, name: user.name }).toString();
+      const res = await fetch(`https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/userinfo?${query}`, {
         method: "GET",
-        credentials: "include" // 쿠키 기반 인증 필요 시
+        headers: {
+          "Authorization": `Bearer ${user.token}`,
+          "Content-Type": "application/json"
+        }
       });
-
       if (!res.ok) {
         const errData = await res.json();
         throw new Error(errData?.detail || "Failed to fetch user info");
       }
-
-      const data = await res.json();
+      const { data } = await res.json();
       setUserInfo(data);
     } catch (err) {
       setError(err.message);
@@ -28,14 +33,12 @@ export const useUserTable = () => {
     }
   };
 
-  useEffect(() => {
-    fetchUserInfo();
-  }, []);
-
+  useEffect(() => { fetchUserInfo(); }, []);
+  
   return {
-    userInfo,
+    info: userInfo,
     loading,
     error,
-    refetch: fetchUserInfo
+    refetch: fetchUserInfo 
   };
 };

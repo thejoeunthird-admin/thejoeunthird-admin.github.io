@@ -5,8 +5,11 @@ import './index.css';
 import { Layout } from './components/layout';
 import { Login } from './components/login';
 import { LoginRedirect } from './components/login.redirect'
+import { useUserTable } from './hooks/useUserTable';
 
 function Home() {
+  const { info } = useUserTable();
+  
   return <div>임시 홈페이지 적용</div>;
 }
 
