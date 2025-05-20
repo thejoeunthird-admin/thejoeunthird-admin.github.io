@@ -2,7 +2,7 @@
     /*반응형을 위한 제한*/
     --breakpoint: 720px;
     --breakpoint-min: 370px;
-    --breakpoint-max: 1025px;
+    --breakpoint-max: 1480px;
 
     --base-color-1 : rgb(87, 60, 39);
     --base-color-2 : rgb(169,131,96);
