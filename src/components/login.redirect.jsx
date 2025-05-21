@@ -32,7 +32,6 @@ const createNickname = async (ref, navigate) => {
   }
 };
 
-
 export function LoginRedirect() {
   const inputRef = useRef();
   const [toggle, setToggle] = useState(false);
@@ -40,7 +39,7 @@ export function LoginRedirect() {
 
   useEffect(() => {
     const isTable = async () => {
-      const user = await getUser();
+      const { user } = await getUser();
       if (!user || !user.id) return false;
       const query = new URLSearchParams({ id: user.id, name: user.name }).toString();
       const url = `https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/user?${query}`;
@@ -61,6 +60,7 @@ export function LoginRedirect() {
     };
 
     isTable().then((created) => {
+      console.log(created)
       if (!created) { navigate('/');} else { setToggle(created); }
     });
   }, []);

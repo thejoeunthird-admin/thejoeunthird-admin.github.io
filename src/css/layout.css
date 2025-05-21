@@ -1,3 +1,269 @@
+.layout .breakpoints {
+    width: 100%;
+    min-width: var(--breakpoint-min);
+    max-width: var(--breakpoint-max);
+    margin: 10px;
+}
+
+.layout header {
+    position: sticky;
+    top: 0; 
+    min-width: calc( var(--breakpoint-min) );
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: visible;
+    width: calc( 100% - 0px );
+    height: 170px;
+    background: var(--base-color-3);
+    box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+.layout header.top {
+    height: 95px;
+    overflow: visible;
+}
+.layout header.top .board-item {
+    opacity: 1;
+}
+.layout header.top .breakpoints.header .link{
+    opacity: 1;
+}
+.layout header.top .taps{
+    opacity: 1;
+    transform: translateY(0px);
+    display: none;
+}
+
+/* flex 범위를 breakpoints까지만 좁힘 */
+.layout header > .breakpoints {
+    display: flex;
+    align-items: center;
+}
+
+.layout header div a img {
+    width: 42px;
+    height: 42px;
+}
+
+.layout header div .a {
+    width: 38px;
+    height: 38px;
+    background: white;
+    border-radius: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: var(--base-color-2);
+    margin-left: auto;
+    margin-right: 20px;
+}
+.layout header .taps {
+    position: sticky;
+    top: 60px; 
+    min-width: calc( var(--breakpoint-min) );
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: visible;
+    width: calc( 100% - 0px );
+    height: 40px;
+    background: var(--base-color-5);
+    box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
+    transition: all 0.2s ease; 
+    transform: translateY(-40px);
+    opacity: 0;
+    display: none;
+}
+.layout header.top .taps.none {
+    opacity: 0;
+    display: none;
+}
+.layout header .taps.none {
+    opacity: 0;
+    display: none;
+}
+
+.layout header .taps .breakpoints ul {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-left: 10px;
+    color: #ffffff;
+}
+.layout header .taps .breakpoints ul li {
+    padding-right: 5px;
+    padding-bottom: 5px;
+    width: fit-content;
+    border-bottom: 3px solid transparent;
+}
+.layout header .taps .breakpoints ul li.select {
+    padding-right: 5px;
+    padding-bottom: 5px;
+    width: fit-content;
+    border-bottom: 3px solid #ffffff;
+}
+
+.layout footer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-width: var(--breakpoint-min);
+    background: var(--base-color-1);
+    color: var(--base-color-3);
+    box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.5);
+}
+
+@media screen and (max-width: 720px) {
+    .layout {
+        align-items:  flex-start;
+
+    }
+    .layout header {
+        align-items: normal;
+    }
+}
+
+.layout header .breakpoints .logo {
+    width: 42px;
+    height: 42px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* .layout header .breakpoints input {
+    width: 44%;
+    height: 32px;
+    margin-left: 10px;
+    padding-left: 10px;
+} */
+
+.layout header .breakpoints .right {
+    margin-left: auto;
+    margin-right: 10px;
+    display: flex;
+      align-items: center; /* 수직 중앙 정렬 추가 */
+    gap: 20px;
+}
+
+.layout header .breakpoints .right a {
+    width: 38px;
+    height: 38px;
+    background: white;
+    border-radius: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: var(--base-color-2);
+}
+
+.layout header div a svg {
+    width: 60%;
+    height: 60%;
+}
+
+.layout header div .right a.shaking {
+    background: var(--base-color-5);
+    animation: shaking 0.6s ease-in-out infinite;
+}
+
+@keyframes shaking {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-15deg);
+    }
+
+    50% {
+        transform: rotate(15deg);
+    }
+
+    75% {
+        transform: rotate(-10deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.link {
+    display: inline-block;
+    padding: 0px 2px 5px 2px;
+    border-bottom: 3px solid var(--base-color-2); 
+    cursor: pointer; 
+    color: var(--base-color-2); 
+    font-weight: 750;
+}
+
+.link.red {
+    border-bottom: 3px solid var(--base-color-5);
+    color: var(--base-color-5);
+}
+
+/* 게시판 메뉴 항목 */
+.board-item {
+    position: relative; /* 드롭다운 위치 기준 */
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+    padding: 5px 0px;
+    font-weight: 750;
+    color: var(--base-color-1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.board-item:hover {
+    color: var(--base-color-5);
+}
+
+/* 드롭다운 메뉴 */
+.board-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: fit-content;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    display: none;
+    background: var(--base-color-4);
+    color: var(--base-color-1);
+    overflow: hidden;
+}
+
+/* 호버 시 드롭다운 보이기 */
+.board-item:hover .board-dropdown {
+    display: block;
+}
+
+.board-item.red {
+    color: var(--base-color-5);
+}
+
+.board-dropdown p {
+    font-size: 14px;
+    padding: 10px;
+    white-space: nowrap;
+}
+
+.board-dropdown p:hover {
+    background: var(--base-color-5);
+    color: #ffffff;
+}
+
+
+/*정리하는 신버전*/
 .layout {
     display: flex;
     flex-direction: column;
@@ -10,39 +276,176 @@
     width: 100%;
     min-width: var(--breakpoint-min);
     max-width: var(--breakpoint-max);
-    padding: 10px;
+    margin: 10px;
 }
 
 .layout header {
-    position: fixed;
+    position: sticky;
+    top: 0; 
+    min-width: calc( var(--breakpoint-min) );
     display: flex;
-    justify-content: center;
-    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    width: calc( 100% - 0px );
     height: 60px;
     background: var(--base-color-3);
-    box-shadow: 0px 0px 10px rgb(0,0,0,0.1);
+    box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+.layout .breakpoints.header {
+    margin: 0 0px 10px 0;
+}
+.layout .breakpoints.header .link{
+    opacity: 0;
+}
+.layout header:hover{
+    height: 95px;
+    overflow: visible;
+}
+.layout header:hover .board-item {
+    opacity: 1;
+}
+.layout header:hover .breakpoints.header .link{
+    opacity: 1;
+}
+.layout header:hover .taps {
+    opacity: 1;
+    transform: translateY(0px);
 }
 
-.layout .main {
+.link {
+    display: inline-block;
+    padding: 0px 2px 7.5px 2px;
+    border-bottom: 3px solid var(--base-color-2); 
+    cursor: pointer; 
+    color: var(--base-color-2); 
+    font-weight: 750;
+    transition: opacity 0.3s ease;
+}
+
+.layout .breakpoints.main {
+    margin: 0 0px 0 0px;
+    display: flex;
+    flex-direction: column;
+    min-height: calc( 100vh - 60px );
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.layout .breakpoints.main p {
     width: calc( 100% - 20px );
+    padding: 10px;
+    background: var(--base-color-3);
+    font-weight: 600;
+    border-radius: 5px;
+}
+.layout .breakpoints.main p strong {
+    font-size: 1.1em;
+    font-weight: 1000;
+}
+.layout .breakpoints.main div {
+    margin: 0 0px 0 0px;
+    display: flex;
+    flex-direction: row;
+}
+.layout .breakpoints.main div ul {
+    padding: 10px;
+    padding-top: 10px;
     min-height: calc(100vh - 50px);
-    margin: 0;
-    margin-top: 60px;
-    background: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+.layout .breakpoints.main div ul li {
+    padding-right: 10px;
+    padding-bottom: 5px;
+    width: fit-content;
+    border-bottom: 3px solid transparent;
+}
+.layout .breakpoints.main div ul li.select {
+    padding-right: 10px;
+    padding-bottom: 5px;
+    width: fit-content;
+    border-bottom: 3px solid var(--base-color-1);
+}
+.layout .breakpoints.main div ul li:hover {
+    border-bottom: 3px solid var(--base-color-1);
 }
 
-.layout footer {
+.layout .breakpoints.main div main {
+    flex: 1;
+    min-height: calc( 100% - 60px );
+    border: 2px solid red;
+}
+
+.layout .inputBox {
+    width: 47.5%;
+    height: 32px;
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.layout .inputBox input {
+    width: 100%;
+    height: 100%;
+    padding-left: 10px;
+    border: 2px solid var(--base-color-1);
+    border-radius: 5px;
+}
+.layout .inputBox input:focus {
+    border-color:  var(--base-color-5);
+    outline: 0;
+}
+.layout .inputBox button {
+    all: unset;
+    position: absolute;
+    width: 38px;
+    height: 38px;
     display: flex;
     justify-content: center;
-    width: 100%;
-    min-width: var(--breakpoint-min);
-    background: var(--base-color-1);
-    color: var(--base-color-3);
-    box-shadow: 0px 0px 10px rgb(0,0,0,0.5);
+    align-items: center;
+    right: 0;
 }
 
 @media screen and (max-width: 720px) {
-    .layout { 
-        align-items: normal;
+    .layout {
+        align-items: flex-start;
+    }
+    
+    .layout .breakpoints {
+        margin: 10px 0 10px 0;
+    }
+
+    .layout .breakpoints.main.margin {
+        margin-top: 52.5px;
+    }
+
+    .layout header .taps {
+        display: flex;
+    }
+
+    .layout header.top .taps {
+        display: flex;
+    }
+
+    .layout .breakpoints.main div ul {
+        display: none;
+    }
+
+    .layout .breakpoints.main div ul {
+        display: none;
+    }
+
+    .layout .breakpoints.main div main {
+        flex: 1;
+        min-height: calc( 100vh - 60px );
+        border: 2px solid red;
     }
 }
+
+

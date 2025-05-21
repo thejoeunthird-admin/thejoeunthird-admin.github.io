@@ -9,9 +9,10 @@ export const useUserTable = () => {
   const [error, setError] = useState(null);
 
   const fetchUserInfo = async () => {
-    if (userInfo) return;
+    const { user } = await getUser();
+    if (user === null) { return; }
+    if (userInfo) { return; }
     try {      
-      const user = await getUser();
       const query = new URLSearchParams({ id: user.id, name: user.name }).toString();
       const res = await fetch(`https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/userinfo?${query}`, {
         method: "GET",
