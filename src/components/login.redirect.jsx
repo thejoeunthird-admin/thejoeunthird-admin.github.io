@@ -42,14 +42,16 @@ export function LoginRedirect() {
     city, setCity,
     district, setDistrict,
     citys, districts,
+    setBoth,
     isLoading
   } = useRegion();
 
   useEffect(() => {
     const isTable = async () => {
+      
       const { user } = await getUser();
       if (!user || !user.id) return false;
-      const query = new URLSearchParams({ id: user.id, name: user.name, region:JSON.stringify(address) }).toString();
+      const query = new URLSearchParams({ id: user.id, name: user.name, region:JSON.stringify([ city, district ]) }).toString();
       const url = `https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/user?${query}`;
       const res = await fetch(url, {
         method: 'GET',
@@ -59,22 +61,26 @@ export function LoginRedirect() {
       });
 
       if (!res.ok) {
-        console.error('서버 요청 실패:', res);
         return false;
       }
-
       const result = await res.json();
-      return result.created;
+      return result;
     };
-
-    if(isLoading) {
-      isTable().then((created) => {
-        //if (!created) { navigate('/');} else { setToggle(created); }
+    if(city !== undefined) {
+      isTable().then((data) => {
+        if (!data.created) {
+          setBoth(data.user.region[0],data.user.region[1])
+          navigate('/'); 
+        } 
+        else {
+          setToggle(data.created); 
+        }
       });
     }
-  }, []); 
+  }, [city]); 
 
-  return(<>
+  if(!toggle) { return(<>로그인 시도중입니다.</>)}
+  else return(<>
     <form onSubmit={(e) => {
       e.preventDefault()
       setToggle(false)

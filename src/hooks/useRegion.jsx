@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setRegionAddress, setRegionLoading } from '../store/redux';
+import { setRegionAddress, setRegionLoading, resetRegion, setRegionBoth } from '../store/redux';
 import region from '../utils/region.json';
 
 export const useRegion = () => {
@@ -49,10 +49,10 @@ export const useRegion = () => {
         }
     }, [dispatch]);
 
-    // 현재 위치 기반으로 주소 가져오기 (실패 시 기본 좌표 사용)
     const fetchAddress = useCallback(() => {
-        if(address.length !== 0) { return; }
+        dispatch(resetRegion());
         dispatch(setRegionLoading(true));
+
         if (!navigator.geolocation) {
             console.warn('Geolocation을 지원하지 않는 브라우저입니다. 기본 좌표를 사용합니다.');
             getAddressFromCoords(DEFAULT_COORDS.x, DEFAULT_COORDS.y);
@@ -74,7 +74,9 @@ export const useRegion = () => {
     }, [dispatch, getAddressFromCoords]);
 
     useEffect(() => {
-        fetchAddress();
+        if (address.length === 0) {
+            fetchAddress();
+        }
     }, [fetchAddress]);
 
     const setCity = (city) => {
@@ -91,12 +93,18 @@ export const useRegion = () => {
         ]));
     };
 
+    const setBoth = (city, district) => {
+        dispatch(setRegionBoth(city, district));
+    };
+
+
     return {
-        city:address[0],
+        city: address[0],
         setCity,
         citys: Object.keys(region),
-        district:address[1],
+        district: address[1],
         setDistrict,
+        setBoth,
         districts: region[address[0]] || [],
         isLoading,
         refetch: fetchAddress

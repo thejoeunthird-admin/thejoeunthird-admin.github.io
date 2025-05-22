@@ -467,6 +467,25 @@
     right: 0;
 }
 
+.layout .select_region {
+    padding: 10px;
+    margin-left: 10px;
+    background: #ffffff;
+    border: 1px solid whitesmoke;
+    border-radius: 5px;
+    font-weight: 600;
+}
+.layout .select_region:focus {
+    outline: none;
+    box-shadow: none;
+}
+.layout .select_region option {
+    font-weight: 600;
+}
+.layout .select_region option:hover {
+    color: whitesmoke;
+}
+
 @media screen and (max-width: 720px) {
     .layout {
         align-items: flex-start;
@@ -502,5 +521,4 @@
         border: 2px solid red;
     }
 }
-
 

@@ -9,4 +9,4 @@ const rootReducer = combineReducers({
 
 export const redux = createStore(rootReducer);
 
-export { setRegionLoading, setRegionAddress } from './regionReducer';
+export { setRegionLoading, setRegionAddress, resetRegion, setRegionBoth } from './regionReducer';

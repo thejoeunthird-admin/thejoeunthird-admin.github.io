@@ -11,6 +11,7 @@ import { clearUserInfo } from '../store/userReducer';
 import { supabase } from "../supabase/supabase";
 import { FaAngleDown } from "react-icons/fa";
 import region from '../utils/region.json';
+import { useRegion } from "../hooks/useRegion";
 
 
 const boards = [
@@ -54,6 +55,14 @@ export function Layout({ children }) {
         boolean: true,
     })
 
+
+    const {
+        city, setCity,
+        district, setDistrict,
+        citys, districts,
+        isLoading
+    } = useRegion();
+
     const toogle1list = Object.keys(region);
     const toogle2list = region[toogle1.state];
     const handleLogout = async () => {
@@ -62,7 +71,9 @@ export function Layout({ children }) {
             alert('로그아웃 실패: ' + error.message);
         } else {
             dispatch(clearUserInfo());
+
         }
+        
     };
 
     useEffect(() => {
@@ -208,66 +219,22 @@ export function Layout({ children }) {
                             );
                         })}
                     </p>
+                    {/* 위치 ui */}
                     <div>
-                        <div className="toogle_item">
-                            <div
-                                onClick={(e) => {
-                                    setToogle1({
-                                        ...toogle1,
-                                        boolean: !toogle1.boolean
-                                    })
-                                }}
-                            >
-                                <p>{toogle1.state}</p><FaAngleDown />
-                                <span className={`toogle_list ${toogle1.boolean && 'hover'}`}>
-                                    {toogle1list.map((o, k) =>
-                                        <b
-                                            key={k}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation()
-                                                setToogle1({
-                                                    ...toogle1,
-                                                    state: o,
-                                                    boolean: !toogle1.boolean
-                                                })
-                                                setToogle2({
-                                                    state: region[o][0],
-                                                    boolean: true,
-                                                })
-                                            }}
-                                        >{o}</b>
-                                    )}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="toogle_item">
-                            <div
-                                onClick={(e) => {
-                                    setToogle2({
-                                        ...toogle2,
-                                        boolean: !toogle2.boolean
-                                    })
-                                }}
-                            >
-                                <p>{toogle2.state}</p><FaAngleDown />
-                                <span className={`toogle_list ${toogle2.boolean && 'hover'}`}>
-                                    {toogle2list.map((o, k) =>
-                                        <b
-                                            key={k}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation()
-                                                setToogle2({
-                                                    state: o,
-                                                    boolean: true,
-                                                })
-                                            }}
-                                        >{o}</b>
-                                    )}
-                                </span>
-                            </div>
-                        </div>
+                        <select 
+                        className="select_region"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        >{ citys.map((o,k)=>
+                            <option key={k}>{ o }</option>
+                        )}</select>
+                        <select 
+                        className="select_region"
+                        value={district}
+                        onChange={(e) => setDistrict(e.target.value)}
+                        >{ districts.map((o,k)=>
+                            <option key={k}>{ o }</option>
+                        )}</select>
                     </div>
                     <div>
                         <ul>
