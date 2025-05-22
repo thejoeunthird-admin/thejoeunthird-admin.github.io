@@ -1,0 +1,43 @@
+
+.toogle_item {
+    margin-left: 10px;
+    background: whitesmoke;
+}
+.toogle_item option {
+    padding: 10px;
+
+}
+.layout .breakpoints.main div div.toogle_item div p {
+    background: whitesmoke;
+    border-right: 2px solid white;
+    width: 110px;
+}
+.layout .breakpoints.main div div.toogle_item div svg {
+    padding: 10px;
+}
+.layout .breakpoints.main div div.toogle_item .toogle_list {
+    position: absolute;
+    top: 100%;   /* 0 → 100%로 변경, div 바로 아래 위치 */
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    z-index: 99;
+    width: 100%;  /* 너비 필요하면 추가 */
+    min-width: calc( 100% - 2px );
+    display: flex;
+    flex-direction: column;
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+.layout .breakpoints.main div div.toogle_item .toogle_list.hover {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.layout .breakpoints.main div div.toogle_item .toogle_list b {
+  padding: 10px;
+}
+.layout .breakpoints.main div div.toogle_item .toogle_list b:hover {
+  background: whitesmoke;
+}

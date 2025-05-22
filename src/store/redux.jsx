@@ -1,8 +1,12 @@
 import { createStore, combineReducers } from "redux";
-import { userReducer } from "./userReducer";
+import { useUserRedux } from "./userReducer";
+import { regionReducer } from "./regionReducer"
 
 const rootReducer = combineReducers({
-  user: userReducer,
+  user: useUserRedux,
+  region: regionReducer
 });
 
 export const redux = createStore(rootReducer);
+
+export { setRegionLoading, setRegionAddress } from './regionReducer';

@@ -36,6 +36,8 @@ const board_init = ({ pathname }) => {
     return ['', ...pathSegments];
 }
 
+// 위치는 리덕스로 저장
+
 export function Layout({ children }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -54,7 +56,6 @@ export function Layout({ children }) {
 
     const toogle1list = Object.keys(region);
     const toogle2list = region[toogle1.state];
-
     const handleLogout = async () => {
         const { error } = await supabase.auth.signOut();
         if (error) {

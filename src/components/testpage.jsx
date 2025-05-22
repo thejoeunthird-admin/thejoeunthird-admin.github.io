@@ -1,9 +1,11 @@
-import { useAddressLocation } from "../hooks/useAddressLocation";
-import { useGeolocation } from "../hooks/useGeolocation";
+import { useRegion } from "../hooks/useRegion";
 
 export function TestPage() {
-    const { location, fetchLocation } = useGeolocation();
-    const address = useAddressLocation(location.x,location.y);
+    const {
+        address,
+        district
+    } = useRegion();
+
     return (<>
         {address[0] + " / "+address[1]}
     </>);

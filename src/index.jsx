@@ -16,6 +16,7 @@ function Home() {
 }
 
 function App() {
+
   return (
     <BrowserRouter>
       <ReduxProvider store={redux}>
