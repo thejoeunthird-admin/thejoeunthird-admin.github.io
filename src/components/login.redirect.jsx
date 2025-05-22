@@ -4,9 +4,9 @@ import { getUser } from '../utils/getUser';
 import { useNavigate } from 'react-router-dom';
 import { useRegion } from '../hooks/useRegion';
 
-const createNickname = async (ref, navigate) => {
+const createNickname = async (ref, city, district) => {
   try {
-    const user = await getUser();
+    const { user } = await getUser();
     if (!user) throw new Error("로그인된 유저가 없습니다.");
 
     const nickname = ref.current.value;
@@ -20,7 +20,7 @@ const createNickname = async (ref, navigate) => {
         'Authorization': `Bearer ${user.token}`,  // 토큰 넣기
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: user.id, name: nickname }),
+      body: JSON.stringify({ id: user.id, name: nickname, region:JSON.stringify([ city, district ]), }),
     });
 
     if (!res.ok) {
@@ -28,7 +28,6 @@ const createNickname = async (ref, navigate) => {
       console.error("닉네임 업데이트 실패:", errorData.error ?? res.statusText);
       return;
     }
-    navigate("/");
   } catch (err) {
     console.error("예외 발생:", err.message);
   }
@@ -43,12 +42,10 @@ export function LoginRedirect() {
     district, setDistrict,
     citys, districts,
     setBoth,
-    isLoading
   } = useRegion();
 
   useEffect(() => {
     const isTable = async () => {
-      
       const { user } = await getUser();
       if (!user || !user.id) return false;
       const query = new URLSearchParams({ id: user.id, name: user.name, region:JSON.stringify([ city, district ]) }).toString();
@@ -70,7 +67,7 @@ export function LoginRedirect() {
       isTable().then((data) => {
         if (!data.created) {
           setBoth(data.user.region[0],data.user.region[1])
-          navigate('/'); 
+          //navigate('/'); 
         } 
         else {
           setToggle(data.created); 
@@ -79,12 +76,16 @@ export function LoginRedirect() {
     }
   }, [city]); 
 
-  if(!toggle) { return(<>로그인 시도중입니다.</>)}
-  else return(<>
+  //f(!toggle) { return(<>로그인 시도중입니다.</>)}
+  /*else*/ return(<>
     <form onSubmit={(e) => {
       e.preventDefault()
       setToggle(false)
-      createNickname(inputRef, navigate)
+      console.log(city,district)
+      createNickname(inputRef, city, district).then(()=>{
+        //navigate('/')
+        console.log(city, district)
+      })
     }}>
       <input placeholder='닉네임 입력' ref={inputRef} />
       <select 
