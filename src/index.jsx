@@ -7,6 +7,7 @@ import './index.css';
 import { Layout } from './components/layout';
 import { Login } from './components/login';
 import { LoginRedirect } from './components/login.redirect'
+import { TestPage } from './components/testpage';
 
 function Home() {
   return <div>
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path='/login' element={<Login />} />
             <Route path='/login/redirect' element={<LoginRedirect />} />
+            <Route path='/test' element={<TestPage />} />
           </Routes>
         </Layout>
       </ReduxProvider>
