@@ -70,7 +70,7 @@
     align-items: center;
     overflow: visible;
     width: calc( 100% - 0px );
-    height: 40px;
+    height: fit-content;
     background: var(--base-color-5);
     box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
     transition: all 0.2s ease; 
@@ -86,7 +86,6 @@
     opacity: 0;
     display: none;
 }
-
 .layout header .taps .breakpoints ul {
     display: flex;
     flex-direction: row;
@@ -96,11 +95,14 @@
     font-weight: 600;
     margin-left: 10px;
     color: #ffffff;
+     flex-wrap: wrap; 
 }
 .layout header .taps .breakpoints ul li {
     padding-right: 5px;
     padding-bottom: 5px;
     width: fit-content;
+    display: flex;
+    white-space: nowrap;
     border-bottom: 3px solid transparent;
 }
 .layout header .taps .breakpoints ul li.select {

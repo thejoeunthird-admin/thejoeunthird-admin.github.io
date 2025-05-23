@@ -20,22 +20,23 @@ const board_init = (categories) => {
     switch (pathSegments[0]) {
         case undefined:
         case 'login':
-            { return [""] } break;
+            { return [{ name:'', url:'' }] } break;
         default: {
-            // 전체 카테고리를 돌려 확인하여 이름으로 돌려줌
+            let result = []
             if(categories !== null){
-                let stop = false;
                 for(let i=0; i < pathSegments.length; i++){
                     for(let j=0; j < categories.length; j++){
                         if(categories[j].url === pathSegments[i]){
-                            pathSegments[i] = categories[j].name
+                            result.push({
+                                url: categories[j].url,
+                                name: categories[j].name,
+                            });
                             break;
                         }
                     }
-                    if(stop) { break; }
                 }
             }
-            return [...pathSegments] 
+            return result;
         } break;
     }
 }
@@ -70,15 +71,6 @@ export function Layout({ children }) {
         e.preventDefault()
         navigate(path)
     }, [navigate])
-
-    /** 이름 찾기 */
-    const isCategories = useCallback((name)=>{
-        const targetItem = categories.find(item => item.url === board[0]);
-        if(targetItem.url === name){
-            return targetItem.name
-        } else ''
-    
-    },[categories,board])
 
     /** 필요한 데이터가 모두 로딩되었는지 확인 */
     const isLoading = useCallback(()=>{
@@ -149,7 +141,7 @@ export function Layout({ children }) {
                     style={{ width: 'calc( 100% - 64px )' }}
                 >
                     <p
-                        className={`${styles['board-item']} ${("" === board[0] ? styles.red : '')}`}
+                        className={`${styles['board-item']} ${("" === board[0].name ? styles.red : '')}`}
                         onClick={(e) => handleNavigate(e, '/')}
                     >
                         홈
@@ -159,7 +151,7 @@ export function Layout({ children }) {
                         <React.Fragment key={k}>
                             {/* 각각 게시판 이름 나열 */}
                             <p
-                                className={`${styles['board-item']} ${(o.name === board[0] ? styles.red : '')}`}
+                                className={`${styles['board-item']} ${(o.name === board[0].name ? styles.red : '')}`}
                                 onClick={(e) => handleNavigate(e, `/${o.url}`)}
                             >
                                 {o.name}
@@ -184,26 +176,28 @@ export function Layout({ children }) {
                 )}
             </div>
             {/* 모바일 모드시 tap을 상단에 생성 */}
-            <div className={`${styles.taps} ${board[0] === "" ? styles.none : ''}`}>
+            <div className={`${styles.taps} ${board[0].name === "" ? styles.none : ''}`}>
                 {/* 게시판의 모든 탭들을 보여주는 ui */}
                 <div className={styles.breakpoints}>
                     <ul>
                         {/* 전체는 기본적으로 있으니 미리 생성 */}
                         <li
                             className={board[1] === undefined ? styles.select : ''}
+                            style={{ whiteSpace:'nowrap', textOverflow: 'ellipsis'  }}
                             onClick={(e) => {
                                 e.preventDefault();
-                                navigate(`/${board[0]}`);
+                                navigate(`/${board[0].url}`);
                             }}
                         >
                             전체
                         </li>
                         {/* 게시판의 각 탭들 표기 */}
-                        {categories.filter(category => category.type === board[0]).map((o, k) => (
+                        {categories.filter(category => category.type === board[0].name).map((o, k) => (
                             <li
                                 key={k}
-                                className={o.name === board[1] ? styles.select : ''}
-                                onClick={(e) => handleNavigate(e, `/${board[0]}/${o.name}`)}
+                                className={o.name === board[1]?.name ? styles.select : ''}
+                                style={{ whiteSpace:'nowrap', textOverflow: 'ellipsis' }}
+                                onClick={(e) => handleNavigate(e, `/${board[0].url}/${o.url}`)}
                             >
                                 {o.name}
                             </li>
@@ -214,7 +208,7 @@ export function Layout({ children }) {
         </header>
         {/* 게시판들의 각 탭들을 나타내는 ui */}
         {/* board_init의 스위치문에 추가하면, 해당 ui들이 안나타남 */}
-        {board[0] !== `` ? (
+        {board[0].name !== `` ? (
             <div className={`${styles.breakpoints} ${styles.main}`}>
                 <p className={styles.p}>
                     <a onClick={(e) => handleNavigate(e, '/')} > {'홈 > '}</a>
@@ -222,10 +216,10 @@ export function Layout({ children }) {
                     {board.map((o, k) => {
                         // 마지막껀 현재 위치라 강조 및 링크 제거
                         if (k === board.length - 1) {
-                            return <strong key={k} className={styles.strong}>{o}</strong>;
+                            return <strong key={k} className={styles.strong}>{o.name}</strong>;
                         } else {
                             // 경로
-                            return <a key={k}> {o + ' > '}</a>;
+                            return <a key={k}> {o.name + ' > '}</a>;
                         }
                     })}
                 </p>
@@ -260,17 +254,17 @@ export function Layout({ children }) {
                             className={board[1] === undefined ? `${styles.li} ${styles.select}` : styles.li}
                             onClick={(e) => {
                                 e.preventDefault();
-                                navigate(`/${board[0]}`);
+                                navigate(`/${board[0].url}`);
                             }}
                         >
                             전체
                         </li>
                         {/* 게시판의 각 탭들 표기 */}
-                        {categories.filter(category => category.type === board[0]).map((o, k) => (
+                        {categories.filter(category => category.type === board[0].name).map((o, k) => (
                             <li
                                 key={k}
-                                className={o.name === board[1] ? `${styles.li} ${styles.select}` : styles.li}
-                                onClick={(e) => handleNavigate(e, `/${board[0]}/${o.name}`)}
+                                className={o.name === board[1]?.name ? `${styles.li} ${styles.select}` : styles.li}
+                                onClick={(e) => handleNavigate(e, `/${board[0].url}/${o.url}`)}
                             >
                                 {o.name}
                             </li>
