@@ -10,9 +10,7 @@ import { LoginRedirect } from './components/login.redirect'
 import { TestPage } from './components/testpage';
 
 function Home() {
-  return <div>
-    메인페이지
-  </div>;
+  return<p></p>;
 }
 
 function App() {
@@ -21,13 +19,13 @@ function App() {
     <BrowserRouter>
       {/* 리덕스 사용 */}
       <ReduxProvider store={redux}>
-        {/* Layout 컴포넌트 안에 <Routes> </Routes> 내용들이 들어감 */}
+        {/* Layout 컴포넌트 안에 <Routes> </Routes> 내용들이 */}
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path='/login' element={<Login />} />
             <Route path='/login/redirect' element={<LoginRedirect />} />
-            <Route path='/test' element={<TestPage />} />
+            <Route path='/test' element={<Home />} />
           </Routes>
         </Layout>
       </ReduxProvider>

@@ -11,13 +11,6 @@ import { supabase } from "../supabase/supabase";
 import { useRegion } from "../hooks/useRegion";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
 
-// 임시 게시판
-const boards = [
-    { name: '게시판1' },
-    { name: '게시판2' },
-    { name: '게시판3' },
-]
-
 // 임시 게시판 탭들
 const boardsTab = [
     { name: '인테리어&꾸미기' },
@@ -70,6 +63,19 @@ export function Layout({ children }) {
         navigate(path)
     }, [navigate])
 
+    /** 필요한 데이터가 모두 로딩되었는지 확인 */
+    const isLoading = useCallback(()=>{
+        let result = true;
+        const list = [
+            categoriesLoding,
+        ]
+        for(let i=0; i <list.length; i++){
+            result = list[i];
+            if(!result) { break; }
+        }
+        return !result;
+    },[categoriesLoding])
+
     useEffect(() => {
         //** 지금 현재 스크롤이 맨위 인제 확인 */
         const handleScroll = () => { setAtTop(window.scrollY === 0); };
@@ -77,11 +83,10 @@ export function Layout({ children }) {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-
-    if (!categoriesLoding) { return <></> } // 로딩페이지 만들어야됨
+    if (isLoading()) { return <></> } // 로딩페이지 만들어야됨
     return (<div className={styles.layout}>
         {/* 헤더부분 */}
-        <header className={atTop && styles.top}>
+        <header className={atTop ?styles.top:''}>
             {/* 헤더의 첫번째줄 */}
             <div className={styles.breakpoints}>
                 {/* 로고 이미지 */}
@@ -193,14 +198,14 @@ export function Layout({ children }) {
         {/* 게시판들의 각 탭들을 나타내는 ui */}
         {/* board_init의 스위치문에 추가하면, 해당 ui들이 안나타남 */}
         {board[0] !== `` ? (
-            <div className={`${styles.breakpoints} ${styles.main} ${styles.margin}`}>
-                <p>
+            <div className={`${styles.breakpoints} ${styles.main}`}>
+                <p className={styles.p}>
                     <a onClick={(e) => handleNavigate(e, '/')} > {'홈 > '}</a>
                     {/* 현재 주소의 위치를 모두 기입 */}
                     {board.map((o, k) => {
                         // 마지막껀 현재 위치라 강조 및 링크 제거
                         if (k === board.length - 1) {
-                            return <strong key={k}>{o}</strong>;
+                            return <strong key={k} className={styles.strong}>{o}</strong>;
                         } else {
                             // 경로
                             return <a key={k}> {o + ' > '}</a>;
@@ -208,7 +213,7 @@ export function Layout({ children }) {
                     })}
                 </p>
                 {/* 위치 ui */}
-                <div>
+                <div className={styles.div}>
                     {/* 시 선택 ui */}
                     <select
                         className={styles.select_region}
@@ -231,11 +236,11 @@ export function Layout({ children }) {
                     </select>
                 </div>
                 {/* 게시판의 각 탭 표시 */}
-                <div>
-                    <ul>
+                <div className={styles.div}>
+                    <ul className={styles.ul}>
                         {/* 전체는 기본적으로 있으니 미리 생성 */}
                         <li
-                            className={board[1] === undefined ? styles.select : ''}
+                            className={board[1] === undefined ? `${styles.li} ${styles.select}` : styles.li}
                             onClick={(e) => {
                                 e.preventDefault();
                                 navigate(`/${board[0]}`);
@@ -247,7 +252,7 @@ export function Layout({ children }) {
                         {boardsTab.map((o, k) => (
                             <li
                                 key={k}
-                                className={o.name === board[1] ? styles.select : ''}
+                                className={o.name === board[1] ? `${styles.li} ${styles.select}` : styles.li}
                                 onClick={(e) => handleNavigate(e, `/${board[0]}/${o.name}`)}
                             >
                                 {o.name}
@@ -255,12 +260,16 @@ export function Layout({ children }) {
                         ))}
                     </ul>
                     {/* children(페이지) 랜더링 */}
-                    <main>{children}</main>
+                    <main className={styles.mainLayout}>
+                        {children}    
+                    </main>
                 </div>
             </div>
         ) : (
             // tap 부분이 필요없는 children(페이지) 랜더링
-            <main className={`${styles.breakpoints} ${styles.main}`}>{children}</main>
+            <main className={styles.mainLayout}>
+                {children}    
+            </main>
         )}
         {/* 맨 하단 푸터 */}
         <footer>

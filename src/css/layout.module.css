@@ -334,7 +334,7 @@
     gap: 10px;
 }
 
-.layout .breakpoints.main p {
+.layout .breakpoints.main .p {
     width: calc( 100% - 30px );
     padding: 10px;
     margin-left: 5px;
@@ -343,16 +343,16 @@
     font-weight: 600;
     border-radius: 5px;
 }
-.layout .breakpoints.main p strong {
+.layout .breakpoints.main .p .strong {
     font-size: 1.1em;
     font-weight: 1000;
 }
-.layout .breakpoints.main div {
+.layout .breakpoints.main .div {
     margin: 0 0px 0 0px;
     display: flex;
     flex-direction: row;
 }
-.layout .breakpoints.main div ul {
+.layout .breakpoints.main .div .ul {
     padding: 10px;
     padding-top: 10px;
     min-height: calc(100vh - 50px);
@@ -362,28 +362,29 @@
     font-size: 1.1em;
     font-weight: 600;
 }
-.layout .breakpoints.main div ul li {
+.layout .breakpoints.main .div .ul .li {
     padding-right: 10px;
     padding-bottom: 5px;
     width: fit-content;
     border-bottom: 3px solid transparent;
 }
-.layout .breakpoints.main div ul li.select {
+.layout .breakpoints.main .div .ul .li.select {
     padding-right: 10px;
     width: fit-content;
     border-bottom: 3px solid var(--base-color-1);
 }
-.layout .breakpoints.main div ul li:hover {
+.layout .breakpoints.main .div ul li:hover {
     border-bottom: 3px solid var(--base-color-1);
 }
 
-.layout .breakpoints.main div main {
-    flex: 1;
+.mainLayout {
+    height: 100vh;
     min-height: calc( 100% - 60px );
-    border: 2px solid red;
+    border: 1px solid red;
+    width: 100%;
 }
 
-.layout .breakpoints.main div div.toogle_item {
+.layout .breakpoints.main .div .div.toogle_item {
     margin-left: 10px;
     font-weight: 600;
     background: whitesmoke;
@@ -393,7 +394,7 @@
     align-items: center; 
     position: relative;  /* 추가: toogle_list 절대 위치 기준 */
 }
-.layout .breakpoints.main div div.toogle_item div {
+.layout .breakpoints.main .div .div.toogle_item div {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -517,3 +518,24 @@
     }
 }
 
+.outlet {
+  /* children 전용 영역 스타일 - 필요 시 따로 적용 */
+  all: unset; /* 기본 스타일 리셋(필요시) */
+}
+
+.childrenWrapper, 
+.childrenWrapper * {
+  all: unset !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: revert !important;
+  width: revert !important;
+  height: revert !important;
+  position: revert !important;
+  overflow: revert !important;
+  font: revert !important;
+  color: revert !important;
+  background: transparent !important;
+  border: none !important;
+  box-sizing: border-box !important;
+}
