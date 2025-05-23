@@ -1,12 +1,15 @@
+// redux 관련 함수 모두 여기에 선언 
 import { createStore, combineReducers } from "redux";
-import { useUserRedux } from "./userReducer";
+import { userReducer } from "./userReducer";
 import { regionReducer } from "./regionReducer"
 
+// redux에 필요한 함수들
+export * from './regionReducer'
+export * from './userReducer'
+
 const rootReducer = combineReducers({
-  user: useUserRedux,
+  user: userReducer,
   region: regionReducer
 });
 
 export const redux = createStore(rootReducer);
-
-export { setRegionLoading, setRegionAddress, resetRegion, setRegionBoth } from './regionReducer';

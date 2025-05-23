@@ -12,30 +12,26 @@ export const setRegionAddress = (payload) => ({
   payload,
 });
 
-export const setRegionLoading = (payload) => ({
-  type: "SET_REGION_LOADING",
-  payload,
-});
-
-// 둘 다 한 번에 설정하는 액션 타입
-const SET_REGION_BOTH = "SET_REGION_BOTH";
-
-// 액션 생성자 추가
 export const setRegionBoth = (city, district) => ({
-  type: SET_REGION_BOTH,
+  type: "SET_REGION_BOTH",
   payload: [city, district]
 });
 
+// 위치 기반 리덕스 액션
 export const regionReducer = (state = initRegionState, action) => {
   switch (action.type) {
+    // 시 변경
     case "SET_REGION_ADDRESS":
       return { ...state, address: action.payload };
+    // 군구 변경 
     case "SET_REGION_LOADING":
       return { ...state, isLoading: action.payload };
-    case "RESET_REGION":
-      return { ...state, address: [] }; // 주소 초기화
+    // 시, 군구 변경
     case "SET_REGION_BOTH":
       return { ...state, address: action.payload };
+    // 주소 초기화
+    case "RESET_REGION":
+      return { ...state, address: [] };
     default:
       return state;
   }
