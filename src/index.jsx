@@ -19,7 +19,9 @@ function App() {
 
   return (
     <BrowserRouter>
+      {/* 리덕스 사용 */}
       <ReduxProvider store={redux}>
+        {/* Layout 컴포넌트 안에 <Routes> </Routes> 내용들이 들어감 */}
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />

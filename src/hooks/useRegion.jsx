@@ -1,19 +1,21 @@
 import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setRegionAddress, setRegionLoading, resetRegion, setRegionBoth } from '../store/redux';
+import { setRegionAddress, resetRegion, setRegionBoth } from '../store/redux';
 import region from '../utils/region.json';
 
+/** 시청의 기본 x,y 값 */
+const DEFAULT_COORDS = {
+    x: 126.9780,
+    y: 37.5665
+};
+const KAKAOKEY = 'bc7544842f15980d1e228d96a24008e5'
+
+/**자신의 위치를 기반하여, 시군구 데이터를 내보내는 훅*/
 export const useRegion = () => {
     const dispatch = useDispatch();
-    const { address, isLoading } = useSelector((state) => state.region);
-
-    const DEFAULT_COORDS = {
-        x: 126.9780,
-        y: 37.5665
-    };
+    const { address } = useSelector((state) => state.region);
 
     const getAddressFromCoords = useCallback((x, y) => {
-        dispatch(setRegionLoading(true));
         const loadKakaoMap = () => {
             window.kakao.maps.load(() => {
                 const geocoder = new window.kakao.maps.services.Geocoder();
@@ -26,7 +28,6 @@ export const useRegion = () => {
                     } else {
                         console.warn('주소 변환에 실패했습니다.');
                     }
-                    dispatch(setRegionLoading(false));
                 });
             });
         };
@@ -39,7 +40,6 @@ export const useRegion = () => {
             script.onload = loadKakaoMap;
             script.onerror = () => {
                 console.warn('카카오맵 스크립트 로드에 실패했습니다.');
-                dispatch(setRegionLoading(false));
             };
 
             document.head.appendChild(script);
@@ -51,7 +51,6 @@ export const useRegion = () => {
 
     const fetchAddress = useCallback(() => {
         dispatch(resetRegion());
-        dispatch(setRegionLoading(true));
 
         if (!navigator.geolocation) {
             console.warn('Geolocation을 지원하지 않는 브라우저입니다. 기본 좌표를 사용합니다.');
@@ -99,14 +98,23 @@ export const useRegion = () => {
 
 
     return {
+        /** 시 */
         city: address[0],
+        /** 시 변환 */
         setCity,
+        /** 시 목록 (utils.region) */
         citys: Object.keys(region),
+        /** 군구 */
         district: address[1],
+        /** 군구 변환 */
         setDistrict,
-        setBoth,
+        /** 시 에 포함된 군구 목록 */
         districts: region[address[0]] || [],
-        isLoading,
+        /** 시, 군구 동시 변환 */
+        setBoth,
+        /** 데이터가 도착 여부 */
+        isLoading: address.length !== 0?true:false,
+        /** 자신 위치에서 다시 시군구 찾기 */
         refetch: fetchAddress
     };
 };

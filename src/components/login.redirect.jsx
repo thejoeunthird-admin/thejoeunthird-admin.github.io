@@ -17,7 +17,7 @@ const createNickname = async (ref, city, district) => {
     const res = await fetch('https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/user', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${user.token}`,  // 토큰 넣기
+        'Authorization': `Bearer ${user.token}`, 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ id: user.id, name: nickname, region:JSON.stringify([ city, district ]), }),
