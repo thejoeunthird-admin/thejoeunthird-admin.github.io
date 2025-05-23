@@ -1,4 +1,4 @@
-import "../css/layout.css"
+import styles from "../css/layout.module.css"
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBell } from "react-icons/fa6";
@@ -10,7 +10,6 @@ import { clearUserInfo } from '../store/userReducer';
 import { supabase } from "../supabase/supabase";
 import { useRegion } from "../hooks/useRegion";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
-
 
 // 임시 게시판
 const boards = [
@@ -31,12 +30,12 @@ const board_init = () => {
     // 주소를 브라우저에서 가져온다.
     const location = useLocation();
     // 주소를 / 기준으로 배열화
-    const pathSegments =  decodeURIComponent(location.pathname).split('/').filter(Boolean);
-    switch(pathSegments[0]){
+    const pathSegments = decodeURIComponent(location.pathname).split('/').filter(Boolean);
+    switch (pathSegments[0]) {
         case undefined:
         case 'login':
-        { return [""] } break;
-        default:{ return [...pathSegments] } break;
+            { return [""] } break;
+        default: { return [...pathSegments] } break;
     }
 }
 
@@ -46,7 +45,7 @@ export function Layout({ children }) {
     const dispatch = useDispatch();
     const user = useUserTable();
     const board = board_init()
-    const { info:categories, loading:categoriesLoding } = useCategoriesTable();
+    const { info: categories, loading: categoriesLoding } = useCategoriesTable();
     const {
         city, setCity,
         district, setDistrict,
@@ -66,10 +65,10 @@ export function Layout({ children }) {
     }, [dispatch]);
 
     /** path에 입력된 값으로 주소값을 바꿔줌 */
-    const handleNavigate = useCallback((e,path)=>{
+    const handleNavigate = useCallback((e, path) => {
         e.preventDefault()
         navigate(path)
-    },[navigate])
+    }, [navigate])
 
     useEffect(() => {
         //** 지금 현재 스크롤이 맨위 인제 확인 */
@@ -77,41 +76,42 @@ export function Layout({ children }) {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
-    
 
-    if(!categoriesLoding) { return <></> } // 로딩페이지 만들어야됨
-    return (<div className="layout">
+
+    if (!categoriesLoding) { return <></> } // 로딩페이지 만들어야됨
+    return (<div className={styles.layout}>
         {/* 헤더부분 */}
-        <header className={`${atTop && 'top'}`}>
+        <header className={atTop && styles.top}>
             {/* 헤더의 첫번째줄 */}
-            <div className="breakpoints">
+            <div className={styles.breakpoints}>
                 {/* 로고 이미지 */}
                 <img
-                className="logo"
-                onClick={(e) =>handleNavigate(e,'/')}
+                    className={styles.logo}
+                    onClick={(e) => handleNavigate(e, '/')}
                 />
                 {/* 검색 창*/}
-                <form className="inputBox">
+                <form className={styles.inputBox}>
                     <input />
                     <button>
                         <FaSearch />
                     </button>
                 </form>
                 {/* 맨 우측 ui들 */}
-                <div className="right">
-                    { user.info === null
+                <div className={styles.right}>
+                    {user.info === null
                         // 비로그인시 로그인 ui
-                        ?(<>
-                            <p className="link"
-                            onClick={(e) =>handleNavigate(e,'/login')}
+                        ? (<>
+                            <p
+                                className={styles.link}
+                                onClick={(e) => handleNavigate(e, '/login')}
                             >
                                 로그인
                             </p>
                         </>)
                         // 로그인시 내정보, 알람 UI
                         : (<>
-                            <p className="link">내정보</p>
-                            <a className="shaking">
+                            <p className={styles.link}>내정보</p>
+                            <a className={styles.shaking}>
                                 <FaBell />
                             </a>
                         </>)
@@ -119,26 +119,26 @@ export function Layout({ children }) {
                 </div>
             </div>
             {/* 헤더 두번째줄 */}
-            <div className="breakpoints header"
-            style={{ display:'flex', alignItems: 'flex-start', gap: '2px' }}
+            <div className={`${styles.breakpoints} ${styles.header}`}
+                style={{ display: 'flex', alignItems: 'flex-start', gap: '2px' }}
             >
                 {/* 홈은 리스트에 없음으로 먼저 생성 */}
                 <div
-                style={{ width:'calc( 100% - 64px )' }}
+                    style={{ width: 'calc( 100% - 64px )' }}
                 >
                     <p
-                    className={"board-item " + ("" === board[0] ? 'red' : '')}
-                    onClick={(e) =>handleNavigate(e,'/')}
+                        className={`${styles['board-item']} ${("" === board[0] ? styles.red : '')}`}
+                        onClick={(e) => handleNavigate(e, '/')}
                     >
                         홈
                     </p>
                     {/* 임시 게시판 이름 */}
-                    { categories.map((o, k) =>(
+                    {categories.map((o, k) => (
                         <React.Fragment key={k}>
                             {/* 각각 게시판 이름 나열 */}
                             <p
-                            className={"board-item " + (o.name === board[0] ? 'red' : '')}
-                            onClick={(e) =>handleNavigate(e,`/${o.name}`)}
+                                className={`${styles['board-item']} ${(o.name === board[0] ? styles.red : '')}`}
+                                onClick={(e) => handleNavigate(e, `/${o.name}`)}
                             >
                                 {o.name}
                             </p>
@@ -146,13 +146,13 @@ export function Layout({ children }) {
                     )}
                 </div>
                 {/* 유저의 정보가 있으면 로그아웃 ui 생성 */}
-                { user.info !== null && (
-                    <div 
-                    className="right"
-                    style={{ width:'64px', flexShrink:0 }}
+                {user.info !== null && (
+                    <div
+                        className={styles.right}
+                        style={{ width: '64px', flexShrink: 0 }}
                     >
                         <p
-                            className="link red"
+                            className={`${styles.link} ${styles.red}`}
                             onClick={(e) => {
                                 e.preventDefault();
                                 handleLogout();
@@ -162,30 +162,30 @@ export function Layout({ children }) {
                 )}
             </div>
             {/* 모바일 모드시 tap을 상단에 생성 */}
-            <div className={`taps ${board[0] === "" && 'none'}`}>
+            <div className={`${styles.taps} ${board[0] === "" ? styles.none : ''}`}>
                 {/* 게시판의 모든 탭들을 보여주는 ui */}
-                <div className="breakpoints">
+                <div className={styles.breakpoints}>
                     <ul>
                         {/* 전체는 기본적으로 있으니 미리 생성 */}
                         <li
-                        className={(undefined === board[1] ? 'select' : '')}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            navigate(`/${board[0]}`)
-                        }}
+                            className={board[1] === undefined ? styles.select : ''}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigate(`/${board[0]}`);
+                            }}
                         >
                             전체
                         </li>
                         {/* 게시판의 각 탭들 표기 */}
-                        { boardsTab.map((o, k) => 
+                        {boardsTab.map((o, k) => (
                             <li
-                            key={k}
-                            className={(o.name === board[1] ? 'select' : '')}
-                            onClick={(e) =>handleNavigate(e,`/${board[0]}/${o.name}`)}
+                                key={k}
+                                className={o.name === board[1] ? styles.select : ''}
+                                onClick={(e) => handleNavigate(e, `/${board[0]}/${o.name}`)}
                             >
                                 {o.name}
                             </li>
-                        )}
+                        ))}
                     </ul>
                 </div>
             </div>
@@ -193,75 +193,82 @@ export function Layout({ children }) {
         {/* 게시판들의 각 탭들을 나타내는 ui */}
         {/* board_init의 스위치문에 추가하면, 해당 ui들이 안나타남 */}
         {board[0] !== `` ? (
-            <div className="breakpoints main margin">
+            <div className={`${styles.breakpoints} ${styles.main} ${styles.margin}`}>
                 <p>
-                    <a onClick={(e) => handleNavigate(e,'/')} > {'홈 > '}</a>
+                    <a onClick={(e) => handleNavigate(e, '/')} > {'홈 > '}</a>
                     {/* 현재 주소의 위치를 모두 기입 */}
-                    { board.map((o, k) => {
+                    {board.map((o, k) => {
                         // 마지막껀 현재 위치라 강조 및 링크 제거
-                        if(k ===  board.length - 1 ){ return <strong key={k}>{o}</strong>}
-                        // 경로
-                        else { return(<a key={k}> {o + ' > '}</a>)}
+                        if (k === board.length - 1) {
+                            return <strong key={k}>{o}</strong>;
+                        } else {
+                            // 경로
+                            return <a key={k}> {o + ' > '}</a>;
+                        }
                     })}
                 </p>
                 {/* 위치 ui */}
                 <div>
                     {/* 시 선택 ui */}
                     <select
-                    className="select_region"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
+                        className={styles.select_region}
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
                     >
-                    { citys.map((o, k) =>
-                        <option key={k}>{o}</option>
-                    )}
+                        {citys.map((o, k) => (
+                            <option key={k}>{o}</option>
+                        ))}
                     </select>
                     {/* 군구 선택 ui */}
                     <select
-                        className="select_region"
+                        className={styles.select_region}
                         value={district}
                         onChange={(e) => setDistrict(e.target.value)}
-                    >{districts.map((o, k) =>
-                        <option key={k}>{o}</option>
-                    )}</select>
+                    >
+                        {districts.map((o, k) => (
+                            <option key={k}>{o}</option>
+                        ))}
+                    </select>
                 </div>
                 {/* 게시판의 각 탭 표시 */}
                 <div>
                     <ul>
                         {/* 전체는 기본적으로 있으니 미리 생성 */}
                         <li
-                        className={(undefined === board[1] ? 'select' : '')}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            navigate(`/${board[0]}`)
-                        }}
+                            className={board[1] === undefined ? styles.select : ''}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigate(`/${board[0]}`);
+                            }}
                         >
                             전체
                         </li>
                         {/* 게시판의 각 탭들 표기 */}
-                        { boardsTab.map((o, k) => 
+                        {boardsTab.map((o, k) => (
                             <li
-                            key={k}
-                            className={(o.name === board[1] ? 'select' : '')}
-                            onClick={(e) =>handleNavigate(e,`/${board[0]}/${o.name}`)}
+                                key={k}
+                                className={o.name === board[1] ? styles.select : ''}
+                                onClick={(e) => handleNavigate(e, `/${board[0]}/${o.name}`)}
                             >
                                 {o.name}
                             </li>
-                        )}
+                        ))}
                     </ul>
                     {/* children(페이지) 랜더링 */}
                     <main>{children}</main>
                 </div>
             </div>
-        )
-            //tap 부분이 필요없는 children(페이지) 랜더링
-            : (<main className="breakpoints main">{children}</main>)}
+        ) : (
+            // tap 부분이 필요없는 children(페이지) 랜더링
+            <main className={`${styles.breakpoints} ${styles.main}`}>{children}</main>
+        )}
         {/* 맨 하단 푸터 */}
         <footer>
-            <div className="breakpoints">
+            <div className={styles.breakpoints}>
                 ( 푸터 내용을 적어주세요 )
             </div>
         </footer>
+
     </div>)
 }
 
