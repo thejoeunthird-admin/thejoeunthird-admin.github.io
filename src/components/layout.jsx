@@ -119,29 +119,38 @@ export function Layout({ children }) {
                 </div>
             </div>
             {/* 헤더 두번째줄 */}
-            <div className="breakpoints header">
+            <div className="breakpoints header"
+            style={{ display:'flex', alignItems: 'flex-start', gap: '2px' }}
+            >
                 {/* 홈은 리스트에 없음으로 먼저 생성 */}
-                <p
-                className={"board-item " + ("" === board[0] ? 'red' : '')}
-                onClick={(e) =>handleNavigate(e,'/')}
+                <div
+                style={{ width:'calc( 100% - 64px )' }}
                 >
-                    홈
-                </p>
-                {/* 임시 게시판 이름 */}
-                { categories.map((o, k) =>(
-                    <React.Fragment key={k}>
-                        {/* 각각 게시판 이름 나열 */}
-                        <p
-                        className={"board-item " + (o.name === board[0] ? 'red' : '')}
-                        onClick={(e) =>handleNavigate(e,`/${o.name}`)}
-                        >
-                            {o.name}
-                        </p>
-                    </React.Fragment>)
-                )}
+                    <p
+                    className={"board-item " + ("" === board[0] ? 'red' : '')}
+                    onClick={(e) =>handleNavigate(e,'/')}
+                    >
+                        홈
+                    </p>
+                    {/* 임시 게시판 이름 */}
+                    { categories.map((o, k) =>(
+                        <React.Fragment key={k}>
+                            {/* 각각 게시판 이름 나열 */}
+                            <p
+                            className={"board-item " + (o.name === board[0] ? 'red' : '')}
+                            onClick={(e) =>handleNavigate(e,`/${o.name}`)}
+                            >
+                                {o.name}
+                            </p>
+                        </React.Fragment>)
+                    )}
+                </div>
                 {/* 유저의 정보가 있으면 로그아웃 ui 생성 */}
                 { user.info !== null && (
-                    <div className="right">
+                    <div 
+                    className="right"
+                    style={{ width:'64px', flexShrink:0 }}
+                    >
                         <p
                             className="link red"
                             onClick={(e) => {
@@ -160,16 +169,19 @@ export function Layout({ children }) {
                         {/* 전체는 기본적으로 있으니 미리 생성 */}
                         <li
                         className={(undefined === board[1] ? 'select' : '')}
-                        onClick={(e) =>handleNavigate(e,`/${board[1]}`)}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            navigate(`/${board[0]}`)
+                        }}
                         >
                             전체
                         </li>
-                        {/* 임시 데이터 사용하여, 게시판들의 탭들을 나타냄 */}
-                        {boardsTab.map((o, k) => 
+                        {/* 게시판의 각 탭들 표기 */}
+                        { boardsTab.map((o, k) => 
                             <li
                             key={k}
                             className={(o.name === board[1] ? 'select' : '')}
-                            onClick={(e) =>handleNavigate(e,`/${board[0]}/${o.name}`) }
+                            onClick={(e) =>handleNavigate(e,`/${board[0]}/${o.name}`)}
                             >
                                 {o.name}
                             </li>
@@ -218,10 +230,10 @@ export function Layout({ children }) {
                     <ul>
                         {/* 전체는 기본적으로 있으니 미리 생성 */}
                         <li
-                        className={(undefined === board[2] ? 'select' : '')}
+                        className={(undefined === board[1] ? 'select' : '')}
                         onClick={(e) => {
                             e.preventDefault();
-                            navigate(`/${board[1]}`)
+                            navigate(`/${board[0]}`)
                         }}
                         >
                             전체
@@ -230,7 +242,7 @@ export function Layout({ children }) {
                         { boardsTab.map((o, k) => 
                             <li
                             key={k}
-                            className={(o.name === board[2] ? 'select' : '')}
+                            className={(o.name === board[1] ? 'select' : '')}
                             onClick={(e) =>handleNavigate(e,`/${board[0]}/${o.name}`)}
                             >
                                 {o.name}

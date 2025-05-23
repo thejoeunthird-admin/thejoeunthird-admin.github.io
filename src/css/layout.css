@@ -14,14 +14,14 @@
     align-items: center;
     overflow: visible;
     width: calc( 100% - 0px );
-    height: 170px;
+    height: fit-content;
     background: var(--base-color-3);
     box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
     transition: all 0.2s ease;
     z-index: 100;
 }
 .layout header.top {
-    height: 95px;
+    height: fit-content;
     overflow: visible;
 }
 .layout header.top .board-item {
@@ -301,7 +301,7 @@
     opacity: 0;
 }
 .layout header:hover{
-    height: 95px;
+    height: fit-content;
     overflow: visible;
 }
 .layout header:hover .board-item {
@@ -370,7 +370,6 @@
 }
 .layout .breakpoints.main div ul li.select {
     padding-right: 10px;
-    padding-bottom: 5px;
     width: fit-content;
     border-bottom: 3px solid var(--base-color-1);
 }
@@ -494,11 +493,7 @@
     .layout .breakpoints {
         margin: 10px 0 10px 0;
     }
-
-    .layout .breakpoints.main.margin {
-        margin-top: 52.5px;
-    }
-
+    
     .layout header .taps {
         display: flex;
     }
