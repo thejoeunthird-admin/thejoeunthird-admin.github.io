@@ -361,6 +361,7 @@
     gap: 10px;
     font-size: 1.1em;
     font-weight: 600;
+    min-width: 150px;
 }
 .layout .breakpoints.main .div .ul .li {
     padding-right: 10px;
@@ -381,7 +382,13 @@
     height: 100vh;
     min-height: calc( 100% - 60px );
     border: 1px solid red;
-    width: 100%;
+    flex: 1;
+}
+
+.mainLayout .div {
+    width: 100vw;
+        height: 100vh;
+    min-height: calc( 100% - 60px );
 }
 
 .layout .breakpoints.main .div .div.toogle_item {
@@ -503,11 +510,7 @@
         display: flex;
     }
 
-    .layout .breakpoints.main div ul {
-        display: none;
-    }
-
-    .layout .breakpoints.main div ul {
+    .layout .breakpoints.main .div .ul {
         display: none;
     }
 

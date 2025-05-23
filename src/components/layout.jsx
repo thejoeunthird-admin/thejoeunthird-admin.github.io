@@ -11,15 +11,8 @@ import { supabase } from "../supabase/supabase";
 import { useRegion } from "../hooks/useRegion";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
 
-// 임시 게시판 탭들
-const boardsTab = [
-    { name: '인테리어&꾸미기' },
-    { name: '꿀팁' },
-    { name: '탭1' },
-]
-
 /** 주소 경로 초기화 */
-const board_init = () => {
+const board_init = (categories) => {
     // 주소를 브라우저에서 가져온다.
     const location = useLocation();
     // 주소를 / 기준으로 배열화
@@ -28,7 +21,22 @@ const board_init = () => {
         case undefined:
         case 'login':
             { return [""] } break;
-        default: { return [...pathSegments] } break;
+        default: {
+            // 전체 카테고리를 돌려 확인하여 이름으로 돌려줌
+            if(categories !== null){
+                let stop = false;
+                for(let i=0; i < pathSegments.length; i++){
+                    for(let j=0; j < categories.length; j++){
+                        if(categories[j].url === pathSegments[i]){
+                            pathSegments[i] = categories[j].name
+                            break;
+                        }
+                    }
+                    if(stop) { break; }
+                }
+            }
+            return [...pathSegments] 
+        } break;
     }
 }
 
@@ -37,8 +45,8 @@ export function Layout({ children }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useUserTable();
-    const board = board_init()
     const { info: categories, loading: categoriesLoding } = useCategoriesTable();
+    const board = board_init(categories);
     const {
         city, setCity,
         district, setDistrict,
@@ -62,6 +70,15 @@ export function Layout({ children }) {
         e.preventDefault()
         navigate(path)
     }, [navigate])
+
+    /** 이름 찾기 */
+    const isCategories = useCallback((name)=>{
+        const targetItem = categories.find(item => item.url === board[0]);
+        if(targetItem.url === name){
+            return targetItem.name
+        } else ''
+    
+    },[categories,board])
 
     /** 필요한 데이터가 모두 로딩되었는지 확인 */
     const isLoading = useCallback(()=>{
@@ -138,12 +155,12 @@ export function Layout({ children }) {
                         홈
                     </p>
                     {/* 임시 게시판 이름 */}
-                    {categories.map((o, k) => (
+                    {categories.filter(category => category.type === 'header').map((o, k) => (
                         <React.Fragment key={k}>
                             {/* 각각 게시판 이름 나열 */}
                             <p
                                 className={`${styles['board-item']} ${(o.name === board[0] ? styles.red : '')}`}
-                                onClick={(e) => handleNavigate(e, `/${o.name}`)}
+                                onClick={(e) => handleNavigate(e, `/${o.url}`)}
                             >
                                 {o.name}
                             </p>
@@ -182,7 +199,7 @@ export function Layout({ children }) {
                             전체
                         </li>
                         {/* 게시판의 각 탭들 표기 */}
-                        {boardsTab.map((o, k) => (
+                        {categories.filter(category => category.type === board[0]).map((o, k) => (
                             <li
                                 key={k}
                                 className={o.name === board[1] ? styles.select : ''}
@@ -249,7 +266,7 @@ export function Layout({ children }) {
                             전체
                         </li>
                         {/* 게시판의 각 탭들 표기 */}
-                        {boardsTab.map((o, k) => (
+                        {categories.filter(category => category.type === board[0]).map((o, k) => (
                             <li
                                 key={k}
                                 className={o.name === board[1] ? `${styles.li} ${styles.select}` : styles.li}
@@ -268,7 +285,7 @@ export function Layout({ children }) {
         ) : (
             // tap 부분이 필요없는 children(페이지) 랜더링
             <main className={styles.mainLayout}>
-                {children}    
+                <div className={styles.div}> {children} </div>    
             </main>
         )}
         {/* 맨 하단 푸터 */}
