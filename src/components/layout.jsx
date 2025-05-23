@@ -169,7 +169,7 @@ export function Layout({ children }) {
                             <li
                             key={k}
                             className={(o.name === board[1] ? 'select' : '')}
-                            onClick={(e) =>handleNavigate(`/${board[0]}/${o.name}`) }
+                            onClick={(e) =>handleNavigate(e,`/${board[0]}/${o.name}`) }
                             >
                                 {o.name}
                             </li>
@@ -186,8 +186,6 @@ export function Layout({ children }) {
                     <a onClick={(e) => handleNavigate(e,'/')} > {'홈 > '}</a>
                     {/* 현재 주소의 위치를 모두 기입 */}
                     { board.map((o, k) => {
-                        // 첫번째는 제외
-                        if (k === 0) return null;
                         // 마지막껀 현재 위치라 강조 및 링크 제거
                         if(k ===  board.length - 1 ){ return <strong key={k}>{o}</strong>}
                         // 경로
@@ -233,7 +231,7 @@ export function Layout({ children }) {
                             <li
                             key={k}
                             className={(o.name === board[2] ? 'select' : '')}
-                            onClick={(e) =>handleNavigate(e,`/${board[1]}/${o.name}`)}
+                            onClick={(e) =>handleNavigate(e,`/${board[0]}/${o.name}`)}
                             >
                                 {o.name}
                             </li>
