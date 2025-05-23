@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { clearUserInfo } from '../store/userReducer';
 import { supabase } from "../supabase/supabase";
 import { useRegion } from "../hooks/useRegion";
+import { useCategoriesTable } from "../hooks/useCategoriesTable";
 
 
 // 임시 게시판
@@ -45,6 +46,7 @@ export function Layout({ children }) {
     const dispatch = useDispatch();
     const user = useUserTable();
     const board = board_init()
+    const { info:categories, loading:categoriesLoding } = useCategoriesTable();
     const {
         city, setCity,
         district, setDistrict,
@@ -76,6 +78,8 @@ export function Layout({ children }) {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
     
+
+    if(!categoriesLoding) { return <></> } // 로딩페이지 만들어야됨
     return (<div className="layout">
         {/* 헤더부분 */}
         <header className={`${atTop && 'top'}`}>
@@ -124,7 +128,7 @@ export function Layout({ children }) {
                     홈
                 </p>
                 {/* 임시 게시판 이름 */}
-                { boards.map((o, k) =>(
+                { categories.map((o, k) =>(
                     <React.Fragment key={k}>
                         {/* 각각 게시판 이름 나열 */}
                         <p
