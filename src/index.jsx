@@ -25,7 +25,12 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path='/login' element={<Login />} />
             <Route path='/login/redirect' element={<LoginRedirect />} />
-            <Route path='/test' element={<Home />} />
+            <Route path='/test' element={<TestPage />} />
+            {/* 동적 라우팅 해줄것 */}
+            <Route path="/life" element={<>라이프 전체 페이지</>} />
+            <Route path="/life/:tap" element={<>라이프 페이지</>} /> 
+            <Route path="/life" element={<>거래 전체 페이지</>} />
+            <Route path="/trade/:tap" element={<>거래 페이지</>} /> 
           </Routes>
         </Layout>
       </ReduxProvider>

@@ -1,12 +1,14 @@
-import { useRegion } from "../hooks/useRegion";
+import { useImage } from "../hooks/useImage";
+
 
 export function TestPage() {
-    const {
-        address,
-        district
-    } = useRegion();
+    const { images, setImages } = useImage();
 
-    return (<>
-        {address[0] + " / "+address[1]}
-    </>);
+  return (
+    <div>
+      <h2>📦 WebP 이미지 압축기 (라이브러리 사용)</h2>
+      <input></input>
+      <input type="file" accept="image/*" onChange={setImages} />
+    </div>
+  );
 }
