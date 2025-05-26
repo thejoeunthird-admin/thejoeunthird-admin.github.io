@@ -19,7 +19,8 @@ const board_init = (categories) => {
     const pathSegments = decodeURIComponent(location.pathname).split('/').filter(Boolean);
     switch (pathSegments[0]) {
         case undefined:
-        case 'login':
+        case 'testpage':
+        case 'test': // 테스트페이지를 위한 임시추가 
             { return [{ name:'', url:'' }] } break;
         default: {
             let result = []
