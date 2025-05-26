@@ -33,7 +33,7 @@ export const useImage = () => {
                     webp, { contentType: 'image/webp', upsert: true,}
                 );
             if (error) throw error;
-            setImageList ((prev)=>[...prev, path]) // 업로드한 이미지 경로를 저장,
+            setImageList ((prev)=>[...prev, data.path]) // 업로드한 이미지 경로를 저장,
             return getImages(data.path);
         } catch (error) {
             console.warn('압축 실패:', error);
