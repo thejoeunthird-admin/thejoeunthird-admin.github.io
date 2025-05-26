@@ -385,12 +385,18 @@
     min-height: calc( 100% - 60px );
     border: 1px solid red;
     flex: 1;
+    width: 100%;
+    min-width: var(--breakpoint-min);
+    max-width: var(--breakpoint-max);
 }
 
+
 .mainLayout .div {
-    width: 100vw;
-        height: 100vh;
+    height: 100vh;
     min-height: calc( 100% - 60px );
+    width: 100%;
+    min-width: var(--breakpoint-min);
+    max-width: var(--breakpoint-max);
 }
 
 .layout .breakpoints.main .div .div.toogle_item {
@@ -526,21 +532,4 @@
 .outlet {
   /* children 전용 영역 스타일 - 필요 시 따로 적용 */
   all: unset; /* 기본 스타일 리셋(필요시) */
-}
-
-.childrenWrapper, 
-.childrenWrapper * {
-  all: unset !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  display: revert !important;
-  width: revert !important;
-  height: revert !important;
-  position: revert !important;
-  overflow: revert !important;
-  font: revert !important;
-  color: revert !important;
-  background: transparent !important;
-  border: none !important;
-  box-sizing: border-box !important;
 }

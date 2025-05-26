@@ -1,11 +1,12 @@
+
+import "../css/login.css"
 import { supabase } from '../supabase/supabase'
 
-
 //** 로그인만들기 */
-const signInWithGoogle = async (e) => {
+const signInWithGoogle = async (e,path) => {
   try {
         const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: path,
         options: {
             redirectTo: "http://localhost:3000/login/redirect"
         }
@@ -20,9 +21,35 @@ const signInWithGoogle = async (e) => {
 };
 
 export function Login(){
-    return(<>
-        <button
-        onClick={(e)=>{signInWithGoogle(e)}}
-        >구글 로그인</button>
-    </>)
+    // return(<>
+    //     <button
+    //     onClick={(e)=>{signInWithGoogle(e)}}
+    //     >구글 로그인</button>
+    // </>)
+
+  return(<>
+    <div className="login">
+      <section className="login_sectoin">
+        <img />
+        <div 
+        className="forWeb"
+        onClick={(e)=>{signInWithGoogle(e,'google')}}
+        >
+          <div className="logobox">
+            <img /> 
+          </div>
+          <h2>for Google</h2>
+        </div>
+        <div 
+        className="forWeb github"
+        onClick={(e)=>{(e)=>{ alert('미구현입니다') }}}
+        >
+          <div className="logobox">
+            <img /> 
+          </div>
+          <h2>for GitHub</h2>
+        </div>
+      </section>        
+    </div>  
+  </>)
 }

@@ -1,6 +1,6 @@
 import styles from "../css/layout.module.css"
 import React, { useCallback } from 'react';
-import { useNavigate, useLocation, matchPath } from 'react-router-dom';
+import { useNavigate, useLocation, matchPath, useParams } from 'react-router-dom';
 import { FaBell } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -43,7 +43,7 @@ export function Layout({ children }) {
     } = useRegion();
     /** 현재 최상단인지 확인 */
     const [atTop, setAtTop] = useState(true);
-
+    
     /** 로그아웃 */
     const handleLogout = useCallback(async () => {
         const { error } = await supabase.auth.signOut();
@@ -262,8 +262,8 @@ export function Layout({ children }) {
                         ))}
                     </ul>
                     {/* children(페이지) 랜더링 */}
-                    <main className={styles.mainLayout}>
-                        {children}    
+                    <main className={`${styles.mainLayout}`}>
+                        {children}
                     </main>
                 </div>
             </div>

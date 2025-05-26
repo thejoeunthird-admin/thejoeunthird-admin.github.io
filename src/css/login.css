@@ -1,0 +1,175 @@
+.login {
+    display: flex;
+    justify-content: center;
+}
+
+.login_sectoin{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--base-color-3);
+    width: 360px;
+    gap: 10px;
+    padding: 30px 0px 30px 0px;
+    border-radius: 10px;
+    margin-top: 40px;
+    aspect-ratio: 1 / 1.25;
+    box-shadow: 1px 5px 10px rgb(0, 0, 0, 0.25);
+}
+
+.login_sectoin img {
+    width: 70%;
+    aspect-ratio: 1;
+    margin-bottom: 20px;
+}
+
+.forWeb {
+    width: fit-content;
+    min-width: 70%;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    background: var(--base-color-4);
+    border-radius: 5px 5px 5px 5px;
+    cursor: pointer;
+    box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.25);
+}
+.forWeb:hover{
+    filter: brightness(0.95);
+}
+
+.forWeb.github {
+    background: #cea5fb;
+}
+
+.forWeb h2{
+    flex: 1;    
+    font-size: 1.25rem;
+    padding: 10px 20px 10px 20px;
+    font-weight: 700;
+    color: #0f0f0f;
+    text-align: center;
+}
+
+.forWeb .logobox {
+    width: 50px;
+    height: 50px;
+    background: #ffffff;
+    border-radius: 5px 0px 0px 5px;
+}
+
+.forWeb .logobox img {
+    width: calc( 100% - 10px);
+    padding: 5px;
+}
+
+.bouncyingBox {
+    width: fit-content;
+    min-width: 70%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    transition: all 0.2s ease-in;
+}
+.bouncyingBox.out {
+    opacity: 0;
+    transform: translateY(-100px);
+}
+
+.bouncyingBox .ball{
+    width: 25px;
+    aspect-ratio: 1;
+    background: var(--base-color-1);
+    border-radius: 100%;
+    animation: bounce 1s infinite ease-in-out;
+}
+
+.bouncyingBox .ball:nth-child(1) {
+    background: var(--base-color-5);
+    animation-delay: 0s;
+}
+.bouncyingBox .ball:nth-child(2) {
+    background: var(--base-color-4);
+    animation-delay: 1.3s;
+}
+.bouncyingBox .ball:nth-child(3) {
+    background: var(--base-color-2);
+    animation-delay: 1.6s;
+}
+.bouncyingBox .ball:nth-child(4) {
+    background: var(--base-color-1);
+    animation-delay: 1.9s;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.box {
+    opacity: 0;
+    transition: all 0.3s ease-in;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.box input {
+    width: 70%;
+    aspect-ratio: 1 / 0.15;
+    padding-left: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+.box button {
+    width: 70%;
+    aspect-ratio: 1 / 0.15;
+    padding-left: 10px;
+    border: 1px solid var(--base-color-4);
+    box-sizing: border-box;
+    background: var(--base-color-4);
+    font-weight: 600;
+}
+.box button:hover {
+    filter: brightness(0.95);
+}
+
+.welcome {
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.welcome span{
+    font-size: 2rem;
+    padding: 10px;
+}
+.welcome span:last-child{
+    display: inline-block;
+    transform: scaleX(-1);
+}
+
+.box.out {
+    opacity: 1;
+    transform: translateY(-90px);
+}
+
+.toggleBox {
+    width: 70%;
+    aspect-ratio: 1 / 0.15;
+}
+
+.toggleBox select {
+    width: 50%;
+    height: 100%;
+}
