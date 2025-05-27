@@ -1,9 +1,0 @@
-diff a/src/index.jsx b/src/index.jsx	(rejected hunks)
-@@ -56,7 +56,6 @@
-         {/* Layout 컴포넌트 안에 <Routes> </Routes> 내용들이 */}
-         <Layout>
-           <Routes>
--            <Route path="/trade/:tap" element={<>거래 페이지</>} /> 
-             <Route path='/:board' element={<Router/>}/>
-             <Route path='/:board/:tap' element={<Router/>}/>
-             <Route path='/:board/:tap/:item' element={<Router/>}/>
