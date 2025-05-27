@@ -1,5 +1,5 @@
 import styles from "../css/layout.module.css"
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useNavigate, useLocation, matchPath, useParams } from 'react-router-dom';
 import { FaBell } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
@@ -10,15 +10,14 @@ import { clearUserInfo } from '../store/userReducer';
 import { supabase } from "../supabase/supabase";
 import { useRegion } from "../hooks/useRegion";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
+import { useRoots } from "./testpage";
 
-const board_init = (categories) => {
-    const location = useLocation();
+const board_init = (categories, location) => {
     if (!categories) return;
     const pathSegments = decodeURIComponent(location.pathname).split('/').filter(Boolean);
     // 초기화된 경로 결과를 저장할 배열
     const matchedPath = [];
     let currentLevel = categories;
-
     for (const segment of pathSegments) {
         const found = currentLevel.find(cat => cat.url === segment);
         if (!found) break;
@@ -34,8 +33,9 @@ export function Layout({ children }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useUserTable();
+    const location = useLocation();
     const { info: categories, loading: categoriesLoding } = useCategoriesTable();
-    const board = board_init(categories);
+    const board = useMemo(() => board_init(categories, location), [categories, location]);
     const {
         city, setCity,
         district, setDistrict,
@@ -43,13 +43,14 @@ export function Layout({ children }) {
     } = useRegion();
     /** 현재 최상단인지 확인 */
     const [atTop, setAtTop] = useState(true);
-    
+
     /** 로그아웃 */
     const handleLogout = useCallback(async () => {
         const { error } = await supabase.auth.signOut();
         if (error) {
             alert('로그아웃 실패: ' + error.message);
         } else {
+            alert('로그아웃 되었습니다.')
             dispatch(clearUserInfo());
         }
     }, [dispatch]);
@@ -77,11 +78,14 @@ export function Layout({ children }) {
     }, [categoriesLoding])
 
     useEffect(() => {
-        //** 지금 현재 스크롤이 맨위 인제 확인 */
         const handleScroll = () => { setAtTop(window.scrollY === 0); };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+    
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.pathname]);
 
     if (isLoading()) { return <></> }
     //console.log(board)
@@ -116,7 +120,15 @@ export function Layout({ children }) {
                         </>)
                         // 로그인시 내정보, 알람 UI
                         : (<>
-                            <p className={styles.link}>내정보</p>
+                            <p 
+                            className={styles.link}
+                            onClick={(e)=>{
+                                e.preventDefault();
+                                navigate('/my')
+                            }}
+                            >
+                                내 정보
+                            </p>
                             <a className={styles.shaking}>
                                 <FaBell />
                             </a>
@@ -132,15 +144,14 @@ export function Layout({ children }) {
                 <div
                     style={{ width: 'calc( 100% - 64px )' }}
                 >
-                    { console.log(board[0]?.url)}
                     <p
-                        className={`${styles['board-item']} ${(board.length == 0? styles.red : '')}`}
+                        className={`${styles['board-item']} ${(location.pathname === '/'? styles.red : '')}`}
                         onClick={(e) => handleNavigate(e, '/')}
                     >
                         홈
                     </p>
                     {/* 임시 게시판 이름 */}
-                    {categories.map((o, k) => (
+                    {categories.filter((o) => o.id !== 16).map((o, k) => (
                         <React.Fragment key={k}>
                             {/* 각각 게시판 이름 나열 */}
                             <p
@@ -183,7 +194,7 @@ export function Layout({ children }) {
                                 navigate(`/${board[0].url}`);
                             }}
                         >
-                            전체
+                            { board[0].url !== 'my'?'전체':'내 정보' }
                         </li>
                         { board[0].children.map((o, k) => (
                             <li
@@ -215,6 +226,7 @@ export function Layout({ children }) {
                     })}
                 </p>
                 {/* 위치 ui */}
+                { board[0].url !== 'my' &&(
                 <div className={styles.div}>
                     {/* 시 선택 ui */}
                     <select
@@ -237,6 +249,7 @@ export function Layout({ children }) {
                         ))}
                     </select>
                 </div>
+                )}
                 {/* 게시판의 각 탭 표시 */}
                 <div className={styles.div}>
                     <ul className={styles.ul}>
@@ -248,7 +261,7 @@ export function Layout({ children }) {
                                 navigate(`/${board[0].url}`);
                             }}
                         >
-                            전체
+                            { board[0].url !== 'my'?'전체':'내 정보' }
                         </li>
                         {/* 게시판의 각 탭들 표기 */}
                         {board[0].children.map((o, k) => (

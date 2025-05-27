@@ -344,6 +344,7 @@
     background: var(--base-color-3);
     font-weight: 600;
     border-radius: 5px;
+    border-radius: 10px 10px 0px 0px;
 }
 .layout .breakpoints.main .p .strong {
     font-size: 1.1em;
@@ -376,7 +377,7 @@
     width: fit-content;
     border-bottom: 3px solid var(--base-color-1);
 }
-.layout .breakpoints.main .div ul li:hover {
+.layout .breakpoints.main .div .ul .li:hover {
     border-bottom: 3px solid var(--base-color-1);
 }
 

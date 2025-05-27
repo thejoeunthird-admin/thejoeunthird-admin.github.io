@@ -62,6 +62,7 @@ export function LoginRedirect() {
     };
     if (city !== undefined) {
       isTable().then((data) => {
+        console.log(data)
         if (!data.created) {
           alert(`로그인 되었습니다.`)
           navigate('/');

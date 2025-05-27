@@ -4,6 +4,7 @@ import { supabase } from '../supabase/supabase'
 
 //** 로그인만들기 */
 const signInWithGoogle = async (e,path) => {
+  e.preventDefault();
   try {
         const { data, error } = await supabase.auth.signInWithOAuth({
         provider: path,
@@ -21,12 +22,6 @@ const signInWithGoogle = async (e,path) => {
 };
 
 export function Login(){
-    // return(<>
-    //     <button
-    //     onClick={(e)=>{signInWithGoogle(e)}}
-    //     >구글 로그인</button>
-    // </>)
-
   return(<>
     <div className="login">
       <section className="login_sectoin">
@@ -42,7 +37,7 @@ export function Login(){
         </div>
         <div 
         className="forWeb github"
-        onClick={(e)=>{(e)=>{ alert('미구현입니다') }}}
+        onClick={(e)=>signInWithGoogle(e,'github')}
         >
           <div className="logobox">
             <img /> 

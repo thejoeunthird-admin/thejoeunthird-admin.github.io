@@ -1,0 +1,81 @@
+
+
+
+/* 채팅창 css */
+
+.talk_div {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 5px;
+}
+
+.talkList {
+    display: flex;    
+    flex-direction: column;
+    width: 375px;
+    gap: 5px;
+}
+.talkList .span {
+    padding: 10px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.talkList li {
+    margin-left: 10px;
+}
+.talkList li strong{
+    color: #ffffff;
+    background: var(--base-color-2);
+    width: calc(100% - 30px);
+    padding: 10px;
+    display: inline-block;
+    font-weight: 600;
+        border-radius: 5px 5px 0px 0px;
+}
+.talkList li strong.read{
+    background: var(--base-color-5);
+}
+.talkList li span {
+    width: calc(100% - 30px);
+    padding: 10px;
+    gap: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--base-color-3);
+    border-radius: 0px 0px 5px 5px;
+}
+.talkList li span p{
+    white-space: nowrap;         /* 줄바꿈 안 함 */
+    overflow: hidden;            /* 넘치는 내용 숨김 */
+    text-overflow: ellipsis;
+}
+.talkList li span small {
+    display: inline-block;
+    font-size: 0.8rem;
+    align-self: flex-end;
+    color: var(--base-color-2);
+}
+
+.talkLog {
+    width: 375px;
+    /* background: black; */
+}
+
+@media screen and (max-width: 940px) {
+    .talk_div {
+        flex-direction: column;
+        align-items: center; 
+        justify-content: center;
+    }
+
+    .talkList {
+        width: 100%;
+    }
+
+    .talkLog {
+        display: none;
+    }
+}
