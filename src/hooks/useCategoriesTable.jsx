@@ -15,13 +15,13 @@ export const useCategoriesTable = (path = null) => {
   const [error, setError] = useState(null);
 
   const fetchCategoriesInfo = async () => {
-    if(categoriesInfo !== null) { return; }
+    if (categoriesInfo !== null) { return; }
     setLoading(true);
     setError(null);
     try {
       // 1. 기본 쿼리 생성 (전체 조회 또는 특정 타입 조회)
       let query = supabase.from('categories').select('*');
-      
+
       if (path !== null) {
         query = query.eq('type', path);
       }
@@ -34,7 +34,7 @@ export const useCategoriesTable = (path = null) => {
       }
 
       // 2. 상위/하위 분류 및 관계 설정
-      const parents = path === null 
+      const parents = path === null
         ? categories.filter(item => item.parent_id === 0 || item.parent_id === null)
         : categories;
 
@@ -69,10 +69,30 @@ export const useCategoriesTable = (path = null) => {
 
   useEffect(() => {
     fetchCategoriesInfo();
-  },[]);
+  }, []);
+
+  const findCategoryByUrl  = (url) => {
+    if (!categoriesInfo || !url) return null;
+    const pathSegments = decodeURIComponent(url).split('/').filter(Boolean);
+    const matchedPath = [];
+    let currentLevel = [];
+    categoriesInfo.forEach(cat => {
+      if (cat.children) currentLevel.push(...cat.children);
+    });
+
+    for (const segment of pathSegments) {
+      const found = currentLevel.find(cat => cat.url === segment);
+      if (!found) break;
+      matchedPath.push(found);
+      currentLevel = found.children || [];
+    }
+
+    return matchedPath;
+  };
 
   return {
     info: categoriesInfo,
+    findChildren: findCategoryByUrl,
     loading,
     error,
     refetch: fetchCategoriesInfo,

@@ -1,5 +1,5 @@
 import styles from "../css/layout.module.css"
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate, useLocation, matchPath, useParams } from 'react-router-dom';
 import { FaBell } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
@@ -10,9 +10,9 @@ import { clearUserInfo } from '../store/userReducer';
 import { supabase } from "../supabase/supabase";
 import { useRegion } from "../hooks/useRegion";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
-import { useRoots } from "./testpage";
 
-const board_init = (categories, location) => {
+const board_init = (categories) => {
+    const location = useLocation();
     if (!categories) return;
     const pathSegments = decodeURIComponent(location.pathname).split('/').filter(Boolean);
     // 초기화된 경로 결과를 저장할 배열
@@ -35,7 +35,7 @@ export function Layout({ children }) {
     const user = useUserTable();
     const location = useLocation();
     const { info: categories, loading: categoriesLoding } = useCategoriesTable();
-    const board = useMemo(() => board_init(categories, location), [categories, location]);
+    const board = board_init(categories);
     const {
         city, setCity,
         district, setDistrict,
@@ -43,7 +43,7 @@ export function Layout({ children }) {
     } = useRegion();
     /** 현재 최상단인지 확인 */
     const [atTop, setAtTop] = useState(true);
-
+    
     /** 로그아웃 */
     const handleLogout = useCallback(async () => {
         const { error } = await supabase.auth.signOut();
@@ -127,7 +127,7 @@ export function Layout({ children }) {
                                 navigate('/my')
                             }}
                             >
-                                내 정보
+                                내정보
                             </p>
                             <a className={styles.shaking}>
                                 <FaBell />
@@ -194,7 +194,7 @@ export function Layout({ children }) {
                                 navigate(`/${board[0].url}`);
                             }}
                         >
-                            { board[0].url !== 'my'?'전체':'내 정보' }
+                            { board[0].url !== 'my'?"전체":"내정보" }
                         </li>
                         { board[0].children.map((o, k) => (
                             <li
@@ -261,7 +261,7 @@ export function Layout({ children }) {
                                 navigate(`/${board[0].url}`);
                             }}
                         >
-                            { board[0].url !== 'my'?'전체':'내 정보' }
+                            { board[0].url !== 'my'?"전체":"내정보" }
                         </li>
                         {/* 게시판의 각 탭들 표기 */}
                         {board[0].children.map((o, k) => (
