@@ -43,6 +43,7 @@ function TalkLog({ user }) {
     });
 
     const markAllAsRead = async () => {
+        if (receiver === user.info.id) return;
         const { error } = await supabase.rpc('mark_all_chats_as_read', {
             p_sender: user.info.id,
             p_receiver: receiver,
