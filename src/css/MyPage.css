@@ -1,7 +1,7 @@
 .wrapper {
     display: flex;
     flex-direction: column;
-    width: fit-content;
+    width: calc( 100% - 10px );
     max-height: 100vh;
     gap: 5px;
 }
@@ -22,7 +22,7 @@
     min-width: calc(var(--breakpoint-min) -25p);
     background: whitesmoke;
     gap: 5px;
-    margin-left: 5px;
+    margin-left: 10px;
     border-radius: 5px;
     box-shadow: 0px 0px 5px rgb(0,0,0,0.2);
 }
@@ -59,7 +59,7 @@
     background: var(--base-color-5);
 }
 
-.wrapper_li button {
+.wrapper_button {
     width: 75px;
     background: var(--base-color-4);
     border: 0px solid transparent;
@@ -68,14 +68,39 @@
     font-weight: 700;
     transition: background 0.1s ease-in;
 }
-.wrapper_li button:hover {
+.wrapper_button:hover {
     background: var(--base-color-5);
+}
+
+.wrapper_region {
+    padding: 10px;
+    background: #ffffff;
+    border: 1px solid whitesmoke;
+    border-radius: 5px;
+    font-weight: 600;
+}
+.wrapper_region:last-child {
+    margin-left: 10px;
+}
+.wrapper_region:focus {
+    outline: none;
+    box-shadow: none;
+}
+.wrapper_region option {
+    font-weight: 600;
+}
+.wrapper_region option:hover {
+    color: whitesmoke;
 }
 
 @media screen and (max-width: 720px) {
     .wrapper_ul {
         width: calc( 100% - 20px );
     }
+    .wrapper_region {
+        width: 50%;
+    }
+
 
     .wrapper_li {
         flex-wrap: wrap;

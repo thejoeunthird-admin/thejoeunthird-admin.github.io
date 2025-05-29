@@ -7,8 +7,9 @@ import { MyPageTalkLog } from './MyPage.Talk.Log'
 import { MyPageLike } from './MyPage.Like'
 import { getUser } from '../utils/getUser';
 import { useRegion } from '../hooks/useRegion';
+import region from '../utils/region.json';
 
-const createNickname = async (name, city, district) => {
+const createNickname = async (name, city, district, email = null) => {
     try {
         const { user } = await getUser();
         if (!user) throw new Error("로그인된 유저가 없습니다.");
@@ -19,7 +20,10 @@ const createNickname = async (name, city, district) => {
                 'Authorization': `Bearer ${user.token}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id: user.id, name: name, region: JSON.stringify([city, district]), }),
+            body: JSON.stringify({
+                id: user.id, name: name, region: JSON.stringify([city, district]),
+                email: email === null ? user.email : email
+            }),
         });
 
         if (!res.ok) {
@@ -33,18 +37,12 @@ const createNickname = async (name, city, district) => {
     }
 };
 
-const emailCall = () => {
-    // 헤헤
-
-}
-
-
 // 변경 페이지
 function Default({ user }) {
     const [name, setName] = useState(null);
     const [email, setEmail] = useState(null);
-    const [ city, setCity ] = useState(user.info.region[0])
-    const [ district, setDistrict ] = useState(user.info.region[1])
+    const [city, setCity] = useState(user.info.region[0])
+    const [district, setDistrict] = useState(user.info.region[1])
     const [realName, setRealName] = useState('')
     const { citys, districts, setBoth } = useRegion();
 
@@ -80,6 +78,7 @@ function Default({ user }) {
                         />)
                     }
                     <button
+                        className='wrapper_button'
                         style={{ filter: `${email !== null ? 'brightness(0.8)' : 'brightness(1)'}` }}
                         onClick={(e) => {
                             e.preventDefault();
@@ -87,8 +86,8 @@ function Default({ user }) {
                                 setName(user.info.name);
                             }
                             else {
-                                createNickname(name,user.info.region[0],user.info.region[1]).then(()=>{
-                                    user.refetch().then(()=>{
+                                createNickname(name, user.info.region[0], user.info.region[1]).then(() => {
+                                    user.refetch().then(() => {
                                         setName(null);
                                     });
                                 })
@@ -103,25 +102,26 @@ function Default({ user }) {
                         ? (<p className='none'>{user.info.email}</p>)
                         : (<input
                             className='none'
-                            value={name}
+                            value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value)
                             }}
                         />)
                     }
                     <button
+                        className='wrapper_button'
                         style={{ filter: `${name !== null ? 'brightness(0.8)' : 'brightness(1)'}` }}
                         onClick={(e) => {
                             e.preventDefault();
                             if (email === null && name === null) {
-                                setEmail('boschi1995@naver.com(임시)');
+                                setEmail(user.info.email);
                             }
                             else {
-                                //  createNickname(name,user.info.region[0],user.info.region[1]).then(()=>{
-                                //     user.refetch().then(()=>{
-                                //         setName(null);
-                                //     });
-                                // })
+                                createNickname(user.info.name, user.info.region[0], user.info.region[1], email).then(() => {
+                                    user.refetch().then(() => {
+                                        setEmail(null);
+                                    });
+                                })
                             }
                         }}>
                         수정
@@ -131,42 +131,48 @@ function Default({ user }) {
         </div>
         <div className='wrapper'>
             <span className='title' style={{ marginTop: '10px' }}>내 위치</span>
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <select
-                    className="toogle_item"
-                    name="region"
-                    value={city}
-                    onChange={(e) => {
+           <ul className='wrapper_ul'>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <select
+                        className="wrapper_region"
+                        name="region"
+                        value={city}
+                        onChange={(e) => {
+                            e.preventDefault();
+                            setCity(e.target.value)
+                        }}
+                    >
+                        {citys.map((o, k) => <option key={k} value={o}>{o}</option>)}
+                    </select>
+                    <select
+                        className="wrapper_region"
+                        name="region"
+                        value={district}
+                        onChange={(e) => {
+                            e.preventDefault();
+                            setDistrict(e.target.value)
+                        }}
+                    >
+                        {region[city].map((o, k) =>
+                            <option key={k} value={o}>{o}</option>
+                        )}
+                    </select>
+                </div>
+                <button
+                    className='wrapper_button'
+                    style={{ width: '100%' }}
+                    onClick={(e) => {
                         e.preventDefault();
-                        setCity(e.target.value)
+                        createNickname(user.info.name, city, district).then((obj) => {
+                            user.refetch().then(() => {
+                                setBoth(city, district);
+                            });
+                        })
                     }}
                 >
-                    {citys.map((o, k) => <option key={k} value={o}>{o}</option>)}
-                </select>
-                <select
-                    className="toogle_item"
-                    name="region"
-                    value={district}
-                    onChange={(e) => {
-                        e.preventDefault();
-                        setDistrict(e.target.value)
-                    }}
-                >
-                    {districts.map((o, k) =>
-                        <option key={k} value={o}>{o}</option>
-                    )}
-                </select>
-            </div>
-            <button
-            onClick={(e)=>{
-                e.preventDefault();
-                createNickname(user.info.name,city,district).then((obj)=>{
-                    setBoth(city,district)
-                })
-            }}
-            >
-                변경
-            </button>
+                    변경
+                </button>
+            </ul>
         </div>
     </>)
 }

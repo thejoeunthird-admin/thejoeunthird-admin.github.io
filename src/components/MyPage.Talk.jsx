@@ -79,7 +79,7 @@ export function MyPageTalk({ user }) {
             </ul>
             {item !== undefined ? (
                 <MyPageTalkLog item={talkList[item]} user={user} />
-            ) : (
+            ):(
                 <p style={{ marginTop: '30px', padding: '10px', color: 'rgb(0,0,0,0.5)' }}>
                     {talkList.length !== 0 && '채팅방을 선택 해주세요.'}
                 </p>

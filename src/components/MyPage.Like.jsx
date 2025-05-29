@@ -11,6 +11,30 @@ export function MyPageLike({ user }) {
     const { findById } = useCategoriesTable();
     const nav = useNavigate();
 
+    const badLike = async (e, table) => {
+        try {
+            // category_id, table_id, user_id 기준으로 좋아요 레코드 삭제
+            const { error } = await supabase
+                .from('likes')
+                .delete()
+                .eq('category_id', table.category_id)
+                .eq('table_id', table.table_id)
+                .eq('user_id', table.user_id);
+            if (error) throw error;
+            setLikes(prev =>
+                prev.map(like =>
+                    like.category_id === table.category_id &&
+                        like.table_id === table.table_id &&
+                        like.user_id === table.user_id
+                        ? { ...like, is_liked: true }
+                        : like
+                )
+            );
+        } catch (err) {
+            console.error("좋아요 취소 중 오류 발생:", err.message);
+        }
+    };
+
     const fetchLikesWithCategoryAndItem = async () => {
         try {
             // 1. likes 가져오기
@@ -53,7 +77,7 @@ export function MyPageLike({ user }) {
 
                 if (itemError) {
                     console.warn(`${category.type} 테이블의 id=${like.table_id} 조회 실패`, itemError);
-                    result.push({ ...like, category, item: null });
+                    // result.push({ ...like, category, item: null });
                 } else {
                     result.push({ ...like, category, item });
                 }
@@ -72,12 +96,21 @@ export function MyPageLike({ user }) {
     }, [info?.id]);
 
     if (!likes) return;
+    console.log(likes)
     return (
         <>
             <ul className="likes-list">
                 <span className='likes-title'>♥️좋아요 목록</span>
                 {likes.map((o, k) => (
-                    <li className="likes-item" key={k}>
+                    <li
+                        key={o.id}
+                        className={`likes-item ${o?.is_liked === true ? 'delet' : ''}`}
+                        onTransitionEnd={(e) => {
+                            if (e.propertyName === 'transform' && o.is_liked) {
+                                setLikes(prev => prev.filter(like => like.id !== o.id));
+                            }
+                        }}
+                    >
                         <section className="likes-card">
                             <img alt="main" src={o.item.main_img} className="likes-img" />
                             <span className="likes-category">
@@ -96,7 +129,7 @@ export function MyPageLike({ user }) {
                                 >
                                     Link
                                 </button>
-                                <button className="likes-remove-btn">💔</button>
+                                <button className="likes-remove-btn" onClick={(e) => badLike(e, o)}>💔</button>
                             </div>
                         </section>
                     </li>
