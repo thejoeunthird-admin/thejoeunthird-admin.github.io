@@ -1,226 +1,172 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
 import '../css/MyPage.css'
-import { useNavigate, useNavigation, useParams, useLocation } from 'react-router-dom';
-import { supabase } from '../supabase/supabase';
-import { getUser } from '../utils/getUser';
+import { useEffect, useState } from 'react';
+import { useParams, } from 'react-router-dom';
 import { useUserTable } from '../hooks/useUserTable'
-import { useSubscribe, EVENT_TYPES } from '../hooks/useSubscribe'
+import { MyPageTalk } from './MyPage.Talk'
+import { MyPageTalkLog } from './MyPage.Talk.Log'
+import { MyPageLike } from './MyPage.Like'
+import { getUser } from '../utils/getUser';
+import { useRegion } from '../hooks/useRegion';
 
-function Default() {
+const createNickname = async (name, city, district) => {
+    try {
+        const { user } = await getUser();
+        if (!user) throw new Error("로그인된 유저가 없습니다.");
 
-    return (<>
-        내정보창 디폴트입니다.
-    </>)
-}
-
-// 리시버 보낸사람
-// 샌더 받는 사람
-
-function TalkLog({ user }) {
-    const talkRef = useRef();
-    const inputRef = useRef();
-    const [talk, setTalk] = useState([]);
-    const { item: receiver } = useParams(); // 보낸사람
-    const [receiverName, setReceiverName] = useState(null);
-
-    const fetchChatLog = async () => {
-        if (!user) return;
-        const { data, error } = await supabase.rpc('get_chats_by_sender_and_receiver', {
-            p_sender: receiver,
-            p_receiver: user.info.id
+        const res = await fetch('https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/user', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${user.token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: user.id, name: name, region: JSON.stringify([city, district]), }),
         });
-        if (error) console.error(error);
-        else setTalk([...data]);
-    };
 
-    useSubscribe({
-        table: 'chats',
-        schema: 'public',
-        callback: ({ newData }) => {
-            if (!newData) return;
-            fetchChatLog();
-        },
-    });
-
-    const markAllAsRead = async () => {
-        if (receiver === user.info.id) return;
-        const { error } = await supabase.rpc('mark_all_chats_as_read', {
-            p_sender: user.info.id,
-            p_receiver: receiver,
-        });
-        if (error) console.error('채팅 읽음 처리 실패:', error);
-    };
-
-    useEffect(() => {
-        const getReceiver = async () => {
-            if (!receiver) return;
-            const { data: { name }, error } = await supabase
-                .from('users')
-                .select('name')
-                .eq('id', receiver)
-                .single(); // 결과가 하나일 경우
-            if (!error) { setReceiverName(name) }
+        if (!res.ok) {
+            const errorData = await res.json();
+            console.error("닉네임 업데이트 실패:", errorData.error ?? res.statusText);
+            return;
         }
-        fetchChatLog();
-        markAllAsRead();
-        getReceiver();
-    }, [receiver]);
-
-    useEffect(() => {
-        if (talkRef.current) {
-            talkRef.current.scrollTo({
-                top: talkRef.current.scrollHeight,
-                behavior: 'smooth',
-            });
-        }
-    });
-
-    const handleSubmit = useCallback(async (e) => {
-        e.preventDefault();
-        const message = inputRef.current.value.trim();
-        if (!message) return;
-        const { error } = await supabase.from('chats').insert({
-            sender_id: receiver,
-            receiver_id: user.info.id,
-            chat: message,
-        });
-        if (!error) inputRef.current.value = '';
-        fetchChatLog();
-    }, [talk])
-    if (!receiverName) {
-        return (<>
-            <p style={{ marginTop: '30px', padding: '10px', color: 'rgb(0,0,0,0.5)' }}>
-                대화 상대를 찾을 수 없습니다.
-                <br />
-                뒤로 넘어 가주세요.
-            </p>
-        </>)
+        return await res.json();
+    } catch (err) {
+        console.error("예외 발생:", err.message);
     }
-    console.log(talk)
-    return (
-        <div className='sen'>
-            <div className='talkLog'>
-                <span className='span'>TALK </span>
-                {talk.length !== 0 ? (
-                    <div ref={talkRef}>
-                        {talk.slice().reverse().map((o, k) =>
-                            <li key={k} className={`${o.receiver.id === user.info.id ? 'red' : ''}`}>
-                                <strong className={`${o.read ? '' : 'read'}`}>
-                                    {o.receiver.name}
-                                </strong>
-                                <span>
-                                    <p>{o.chat}</p>
-                                    <small>{new Date(o.create_date).toISOString().slice(0, 10)}</small>
-                                </span>
-                            </li>
-                        )}
-                    </div>
-                ) : (<>
-                    <div ref={talkRef}>
-                        <div className='newChat'>
-                            <p style={{ fontSize: '1.2rem' }}>새로운 채팅방 입니다.</p>
-                            <br />
-                            <small style={{ fontSize: '0.8rem' }}>채팅을 입력해주세요</small>
-                        </div>
-                    </div>
-                </>)}
-                <form onSubmit={handleSubmit}>
-                    <textarea
-                        ref={inputRef}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !e.shiftKey) {
-                                e.preventDefault();
-                                handleSubmit(e);
-                            }
-                        }}
-                    />
-                    <button type='submit'>입력</button>
-                </form>
-            </div>
-        </div>
-    );
+};
+
+const emailCall = () => {
+    // 헤헤
+
 }
 
-function Talk({ user }) {
-    const nav = useNavigate();
-    const [talkList, setTalkList] = useState([]);
-    const { item } = useParams();
 
-    const fetchChatLog = async () => {
-        const { data, error } = await supabase.rpc('get_latest_chats_by_user', {
-        p_user: user.info.id
-        });
-        if (error) console.error(error);
-        else setTalkList([...data])
-    };
+// 변경 페이지
+function Default({ user }) {
+    const [name, setName] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [ city, setCity ] = useState(user.info.region[0])
+    const [ district, setDistrict ] = useState(user.info.region[1])
+    const [realName, setRealName] = useState('')
+    const { citys, districts, setBoth } = useRegion();
 
     useEffect(() => {
-        fetchChatLog();
-    }, [])
-
-    // 예: 직접 구현 시
-    useEffect(() => {
-        const subscription = supabase
-            .channel('chat-updates')
-            .on('postgres_changes', {
-                event: 'INSERT',
-                schema: 'public',
-                table: 'chats',
-            }, (payload) => {
-                fetchChatLog();
-            })
-            .on('postgres_changes', {
-                event: 'UPDATE',
-                schema: 'public',
-                table: 'chats',
-            }, (payload) => {
-                fetchChatLog();
-            })
-            .subscribe();
-
-        return () => {
-            supabase.removeChannel(subscription);
-        };
+        (async () => {
+            try {
+                const { user } = await getUser();
+                setRealName(user.name);
+            } catch (error) {
+                console.error("유저 데이터 불러오기 실패:", error);
+            }
+        })();/*  */
     }, []);
 
     return (<>
-        <div className='talk_div'>
-            <ul className='talkList'>
-                <span className='span'>TALK</span>
-                <div>
-                    {talkList.length !== 0 ? (talkList.map((o, k) =>{
-                        //sender
-                        let read = o.receiver.id === user.info.id;
-                        let isUser = read;
-                        if(!isUser) { read = o.read }
-                        return(
-                        <li key={k}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                nav(`/my/talk/${isUser?o.sender.id:o.receiver.id}`);
+        <div className='wrapper'>
+            <span className='title'>내 정보</span>
+            <ul className='wrapper_ul'>
+                <li className='wrapper_li rhwjd'>
+                    <span>이름</span>
+                    <p className='none'>{realName}</p>
+                </li>
+                <li className='wrapper_li'>
+                    <span>닉네임</span>
+                    {name === null
+                        ? (<p className='none'>{user.info.name}</p>)
+                        : (<input
+                            className='none'
+                            value={name}
+                            onChange={(e) => {
+                                setName(e.target.value)
                             }}
-                        >
-                            {/* 여길 자신일경우 제외 */}
-                            <strong className={`${read ? '' : 'read'}`}>
-                                { isUser?o.sender.name:o.receiver.name }
-                            </strong>
-                            <span>
-                                <p>{o.chat}</p>
-                                <small>{new Date(o.create_date).toISOString().slice(0, 10)}</small>
-                            </span>
-                        </li>)
-                    }))
-                        : (<div className='newChat'>
-                            <p style={{ fontSize: '1.2rem' }}>채팅이 없습니다.</p>
-                        </div>)}
-                </div>
+                        />)
+                    }
+                    <button
+                        style={{ filter: `${email !== null ? 'brightness(0.8)' : 'brightness(1)'}` }}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            if (email === null && name === null) {
+                                setName(user.info.name);
+                            }
+                            else {
+                                createNickname(name,user.info.region[0],user.info.region[1]).then(()=>{
+                                    user.refetch().then(()=>{
+                                        setName(null);
+                                    });
+                                })
+                            }
+                        }}>
+                        수정
+                    </button>
+                </li>
+                <li className='wrapper_li'>
+                    <span>이메일</span>
+                    {email === null
+                        ? (<p className='none'>{user.info.email}</p>)
+                        : (<input
+                            className='none'
+                            value={name}
+                            onChange={(e) => {
+                                setEmail(e.target.value)
+                            }}
+                        />)
+                    }
+                    <button
+                        style={{ filter: `${name !== null ? 'brightness(0.8)' : 'brightness(1)'}` }}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            if (email === null && name === null) {
+                                setEmail('boschi1995@naver.com(임시)');
+                            }
+                            else {
+                                //  createNickname(name,user.info.region[0],user.info.region[1]).then(()=>{
+                                //     user.refetch().then(()=>{
+                                //         setName(null);
+                                //     });
+                                // })
+                            }
+                        }}>
+                        수정
+                    </button>
+                </li>
             </ul>
-            {item !== undefined
-                ? (<TalkLog item={talkList[item]} user={user} />)
-                : (<p style={{ marginTop: '30px', padding: '10px', color: 'rgb(0,0,0,0.5)' }}>
-                    {talkList.length !== 0 && '채팅방을 선택 해주세요.'}
-                </p>)
-            }
+        </div>
+        <div className='wrapper'>
+            <span className='title' style={{ marginTop: '10px' }}>내 위치</span>
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <select
+                    className="toogle_item"
+                    name="region"
+                    value={city}
+                    onChange={(e) => {
+                        e.preventDefault();
+                        setCity(e.target.value)
+                    }}
+                >
+                    {citys.map((o, k) => <option key={k} value={o}>{o}</option>)}
+                </select>
+                <select
+                    className="toogle_item"
+                    name="region"
+                    value={district}
+                    onChange={(e) => {
+                        e.preventDefault();
+                        setDistrict(e.target.value)
+                    }}
+                >
+                    {districts.map((o, k) =>
+                        <option key={k} value={o}>{o}</option>
+                    )}
+                </select>
+            </div>
+            <button
+            onClick={(e)=>{
+                e.preventDefault();
+                createNickname(user.info.name,city,district).then((obj)=>{
+                    setBoth(city,district)
+                })
+            }}
+            >
+                변경
+            </button>
         </div>
     </>)
 }
@@ -230,9 +176,9 @@ export function MyPage() {
     const { tap, item } = useParams();
     const [isMobile, setIsMobile] = useState(false);
 
-    useEffect(() => {
+    useEffect(() => { // 사이즈 확인 
         const checkSize = () => {
-            setIsMobile(window.innerWidth < 940);
+            setIsMobile(window.innerWidth <= 940);
         };
         checkSize();
         window.addEventListener('resize', checkSize);
@@ -243,18 +189,16 @@ export function MyPage() {
     switch (tap) {
         case 'talk': {
             if (isMobile) {
-                if (!item) { return (<Talk user={user} />) }
-                else { return (<TalkLog user={user} />) }
+                if (!item) { return (<MyPageTalk user={user} />) }
+                else { return (<MyPageTalkLog user={user} />) }
             }
-            else return (<Talk user={user} />)
+            else return (<MyPageTalk user={user} />)
         } break;
         case 'like': {
-            return (<> 라이크는 어떻게 구현해야될까 </>);
+            return (<MyPageLike user={user} />);
         } break;
-        default: { 
-
-            return(<>{user.info.name}</>)
+        default: {
+            return (<Default user={user} />)
         } break;
     }
 }
-

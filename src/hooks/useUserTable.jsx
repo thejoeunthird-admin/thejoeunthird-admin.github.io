@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../utils/getUser";
 import { setUserInfo, clearUserInfo } from "../store/userReducer";
@@ -9,35 +9,46 @@ export const useUserTable = () => {
   const userInfo = useSelector((state) => state.user.info);
   const [error, setError] = useState(null);
 
-  const fetchUserInfo = async () => {
-    const { user } = await getUser();
-    if (user === null) { return; }
-    if (userInfo) { return; }
-    try {      
-      const query = new URLSearchParams({ id: user.id, name: user.name }).toString();
-      const res = await fetch(`https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/userinfo?${query}`, {
+  /**supabase 내의 유저 테이블을 가져오는 함수*/
+  const fetchUserInfo = useCallback(async (force = false) => {
+    try {
+      const { user } = await getUser();
+      if (user === null) {
+        dispatch(clearUserInfo());
+        return;
+      }
+
+      // force가 true이거나 userInfo가 없을 때만 API 호출
+      if (!force && userInfo) return;
+
+      const res = await fetch(`https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/userinfo?${new URLSearchParams({
+        id: user.id,
+        name: user.name,
+      })}`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${user.token}`,
           "Content-Type": "application/json",
         },
+        cache: "no-cache"
       });
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData?.detail || "Failed to fetch user info");
-      }
-
+      if (!res.ok) throw new Error(await res.text());
       const { data } = await res.json();
       dispatch(setUserInfo(data));
+      setError(null);
     } catch (err) {
       setError(err.message);
       dispatch(clearUserInfo());
     }
-  };
+  }, [dispatch, userInfo]);
 
   useEffect(() => {
     fetchUserInfo();
-  }, []);
+  }, [fetchUserInfo]);
+
+  const refetch = useCallback(async () => {
+    fetchUserInfo(true); // 강제 리패치
+  }, [fetchUserInfo]);
 
   return {
     /** 유저의 정보 */
@@ -47,6 +58,6 @@ export const useUserTable = () => {
     /** 오류 목록 */
     error,
     /** 유저 정보 다시 가져오기 */
-    refetch: fetchUserInfo,
+    refetch,
   };
 };

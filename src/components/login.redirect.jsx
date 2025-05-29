@@ -16,7 +16,7 @@ const createNickname = async (name, city, district) => {
         'Authorization': `Bearer ${user.token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: user.id, name: name, region: JSON.stringify([city, district]), }),
+      body: JSON.stringify({ id: user.id, name: name, region: JSON.stringify([city, district]), email:user.email }),
     });
 
     if (!res.ok) {

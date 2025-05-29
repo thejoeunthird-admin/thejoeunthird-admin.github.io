@@ -337,14 +337,13 @@
 }
 
 .layout .breakpoints.main .p {
-    width: calc( 100% - 30px );
+    width: calc( 70% - 30px );
     padding: 10px;
     margin-left: 5px;
     margin-right: 5px;
-    background: var(--base-color-3);
+    background: linear-gradient(to right, var(--base-color-3) 0%, white 100%);
     font-weight: 600;
     border-radius: 5px;
-    border-radius: 10px 10px 0px 0px;
 }
 .layout .breakpoints.main .p .strong {
     font-size: 1.1em;
@@ -382,11 +381,11 @@
 }
 
 .mainLayout {
-    height: 100vh;
+    height: fit-content;
     min-height: calc( 100% - 60px );
-    border: 1px solid red;
     flex: 1;
-    width: 100%;
+    width: calc(100% - 100px);
+    /* padding-right: 5px; */
     min-width: var(--breakpoint-min);
     max-width: var(--breakpoint-max);
 }
@@ -526,7 +525,12 @@
     .layout .breakpoints.main div main {
         flex: 1;
         min-height: calc( 100vh - 60px );
-        border: 2px solid red;
+        /* border: 2px solid red; */
+    }
+
+    .layout .breakpoints.main .p {
+        width: calc(100% - 30px);
+        background: var(--base-color-3);
     }
 }
 

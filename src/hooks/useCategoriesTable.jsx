@@ -74,9 +74,15 @@ export const useCategoriesTable = () => {
     return foundCategory || null;
   };
 
+  const findById = (id) => {
+    if (!categoriesAll || !id) return null;
+    return categoriesAll.find(cat => cat.id === id) || null;
+  };
+
   return {
     info: categoriesInfo,
     findByUrl,
+    findById,
     loading,
     error,
     refetch: fetchCategoriesInfo,
