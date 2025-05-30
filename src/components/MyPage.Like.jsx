@@ -6,7 +6,7 @@ import { formatDateTime } from '../utils/formatDateTime'; // 날짜 포매팅 �
 
 export function MyPageLike({ user }) {
     const { info } = user;
-    const [likes, setLikes] = useState()
+    const [likes, setLikes] = useState([])
     const { findById } = useCategoriesTable();
     const nav = useNavigate();
 
@@ -94,8 +94,6 @@ export function MyPageLike({ user }) {
         fetchLikesWithCategoryAndItem();
     }, [info?.id]);
 
-    if (!likes) return;
-    console.log(likes)
     return (
         <>
             <ul className="likes-list">

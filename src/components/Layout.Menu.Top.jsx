@@ -79,6 +79,7 @@ export const LayoutMenuTop = ({ board }) => {
   return (
     <div className="layout_menu_top">
       <div className="breakpoints">
+        <div className="layout_menu_top_wrapper"></div>
         <ul
           className="layout_menu_top_ul"
           ref={scrollRef}
