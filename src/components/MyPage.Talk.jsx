@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../supabase/supabase';
 import { MyPageTalkLog } from './MyPage.Talk.Log';
-import '../css/MyPage.Talk.css';
 
 export function MyPageTalk({ user }) {
     const nav = useNavigate();

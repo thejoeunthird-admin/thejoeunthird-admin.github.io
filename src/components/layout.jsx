@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBell } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
@@ -8,8 +8,9 @@ import { clearUserInfo } from '../store/userReducer';
 import { supabase } from "../supabase/supabase";
 import { useRegion } from "../hooks/useRegion";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
-
-import "../css/layout.css";  // CSS 모듈 -> 일반 전역 CSS 임포트
+import "../css/layout.css";
+import { LayoutMenu } from './Layout.Menu';
+import { LayoutMenuTop } from './Layout.Menu.Top'
 
 const board_init = (categories) => {
     const location = useLocation();
@@ -39,7 +40,7 @@ export function Layout({ children }) {
         citys, districts,
     } = useRegion();
     const [atTop, setAtTop] = useState(true);
-    
+
     const handleLogout = useCallback(async () => {
         const { error } = await supabase.auth.signOut();
         if (error) {
@@ -64,7 +65,7 @@ export function Layout({ children }) {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
-    
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location.pathname]);
@@ -73,7 +74,7 @@ export function Layout({ children }) {
 
     return (
         <div className="layout">
-            <header className={atTop ? "top" : ""}>
+            <header className={atTop ? "layout_header top" : "layout_header"}>
                 <div className="breakpoints">
                     <img
                         className="logo"
@@ -118,7 +119,7 @@ export function Layout({ children }) {
                     <div style={{ width: 'calc( 100% - 64px )' }}>
                         <p
                             className={`board-item ${location.pathname === '/' ? 'red' : ''}`}
-                            onClick={(e) => handleNavigate(e, '/')}
+                            onClick={(e) => handleNavigate(e, `/`)}
                         >
                             홈
                         </p>
@@ -147,38 +148,12 @@ export function Layout({ children }) {
                         </div>
                     )}
                 </div>
-                {board[0] !== undefined && (
-                    <div className="taps">
-                        <div className="breakpoints">
-                            <ul>
-                                <li
-                                    className={board[1] === undefined ? 'select' : ''}
-                                    style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        navigate(`/${board[0].url}`);
-                                    }}
-                                >
-                                    {board[0].url !== 'my' ? "전체" : "내정보"}
-                                </li>
-                                {board[0].children.map((o, k) => (
-                                    <li
-                                        key={k}
-                                        className={o.url === board[1]?.url ? 'select' : ''}
-                                        style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
-                                        onClick={(e) => handleNavigate(e, `/${board[0].url}/${o.url}`)}
-                                    >
-                                        {o.name}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
+                {board[0] !== undefined && (<LayoutMenuTop board={board} />
                 )}
             </header>
             {board[0] !== undefined ? (
                 <div className="breakpoints main">
-                    <p className="p">
+                    {/* <p className="p">
                         <a onClick={(e) => handleNavigate(e, '/')}> {'홈 > '} </a>
                         {board.map((o, k) => {
                             if (k === board.length - 1) {
@@ -187,7 +162,7 @@ export function Layout({ children }) {
                                 return <a key={k}> {o.name + ' > '}</a>;
                             }
                         })}
-                    </p>
+                    </p> */}
                     {board[0].url !== 'my' && (
                         <div className="div">
                             <select
@@ -211,30 +186,10 @@ export function Layout({ children }) {
                         </div>
                     )}
                     <div className="div">
-                        <ul className="ul">
-                            <li
-                                className={board[1] === undefined ? 'li select' : 'li'}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    navigate(`/${board[0].url}`);
-                                }}
-                            >
-                                {board[0].url !== 'my' ? "전체" : "내정보"}
-                            </li>
-                            {board[0].children.map((o, k) => (
-                                <li
-                                    key={k}
-                                    className={o.url === board[1]?.url ? 'li select' : 'li'}
-                                    onClick={(e) => handleNavigate(e, `/${board[0].url}/${o.url}`)}
-                                >
-                                    {o.name}
-                                </li>
-                            ))}
-                        </ul>
+                        <LayoutMenu board={board} />
                         <main className="mainLayout">
                             {children}
                         </main>
-                        
                     </div>
                 </div>
             ) : (
@@ -242,7 +197,7 @@ export function Layout({ children }) {
                     <div className="div">{children}</div>
                 </main>
             )}
-            <footer>
+            <footer className='layout_footer'>
                 <div className="breakpoints">( 푸터 내용을 적어주세요 )</div>
             </footer>
         </div>

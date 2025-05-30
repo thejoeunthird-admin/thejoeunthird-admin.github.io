@@ -1,4 +1,3 @@
-import '../css/MyPage.Like.css';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase/supabase'; // 경로는 실제 프로젝트 구조에 맞게 조정

@@ -1,7 +1,7 @@
 .wrapper {
     display: flex;
     flex-direction: column;
-    width: calc( 100% - 10px );
+    width: calc(100% - 10px);
     max-height: 100vh;
     gap: 5px;
 }
@@ -24,7 +24,7 @@
     gap: 5px;
     margin-left: 10px;
     border-radius: 5px;
-    box-shadow: 0px 0px 5px rgb(0,0,0,0.2);
+    box-shadow: 0px 0px 5px rgb(0, 0, 0, 0.2);
 }
 
 .wrapper_li {
@@ -32,12 +32,14 @@
     flex-direction: row;
     gap: 5px;
 }
+
 .wrapper_li span {
     padding: 10px;
     width: 70px;
     background: white;
     flex-shrink: 0;
 }
+
 .wrapper_li p {
     padding: 10px;
     width: 240px;
@@ -55,6 +57,7 @@
     background: var(--base-color-4);
     color: white;
 }
+
 .wrapper_li input:focus {
     background: var(--base-color-5);
 }
@@ -68,6 +71,7 @@
     font-weight: 700;
     transition: background 0.1s ease-in;
 }
+
 .wrapper_button:hover {
     background: var(--base-color-5);
 }
@@ -79,42 +83,454 @@
     border-radius: 5px;
     font-weight: 600;
 }
+
 .wrapper_region:last-child {
     margin-left: 10px;
 }
+
 .wrapper_region:focus {
     outline: none;
     box-shadow: none;
 }
+
 .wrapper_region option {
     font-weight: 600;
 }
+
 .wrapper_region option:hover {
     color: whitesmoke;
 }
 
+.likes-list {
+    width: calc(100% - 10px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    padding: 5px;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.likes-item {
+    width: 100%;
+    max-height: 500px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.likes-item.delet {
+    transform: translateX(10%);
+    opacity: 0;
+    max-height: 0;
+}
+
+.likes-card {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    grid-template-rows: 1.2rem 1.2rem 1fr 30px;
+    gap: 10px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.likes-img {
+    grid-row: 1 / span 4;
+    grid-column: 1;
+    width: 100%;
+    max-width: 150px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.likes-category {
+    grid-row: 1;
+    grid-column: 2;
+    height: fit-content;
+    color: rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.likes-title {
+    grid-row: 2;
+    grid-column: 2;
+    font-weight: bold;
+    font-size: 1.2rem;
+    height: fit-content;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.likes-content {
+    grid-row: 3;
+    grid-column: 2;
+    color: #555;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.likes-footer {
+    grid-row: 4;
+    grid-column: 2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+    gap: 5px;
+    height: 100%;
+}
+
+.likes-date {
+    margin-right: 5px;
+    margin-top: 0.1rem;
+    font-size: 0.8rem;
+    opacity: 0.5;
+}
+
+.likes-link-btn {
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: #95b8d1;
+    border: none;
+    cursor: pointer;
+    font-weight: 750;
+    color: white;
+    height: 100%;
+}
+
+.likes-remove-btn {
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: #ffaaaa;
+    border: none;
+    cursor: pointer;
+    height: 100%;
+}
+
+/* MyPageTalk.css */
+
+.mytalk-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    gap: 5px;
+}
+
+.mytalk-list {
+    display: flex;
+    flex-direction: column;
+    width: 375px;
+    gap: 5px;
+    height: calc(100% - 10px);
+}
+
+.mytalk-scroll {
+    height: calc(50vh + 100px);
+    overflow-y: scroll;
+}
+
+.mytalk-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.mytalk-scroll::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 4px;
+}
+
+.mytalk-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--base-color-4);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.mytalk-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: var(--base-color-5);
+}
+
+.mytalk-title {
+    padding: 10px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.mytalk-item {
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+.mytalk-name {
+    color: #ffffff;
+    background: var(--base-color-2);
+    width: calc(100% - 30px);
+    padding: 10px;
+    display: inline-block;
+    font-weight: 600;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.mytalk-name.read {
+    background: var(--base-color-5);
+}
+
+.mytalk-preview {
+    width: calc(100% - 30px);
+    padding: 10px;
+    gap: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--base-color-3);
+    border-radius: 0px 0px 5px 5px;
+}
+
+.mytalk-preview p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mytalk-preview small {
+    display: inline-block;
+    font-size: 0.8rem;
+    align-self: flex-end;
+    color: var(--base-color-2);
+}
+
+.mytalk-nochat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mytalk-noReceiver {
+    margin-top: 30px;
+    padding: 10px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.talkLog-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    gap: 5px;
+}
+
+.talkLog-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: calc(100% - 10px);
+    width: 100%;
+    min-width: 365px;
+}
+
+.talkLog-title {
+    padding: 10px;
+    padding-bottom: 5px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.talkLog-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 10px;
+}
+
+.talkLog-username {
+    margin-top: 10px;
+    padding: 5px 20px;
+    width: fit-content;
+    background: var(--base-color-2);
+    border-radius: 5px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.talkLog-username.is-read {
+    background: var(--base-color-5);
+}
+
+.talkLog-message {
+    margin-top: 0px;
+    width: fit-content;
+    max-width: 90%;
+    background: var(--base-color-3);
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: space-between;
+    border-radius: 0 0 5px 5px;
+    padding: 10px;
+}
+
+.talkLog-message p {
+    padding-top: 1px;
+    white-space: pre-wrap;
+}
+
+.talkLog-message small {
+    display: inline-block;
+    font-size: 0.8rem;
+    align-self: flex-end;
+    color: var(--base-color-2);
+}
+
+.talkLog-item.is-me {
+    align-items: flex-end;
+    position: relative;
+    right: 10px;
+    text-align: right;
+    margin-left: 0px;
+}
+
+.talkLog-item.is-me .talkLog-username {
+    background: var(--base-color-5);
+}
+
+.talkLog-scroll {
+    height: 50vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background: var(--base-color-3);
+    padding-bottom: 10px;
+}
+
+.talkLog-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.talkLog-scroll::-webkit-scrollbar-track {
+    background: var(--base-color-3);
+    border-radius: 4px;
+}
+
+.talkLog-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--base-color-4);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.talkLog-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: var(--base-color-5);
+}
+
+.talkLog-form {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.talkLog-textarea {
+    width: calc(100% - 61px);
+    height: calc(100% - 9px);
+    resize: none;
+    overflow: auto;
+    padding-left: 5px;
+    padding-top: 5px;
+    background: var(--base-color-3);
+    border: 1px solid var(--base-color-3);
+}
+
+.talkLog-textarea:focus {
+    border: 1px solid var(--base-color-5);
+    outline: 0;
+}
+
+.talkLog-button {
+    width: 55px;
+    height: 100%;
+    background: var(--base-color-3);
+    border: 1px solid var(--base-color-3);
+}
+
+.talkLog-button:hover {
+    filter: brightness(0.95);
+}
+
+.talkLog-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+}
+
+.talkLog-noReceiver {
+    margin-top: 30px;
+    padding: 10px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+@media screen and (max-width: 940px) {
+    .mytalk-wrapper {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mytalk-list {
+        width: 100%;
+    }
+
+    .mytalk-scroll {
+        overflow-y: auto;
+    }
+
+    .talkLog-wrapper {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
 @media screen and (max-width: 720px) {
     .wrapper_ul {
-        width: calc( 100% - 20px );
+        width: calc(100% - 20px);
     }
+
     .wrapper_region {
         width: 50%;
     }
 
-
     .wrapper_li {
         flex-wrap: wrap;
     }
+
     /* 이름(span) 스타일 유지 */
     .wrapper_li span {
-        min-width: 70px; /* 최소 너비 보장 */
-        white-space: nowrap; /* 줄바꿈 방지 */
+        min-width: 70px;
+        /* 최소 너비 보장 */
+        white-space: nowrap;
+        /* 줄바꿈 방지 */
     }
+
     /* 설명(p)은 유연하게 */
     .wrapper_li p {
         flex-grow: 1;
-        min-width: 0; /* 내용이 너비를 압축하지 않도록 */
+        min-width: 0;
+        /* 내용이 너비를 압축하지 않도록 */
     }
+
     /* 버튼은 아래로 */
     .wrapper_li button {
         order: 1;
@@ -123,12 +539,17 @@
         margin-top: 5px;
         margin-bottom: 5px;
     }
+
     .wrapper_li p.none {
         width: auto;
     }
 
     .wrapper_li input.none {
         /* width: auto; */
-        width: calc( 100% - 105px);
+        width: calc(100% - 105px);
+    }
+
+    .likes-list {
+        max-width: none;
     }
 }

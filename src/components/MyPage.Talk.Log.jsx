@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../supabase/supabase';
 import { useSubscribe } from '../hooks/useSubscribe';
-import '../css/MyPage.Talk.Log.css';
 
 export function MyPageTalkLog({ user }) {
     const talkRef = useRef();

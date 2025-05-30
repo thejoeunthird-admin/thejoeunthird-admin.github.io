@@ -1,3 +1,12 @@
+/* 레이아웃 기본 구조 */
+.layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: fit-content;
+}
+
 .layout .breakpoints {
     width: 100%;
     min-width: var(--breakpoint-min);
@@ -5,207 +14,121 @@
     margin: 10px;
 }
 
-.layout header {
+/* 헤더 */
+.layout_header {
     position: sticky;
-    top: 0; 
-    min-width: calc( var(--breakpoint-min) );
+    top: 0;
+    min-width: calc(var(--breakpoint-min));
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow: visible;
-    width: calc( 100% - 0px );
-    height: fit-content;
+    overflow: hidden;
+    width: calc(100% - 0px);
+    height: 60px;
     background: var(--base-color-3);
     box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
     transition: all 0.2s ease;
-    z-index: 100;
 }
-.layout header.top {
+.layout_header.top,
+.layout_header.top .board-item,
+.layout_header.top .right .link,
+.layout_header.top .right .link.red
+{
+    height: fit-content;
+    opacity: 1;
+} 
+
+.layout .breakpoints.header {
+    margin: 0 0px 10px 0;
+}
+
+.layout .breakpoints.header .link {
+    opacity: 0;
+}
+
+.layout_header:hover {
     height: fit-content;
     overflow: visible;
 }
-.layout header.top .board-item {
+
+.layout_header:hover .board-item {
     opacity: 1;
-}
-.layout header.top .breakpoints.header .link{
-    opacity: 1;
-}
-.layout header.top .taps{
-    opacity: 1;
-    transform: translateY(0px);
-    display: none;
 }
 
-/* flex 범위를 breakpoints까지만 좁힘 */
-.layout header > .breakpoints {
+.layout_header:hover .breakpoints.header .link {
+    opacity: 1;
+}
+
+.layout_header .breakpoints {
     display: flex;
     align-items: center;
 }
 
-.layout header div a img {
+.layout_header div a img {
     width: 42px;
     height: 42px;
 }
 
-.layout header div .a {
-    width: 38px;
-    height: 38px;
-    background: white;
-    border-radius: 50px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    background: var(--base-color-2);
-    margin-left: auto;
-    margin-right: 20px;
-}
-.layout header .taps {
-    position: sticky;
-    top: 60px; 
-    min-width: calc( var(--breakpoint-min) );
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: visible;
-    width: calc( 100% - 0px );
-    height: fit-content;
-    background: var(--base-color-5);
-    box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
-    transition: all 0.2s ease; 
-    transform: translateY(-40px);
-    opacity: 0;
-    display: none;
-}
-.layout header.top .taps.none {
-    opacity: 0;
-    display: none;
-}
-.layout header .taps.none {
-    opacity: 0;
-    display: none;
-}
-.layout header .taps .breakpoints ul {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.9em;
-    font-weight: 600;
-    margin-left: 10px;
-    color: #ffffff;
-     flex-wrap: wrap; 
-}
-.layout header .taps .breakpoints ul li {
-    padding-right: 5px;
-    padding-bottom: 5px;
-    width: fit-content;
-    display: flex;
-    white-space: nowrap;
-    border-bottom: 3px solid transparent;
-}
-.layout header .taps .breakpoints ul li.select {
-    padding-right: 5px;
-    padding-bottom: 5px;
-    width: fit-content;
-    border-bottom: 3px solid #ffffff;
-}
-
-.layout footer {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    min-width: var(--breakpoint-min);
-    background: var(--base-color-1);
-    color: var(--base-color-3);
-    box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.5);
-}
-
-@media screen and (max-width: 720px) {
-    .layout {
-        align-items:  flex-start;
-
-    }
-    .layout header {
-        align-items: normal;
-    }
-}
-
-.layout header .breakpoints .logo {
+.layout_header .breakpoints .logo {
     width: 42px;
     height: 42px;
     margin-left: 10px;
     cursor: pointer;
 }
 
-/* .layout header .breakpoints input {
-    width: 44%;
-    height: 32px;
-    margin-left: 10px;
-    padding-left: 10px;
-} */
-
-.layout header .breakpoints .right {
+.layout_header .breakpoints .right {
     margin-left: auto;
     margin-right: 10px;
     display: flex;
-      align-items: center; /* 수직 중앙 정렬 추가 */
+    align-items: center;
     gap: 20px;
 }
 
-.layout header .breakpoints .right a {
+.layout_header .breakpoints .right a,
+.layout_header div .a {
     width: 38px;
     height: 38px;
-    background: white;
+    background: var(--base-color-2);
     border-radius: 50px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    background: var(--base-color-2);
 }
 
-.layout header div a svg {
+.layout_header div .a {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.layout_header div a svg {
     width: 60%;
     height: 60%;
 }
 
-.layout header div .right a.shaking {
+.layout_header div .right a.shaking {
     background: var(--base-color-5);
     animation: shaking 0.6s ease-in-out infinite;
 }
 
 @keyframes shaking {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    25% {
-        transform: rotate(-15deg);
-    }
-
-    50% {
-        transform: rotate(15deg);
-    }
-
-    75% {
-        transform: rotate(-10deg);
-    }
-
-    100% {
-        transform: rotate(0deg);
-    }
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-15deg); }
+    50% { transform: rotate(15deg); }
+    75% { transform: rotate(-10deg); }
+    100% { transform: rotate(0deg); }
 }
 
+/* 링크 */
 .link {
     display: inline-block;
-    padding: 0px 2px 5px 2px;
-    border-bottom: 3px solid var(--base-color-2); 
-    cursor: pointer; 
-    color: var(--base-color-2); 
+    padding: 0px 2px 7.5px 2px;
+    border-bottom: 3px solid var(--base-color-2);
+    cursor: pointer;
+    color: var(--base-color-2);
     font-weight: 750;
+    transition: opacity 0.3s ease;
 }
 
 .link.red {
@@ -215,7 +138,7 @@
 
 /* 게시판 메뉴 항목 */
 .board-item {
-    position: relative; /* 드롭다운 위치 기준 */
+    position: relative;
     display: inline-block;
     margin-left: 10px;
     cursor: pointer;
@@ -227,6 +150,10 @@
 }
 
 .board-item:hover {
+    color: var(--base-color-5);
+}
+
+.board-item.red {
     color: var(--base-color-5);
 }
 
@@ -245,13 +172,8 @@
     overflow: hidden;
 }
 
-/* 호버 시 드롭다운 보이기 */
 .board-item:hover .board-dropdown {
     display: block;
-}
-
-.board-item.red {
-    color: var(--base-color-5);
 }
 
 .board-dropdown p {
@@ -265,79 +187,77 @@
     color: #ffffff;
 }
 
-
-/*정리하는 신버전*/
-.layout {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: fit-content;
-}
-
-.layout .breakpoints {
-    width: 100%;
-    min-width: var(--breakpoint-min);
-    max-width: var(--breakpoint-max);
-    margin: 10px;
-}
-
-.layout header {
+/* 상단 메뉴 */
+.layout_menu_top {
     position: sticky;
-    top: 0; 
-    min-width: calc( var(--breakpoint-min) );
+    top: 60px;
+    min-width: calc(var(--breakpoint-min));
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow: hidden;
-    width: calc( 100% - 0px );
-    height: 60px;
-    background: var(--base-color-3);
+    overflow: visible;
+    width: calc(100% - 0px);
+    height: fit-content;
+    background: var(--base-color-5);
     box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
     transition: all 0.2s ease;
-}
-.layout .breakpoints.header {
-    margin: 0 0px 10px 0;
-}
-.layout .breakpoints.header .link{
+    transform: translateY(-40px);
     opacity: 0;
-}
-.layout header:hover{
-    height: fit-content;
-    overflow: visible;
-}
-.layout header:hover .board-item {
-    opacity: 1;
-}
-.layout header:hover .breakpoints.header .link{
-    opacity: 1;
-}
-.layout header:hover .taps {
-    opacity: 1;
-    transform: translateY(0px);
+    display: none;
 }
 
-.link {
-    display: inline-block;
-    padding: 0px 2px 7.5px 2px;
-    border-bottom: 3px solid var(--base-color-2); 
-    cursor: pointer; 
-    color: var(--base-color-2); 
-    font-weight: 750;
-    transition: opacity 0.3s ease;
+.layout_menu_top.none {
+    opacity: 0;
+    display: none;
 }
 
+.layout_menu_top_ul {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-left: 10px;
+    color: #ffffff;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.layout_menu_top_ul::-webkit-scrollbar {
+    display: none;
+}
+
+.layout_menu_top_li {
+    padding-right: 5px;
+    padding-bottom: 5px;
+    width: fit-content;
+    display: flex;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+}
+
+.layout_menu_top_li.select {
+    padding-right: 5px;
+    padding-bottom: 5px;
+    width: fit-content;
+    border-bottom: 3px solid #ffffff;
+}
+
+/* 메인 콘텐츠 */
 .layout .breakpoints.main {
     margin: 0 0px 0 0px;
     display: flex;
     flex-direction: column;
-    min-height: calc( 100vh - 60px );
+    min-height: calc(100vh - 60px);
     margin-top: 10px;
     gap: 10px;
 }
 
 .layout .breakpoints.main .p {
-    width: calc( 70% - 30px );
+    width: calc(70% - 30px);
     padding: 10px;
     margin-left: 5px;
     margin-right: 5px;
@@ -345,15 +265,20 @@
     font-weight: 600;
     border-radius: 5px;
 }
+
 .layout .breakpoints.main .p .strong {
     font-size: 1.1em;
     font-weight: 1000;
 }
+
 .layout .breakpoints.main .div {
     margin: 0 0px 0 0px;
     display: flex;
     flex-direction: row;
 }
+
+/* 사이드 메뉴 */
+.layout_menu_ul,
 .layout .breakpoints.main .div .ul {
     padding: 10px;
     padding-top: 10px;
@@ -365,40 +290,46 @@
     font-weight: 600;
     min-width: 150px;
 }
+
+.layout_menu_li,
 .layout .breakpoints.main .div .ul .li {
     padding-right: 10px;
     padding-bottom: 5px;
     width: fit-content;
     border-bottom: 3px solid transparent;
 }
+
+.layout_menu_li.select,
 .layout .breakpoints.main .div .ul .li.select {
     padding-right: 10px;
     width: fit-content;
     border-bottom: 3px solid var(--base-color-1);
 }
+
+.layout_menu_li:hover,
 .layout .breakpoints.main .div .ul .li:hover {
     border-bottom: 3px solid var(--base-color-1);
 }
 
+/* 메인 레이아웃 */
 .mainLayout {
     height: fit-content;
-    min-height: calc( 100% - 60px );
+    min-height: calc(100% - 60px);
     flex: 1;
     width: calc(100% - 100px);
-    /* padding-right: 5px; */
     min-width: var(--breakpoint-min);
     max-width: var(--breakpoint-max);
 }
 
-
 .mainLayout .div {
     height: 100vh;
-    min-height: calc( 100% - 60px );
+    min-height: calc(100% - 60px);
     width: 100%;
     min-width: var(--breakpoint-min);
     max-width: var(--breakpoint-max);
 }
 
+/* 토글 아이템 */
 .layout .breakpoints.main .div .div.toogle_item {
     margin-left: 10px;
     font-weight: 600;
@@ -406,32 +337,36 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center; 
-    position: relative;  /* 추가: toogle_list 절대 위치 기준 */
+    align-items: center;
+    position: relative;
 }
+
 .layout .breakpoints.main .div .div.toogle_item div {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center; 
+    align-items: center;
 }
+
 .layout .breakpoints.main div div.toogle_item div p {
     background: whitesmoke;
     border-right: 2px solid white;
     width: 110px;
 }
+
 .layout .breakpoints.main div div.toogle_item div svg {
     padding: 10px;
 }
+
 .layout .breakpoints.main div div.toogle_item .toogle_list {
     position: absolute;
-    top: 100%;   /* 0 → 100%로 변경, div 바로 아래 위치 */
+    top: 100%;
     left: 0;
     background: white;
     border: 1px solid #ccc;
     z-index: 99;
-    width: 100%;  /* 너비 필요하면 추가 */
-    min-width: calc( 100% - 2px );
+    width: 100%;
+    min-width: calc(100% - 2px);
     display: flex;
     flex-direction: column;
     max-height: 200px;
@@ -444,13 +379,14 @@
 }
 
 .layout .breakpoints.main div div.toogle_item .toogle_list b {
-  padding: 10px;
+    padding: 10px;
 }
+
 .layout .breakpoints.main div div.toogle_item .toogle_list b:hover {
-  background: whitesmoke;
+    background: whitesmoke;
 }
 
-
+/* 입력 박스 */
 .layout .inputBox {
     width: 47.5%;
     height: 32px;
@@ -467,10 +403,12 @@
     border: 2px solid var(--base-color-1);
     border-radius: 5px;
 }
+
 .layout .inputBox input:focus {
-    border-color:  var(--base-color-5);
+    border-color: var(--base-color-5);
     outline: 0;
 }
+
 .layout .inputBox button {
     all: unset;
     position: absolute;
@@ -482,6 +420,7 @@
     right: 0;
 }
 
+/* 선택 영역 */
 .layout .select_region {
     padding: 10px;
     margin-left: 10px;
@@ -490,51 +429,68 @@
     border-radius: 5px;
     font-weight: 600;
 }
+
 .layout .select_region:focus {
     outline: none;
     box-shadow: none;
 }
+
 .layout .select_region option {
     font-weight: 600;
 }
+
 .layout .select_region option:hover {
     color: whitesmoke;
 }
 
+/* 푸터 */
+.layout_footer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-width: var(--breakpoint-min);
+    background: var(--base-color-1);
+    color: var(--base-color-3);
+    box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.5);
+}
+
+/* 아웃렛 */
+.outlet {
+    all: unset;
+}
+
+/* 미디어 쿼리 */
 @media screen and (max-width: 720px) {
     .layout {
         align-items: flex-start;
     }
-    
+
     .layout .breakpoints {
         margin: 10px 0 10px 0;
     }
-    
-    .layout header .taps {
-        display: flex;
+
+    .layout_header {
+        align-items: normal;
     }
 
-    .layout header.top .taps {
+    .layout_menu_top {
         display: flex;
+        opacity: 1;
+        transform: translateY(0px);
     }
 
-    .layout .breakpoints.main .div .ul {
+    .layout .breakpoints.main .div .ul,
+    .layout_menu_ul {
         display: none;
     }
 
     .layout .breakpoints.main div main {
         flex: 1;
-        min-height: calc( 100vh - 60px );
-        /* border: 2px solid red; */
+        min-height: calc(100vh - 60px);
     }
 
     .layout .breakpoints.main .p {
         width: calc(100% - 30px);
         background: var(--base-color-3);
     }
-}
-
-.outlet {
-  /* children 전용 영역 스타일 - 필요 시 따로 적용 */
-  all: unset; /* 기본 스타일 리셋(필요시) */
 }
