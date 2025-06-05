@@ -1,6 +1,10 @@
 
 import "../css/login.css"
 import { supabase } from '../supabase/supabase'
+import { FcGoogle } from "react-icons/fc";
+import { IoLogoGithub } from "react-icons/io";
+
+
 
 //** 로그인만들기 */
 const signInWithGoogle = async (e, path) => {
@@ -25,30 +29,29 @@ const signInWithGoogle = async (e, path) => {
 };
 
 
-export function Login(){
-  return(<>
+export function Login() {
+  return (<>
     <div className="login">
       <section className="login_sectoin">
         <img />
-        <div 
-        className="forWeb"
-        onClick={(e)=>{signInWithGoogle(e,'google')}}
-        >
-          <div className="logobox">
-            <img /> 
+        <h2
+        style={{ fontWeight: 700, padding:'10px' }}
+        >간편 로그인</h2>
+        <div className="forWeb_div">
+          <div
+            className="forWeb"
+            onClick={(e) => { signInWithGoogle(e, 'google') }}
+          >
+            <FcGoogle />
           </div>
-          <h2>for Google</h2>
-        </div>
-        <div 
-        className="forWeb github"
-        onClick={(e)=>signInWithGoogle(e,'github')}
-        >
-          <div className="logobox">
-            <img /> 
+          <div
+            className="forWeb github"
+            onClick={(e) => signInWithGoogle(e, 'github')}
+          >
+            <IoLogoGithub />
           </div>
-          <h2>for GitHub</h2>
         </div>
-      </section>        
-    </div>  
+      </section>
+    </div>
   </>)
 }

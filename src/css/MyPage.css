@@ -155,6 +155,13 @@
     font-weight: 700;
     overflow: hidden;
     text-overflow: ellipsis;
+      display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* 또는 필요한 너비 */
+}
+.likes-category {
+    font-size: 0.9rem;
 }
 
 .likes-title {
@@ -162,13 +169,11 @@
     grid-column: 2;
     font-weight: bold;
     font-size: 1.2rem;
-    padding-top: 5px;
-    padding-left: 5px;
-    padding-bottom: 10px;
     height: fit-content;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    
 }
 
 .likes-content {
@@ -179,6 +184,9 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.likes-content small{
+    font-size: 0.75rem;
 }
 
 .likes-footer {
@@ -217,6 +225,33 @@
     cursor: pointer;
     height: 100%;
 }
+.chat-btn{
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: #ffaaaa;
+    border: none;
+    cursor: pointer;
+    color:white;
+    font-weight: 750;
+    height: 100%;
+    
+}
+.likes-plus-line{
+    grid-column: span 2;
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+    padding: 7.5px;
+    gap: 10px;
+    white-space: nowrap;       /* 줄바꿈 안 함 */
+    overflow: hidden;          /* 넘친 부분 숨김 */
+    text-overflow: ellipsis;   /* 말줄임표 (...) 표시 */
+      background-color: #f2f4f6; /* 연한 회색 톤 */
+}
+.likes-plues-line p {
+    font-size: 0.75rem;
+}
+
 
 /* MyPageTalk.css */
 
@@ -224,8 +259,7 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 100%;
-    max-height: 100vh;
+    height: calc(100vh - 50px);
     gap: 5px;
 }
 
@@ -238,12 +272,12 @@
 }
 
 .mytalk-scroll {
-    height: calc(50vh + 100px);
+    height: calc(100% - 75px);
     overflow-y: scroll;
 }
 
 .mytalk-scroll::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
 }
 
 .mytalk-scroll::-webkit-scrollbar-track {
@@ -252,7 +286,7 @@
 }
 
 .mytalk-scroll::-webkit-scrollbar-thumb {
-    background-color: var(--base-color-4);
+    background-color: whitesmoke;
     border-radius: 4px;
     border: 2px solid transparent;
     background-clip: content-box;
@@ -274,17 +308,31 @@
 }
 
 .mytalk-name {
-    color: #ffffff;
-    background: var(--base-color-2);
+    color: black;
+    background: whitesmoke;
     width: calc(100% - 30px);
     padding: 10px;
     display: inline-block;
     font-weight: 600;
     border-radius: 5px 5px 0px 0px;
+    border-bottom: 2px solid white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background: whitesmoke;
+}
+.mytalk-name small {
+    display: inline-block;
+    font-size: 0.8rem;
+    align-self: flex-end;
+    color: var(--base-color-2);
 }
 
 .mytalk-name.read {
-    background: var(--base-color-5);
+    background: var(--base-color-4);
+}
+.mytalk-name.read small{
+    color: white;
 }
 
 .mytalk-preview {
@@ -294,7 +342,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: var(--base-color-3);
+    background: #eaebee;
     border-radius: 0px 0px 5px 5px;
 }
 
@@ -302,13 +350,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.mytalk-preview small {
-    display: inline-block;
-    font-size: 0.8rem;
-    align-self: flex-end;
-    color: var(--base-color-2);
 }
 
 .mytalk-nochat {
@@ -358,30 +399,37 @@
 
 .talkLog-username {
     margin-top: 10px;
-    padding: 5px 20px;
+    padding: 5px 0px;
     width: fit-content;
-    background: var(--base-color-2);
+    /* background: #eaebee; */
     border-radius: 5px;
     font-weight: 600;
-    color: #ffffff;
+    font-size: 0.9rem;
+    color: var(--base-color-1);
+    margin-bottom: 2px;
 }
 
 .talkLog-username.is-read {
-    background: var(--base-color-5);
+    color: black;
 }
 
 .talkLog-message {
     margin-top: 0px;
     width: fit-content;
     max-width: 90%;
-    background: var(--base-color-3);
+    background: #eaebee;
     font-size: 1rem;
     display: flex;
     flex-direction: column;
     gap: 5px;
     justify-content: space-between;
-    border-radius: 0 0 5px 5px;
+    border-radius: 0px 10px 10px 10px;
     padding: 10px;
+    min-width: 150px;
+}
+.talkLog-message.is-read {
+    background: rgb(255,200,210);
+    border-radius: 10px 0px 10px 10px;
 }
 
 .talkLog-message p {
@@ -404,15 +452,16 @@
     margin-left: 0px;
 }
 
-.talkLog-item.is-me .talkLog-username {
-    background: var(--base-color-5);
+
+.talkLog-message.is-read small {
+    align-self: self-start;
 }
 
 .talkLog-scroll {
-    height: 50vh;
+    height: calc(100% - 100px );
     overflow-y: scroll;
     overflow-x: hidden;
-    background: var(--base-color-3);
+    background: white;
     padding-bottom: 10px;
 }
 
@@ -421,7 +470,7 @@
 }
 
 .talkLog-scroll::-webkit-scrollbar-track {
-    background: var(--base-color-3);
+    background: whitesmoke;
     border-radius: 4px;
 }
 
@@ -441,7 +490,7 @@
     height: 50px;
     display: flex;
     flex-direction: row;
-    gap: 5px;
+    gap: 2px;
 }
 
 .talkLog-textarea {
@@ -451,8 +500,8 @@
     overflow: auto;
     padding-left: 5px;
     padding-top: 5px;
-    background: var(--base-color-3);
-    border: 1px solid var(--base-color-3);
+    background: #eaebee;
+    border: 1px solid #eaebee;
 }
 
 .talkLog-textarea:focus {
@@ -461,10 +510,10 @@
 }
 
 .talkLog-button {
-    width: 55px;
+    width: 75px;
     height: 100%;
-    background: var(--base-color-3);
-    border: 1px solid var(--base-color-3);
+    background: #eaebee;
+    border: 0;
 }
 
 .talkLog-button:hover {
@@ -504,6 +553,10 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+    }
+
+    .talkLog-container{
+        height: calc( 100vh - 115px);
     }
 }
 
@@ -555,5 +608,9 @@
 
     .likes-list {
         max-width: none;
+    }
+    
+    .likes-plus-line{
+        flex-direction: column;
     }
 }

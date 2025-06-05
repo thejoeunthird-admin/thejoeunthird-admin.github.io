@@ -296,7 +296,7 @@
     gap: 10px;
     font-size: 1.1em;
     font-weight: 600;
-    min-width: 150px;
+    width: 200px;
     margin-top: 10px;
 }
 
@@ -311,18 +311,25 @@
     padding: 5px;
     font-size: 1.2rem;
     gap: 10px;
+    color: #b0b0b0;
     border-bottom: 3px solid transparent;
+    transition: all 0.15s ease-in;
 }
 
 .layout_menu_li.select,
 .layout .breakpoints.main .div .ul .li.select {
-    padding-right: 10px;
-    width: fit-content;
-    border-bottom: 3px solid var(--base-color-1);
+    color: var(--base-color-5);
 }
 
 .layout .breakpoints.main .div .ul .li:hover {
     border-bottom: 3px solid var(--base-color-1);
+}
+
+.layout_menu_li.select:hover {
+    color: var(--base-color-5);
+}
+.layout_menu_li:hover {
+    color: var(--base-color-1);
 }
 
 /* 메인 레이아웃 */
@@ -444,7 +451,6 @@
     color: var(--base-color-5);
     font-size: 20px;
     transform: rotate(360deg);
-
 }
 
 
@@ -579,7 +585,7 @@
     border-top: 1px solid #f0f0f0;
 }
 .humbeger_btn.logout {
-    background: var(--base-color-4);
+    background: var(--base-color-5);
     color: #ffffff;
 }
 .humbeger_btn.logout:hover{

@@ -8,6 +8,10 @@ import { MyPageLike } from './MyPage.Like'
 import { getUser } from '../utils/getUser';
 import { useRegion } from '../hooks/useRegion';
 import region from '../utils/region.json';
+import { MyPageSell } from './MyPage.Sell';
+import { MyPageBuy } from './MyPage.Buy';
+import { MyPageGroupBuy } from './MyPage.Group.Buy';
+import { MyPageGroupSell } from './MyPage.Group.Sell';
 
 const createNickname = async (name, city, district, email = null) => {
     try {
@@ -203,6 +207,18 @@ export function MyPage() {
         case 'like': {
             return (<MyPageLike user={user} />);
         } break;
+        case 'buy': {
+            return (<MyPageBuy user={user}/>)
+        }
+        case 'groupBuy': {
+            return (<MyPageGroupBuy user={user}/>)
+        }
+        case 'sell': {
+            return (<MyPageSell user={user} />);
+        } break;
+        case 'groupSell':{
+            return(<MyPageGroupSell user={user}/>)
+        }
         default: {
             return (<Default user={user} />)
         } break;

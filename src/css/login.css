@@ -3,52 +3,60 @@
     justify-content: center;
 }
 
-.login_sectoin{
+.login_sectoin {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: var(--base-color-3);
     width: 360px;
     gap: 10px;
     padding: 30px 0px 30px 0px;
     border-radius: 10px;
     margin-top: 40px;
     aspect-ratio: 1 / 1.25;
-    box-shadow: 1px 5px 10px rgb(0, 0, 0, 0.25);
+    box-shadow: 1px 5px 10px rgb(0, 0, 0, 0.1);
+    border: 1px solid #e1e3e5;
 }
 
 .login_sectoin img {
     width: 70%;
     aspect-ratio: 1;
-    margin-bottom: 20px;
+}
+
+.forWeb_div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    gap: 10px;
 }
 
 .forWeb {
-    width: fit-content;
-    min-width: 70%;
     display: flex;
     align-items: center;
     flex-direction: row;
-    background: var(--base-color-4);
-    border-radius: 5px 5px 5px 5px;
+    /* background: var(--base-color-4); */
+    border-radius: 100%;
     cursor: pointer;
-    box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.25);
-}
-.forWeb:hover{
-    filter: brightness(0.95);
+    border: 1px solid #e1e3e5;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: all 0.1s ease-in;
 }
 
-.forWeb.github {
-    background: #cea5fb;
+.forWeb:hover {
+    filter: brightness(0.8);
+    background-color: whitesmoke;
 }
-
-.forWeb h2{
-    flex: 1;    
-    font-size: 1.25rem;
-    padding: 10px 20px 10px 20px;
-    font-weight: 700;
-    color: #0f0f0f;
-    text-align: center;
+.forWeb svg {
+    font-size: 40px;
+    padding: 5px;
+}
+.forWeb.github svg{
+    color: #a304fa;
 }
 
 .forWeb .logobox {
@@ -59,7 +67,7 @@
 }
 
 .forWeb .logobox img {
-    width: calc( 100% - 10px);
+    width: calc(100% - 10px);
     padding: 5px;
 }
 
@@ -74,12 +82,13 @@
     margin-top: 30px;
     transition: all 0.2s ease-in;
 }
+
 .bouncyingBox.out {
     opacity: 0;
     transform: translateY(-100px);
 }
 
-.bouncyingBox .ball{
+.bouncyingBox .ball {
     width: 25px;
     aspect-ratio: 1;
     background: var(--base-color-1);
@@ -89,25 +98,36 @@
 
 .bouncyingBox .ball:nth-child(1) {
     background: var(--base-color-5);
-    animation-delay: 0s;
-}
-.bouncyingBox .ball:nth-child(2) {
-    background: var(--base-color-4);
     animation-delay: 0.1s;
 }
+
+.bouncyingBox .ball:nth-child(2) {
+    background: var(--base-color-4);
+    animation-delay: 0.5s;
+}
+
 .bouncyingBox .ball:nth-child(3) {
-    background: var(--base-color-2);
+    background: var(--base-color-3);
     animation-delay: 0.2s;
 }
+
 .bouncyingBox .ball:nth-child(4) {
+    background: var(--base-color-2);
+    animation-delay: 0.4s;
+}
+
+.bouncyingBox .ball:nth-child(5) {
     background: var(--base-color-1);
     animation-delay: 0.3s;
 }
 
 @keyframes bounce {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-20px);
     }
@@ -115,7 +135,7 @@
 
 .box {
     opacity: 0;
-    transition: all 0.3s ease-in;
+    transition: all 0.2s ease-in;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -140,6 +160,7 @@
     background: var(--base-color-4);
     font-weight: 600;
 }
+
 .box button:hover {
     filter: brightness(0.95);
 }
@@ -150,11 +171,12 @@
     display: inline-block;
 }
 
-.welcome span{
+.welcome span {
     font-size: 2rem;
     padding: 10px;
 }
-.welcome span:last-child{
+
+.welcome span:last-child {
     display: inline-block;
     transform: scaleX(-1);
 }

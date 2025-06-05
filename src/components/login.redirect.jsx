@@ -84,6 +84,7 @@ export function LoginRedirect() {
           <div className="ball" />
           <div className="ball" />
           <div className="ball" />
+          <div className="ball" />
         </div>
         <form 
         className={`box ${toggle ? "" : "out"}`}

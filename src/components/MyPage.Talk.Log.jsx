@@ -74,6 +74,28 @@ export function MyPageTalkLog({ user }) {
         fetchChatLog();
     }, [talk]);
 
+    // 일반 구매
+    const handleOrder = useCallback(async (e, item) => {
+        e.preventDefault();
+        if (item.trades.state !== 1) return;
+        if (item.trades.category_id === 7) {
+            // 공구 구매?
+        }
+        else { // 일반 구매
+            const { error } = await supabase.rpc('create_order_and_update_chat', {
+                p_trades_id: item.trades_id,
+                p_user_id: item.sender.id,
+                p_price: item.trades.price,
+                p_quantity: item.trades_quantity
+            });
+            if (error) {
+                console.error('거래 수락 실패:', error.message);
+            } else {
+                fetchChatLog();
+            }
+        }
+    }, [fetchChatLog]);
+
     if (!receiverName) {
         return (
             <p style={{ marginTop: '30px', padding: '10px', color: 'rgb(0,0,0,0.5)' }}>
@@ -85,24 +107,105 @@ export function MyPageTalkLog({ user }) {
     return (
         <div className="talkLog-wrapper">
             <div className="talkLog-container">
-                <span className="talkLog-title">{receiverName}</span>
-
                 <div ref={talkRef} className="talkLog-scroll">
                     {talk.length !== 0 ? (
-                        talk.slice().reverse().map((o, k) => (
-                            <li
-                                key={k}
-                                className={`talkLog-item ${o.receiver.id === user.info.id ? 'is-me' : ''}`}
-                            >
-                                <strong className={`talkLog-username ${o.read ? '' : 'is-read'}`}>
-                                    {o.receiver.name}
-                                </strong>
-                                <span className="talkLog-message">
-                                    <p>{o.chat}</p>
-                                    <small>{new Date(o.create_date).toISOString().slice(0, 10)}</small>
-                                </span>
-                            </li>
-                        ))
+                        talk.slice().reverse().map((o, k) => {
+                            if (!o.trades?.id) {
+                                return (
+                                    <li
+                                        key={k}
+                                        className={`talkLog-item ${o.receiver.id === user.info.id ? 'is-me' : ''}`}
+                                    >
+                                        <strong className={`talkLog-username`}>
+                                            {o.receiver.name}
+                                        </strong>
+                                        <span className={`talkLog-message ${o.receiver.id === user.info.id ? 'is-read' : ''}`}>
+                                            <p>{o.chat}</p>
+                                            <small>{new Date(o.create_date).toISOString().slice(0, 10)}</small>
+                                        </span>
+                                    </li>
+                                )
+                            }
+                            else {
+                                if (o.trades.category_id !== 7) {
+                                    return (
+                                        <li
+                                            key={k}
+                                            className={`talkLog-item ${o.receiver.id === user.info.id ? 'is-me' : ''}`}
+                                        >
+                                            <strong className={`talkLog-username`}>
+                                                {o.receiver.name}
+                                            </strong>
+                                            <span className={`talkLog-message ${o.receiver.id === user.info.id ? 'is-read' : ''}`}>
+                                                <p style={{ padding: '2.5px 0px' }}>{o.chat}</p>
+                                                <div style={{ display: 'flex', height: '100%', flexDirection: 'row', marginTop: '5px' }}>
+                                                    {o.receiver.id !== user.info.id && (
+                                                        <img src={`${o.trades.main_img}`} style={{ width: '100px', height: '100px' }} />
+                                                    )}
+                                                    <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px', marginRight: "10px", height: '100%', }}>
+                                                        <p style={{ fontSize: '1.1rem', fontWeight: '700', padding: '5px 0px', }}>{o.trades.title}</p>
+                                                        <p style={{ fontSize: '0.9rem', padding: '0px 0px' }}>{o.trades.price} x {o.trades_quantity} = {o.trades.price * o.trades_quantity} 원</p>
+                                                        {o.receiver.id !== user.info.id && (
+                                                            <button
+                                                                disabled={o.trades_state === true}
+                                                                onClick={(e) => handleOrder(e, o)}
+                                                                style={{ width: '100%', marginTop: '30px', background: o.trades_state ? 'whitesmoke' : 'rgb(255,173,198)', border: '0', padding: '5px', borderRadius: '5px' }}>
+                                                                거래 수락 {o.trades_state && '완료'}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                    {o.receiver.id === user.info.id && (
+                                                        <img src={`${o.trades.main_img}`} style={{ width: '100px', height: '100px' }} />
+                                                    )}
+                                                </div>
+                                                <small>{new Date(o.create_date).toISOString().slice(0, 10)}</small>
+                                            </span>
+                                        </li>
+                                    )
+                                }
+                                else {
+                                    console.log(o.trades.state === 1)
+                                    return (<>
+                                        <li
+                                            key={k}
+                                            className={`talkLog-item ${o.receiver.id === user.info.id ? 'is-me' : ''}`}
+                                        >
+                                            <strong className={`talkLog-username`}>
+                                                {o.receiver.name}
+                                            </strong>
+                                            <span className={`talkLog-message ${o.receiver.id === user.info.id ? 'is-read' : ''}`}>
+                                                {/* <p style={{ padding: '2.5px 0px' }}>{o.chat}</p> */}
+                                                <div style={{ display: 'flex', height: '100%', flexDirection: 'row', marginTop: '5px' }}>
+                                                    {o.receiver.id !== user.info.id && (
+                                                        <img src={`${o.trades.main_img}`} style={{ width: '100px', height: '100px' }} />
+                                                    )}
+                                                    <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px', marginRight: "10px", height: '100%', }}>
+                                                        <p style={{ fontSize: '1.1rem', fontWeight: '700', padding: '5px 0px', }}>{o.trades.title}</p>
+                                                        <p style={{ fontSize: '0.9rem', padding: '0px 0px' }}>{o.trades.price} x {o.trades_quantity} = {o.trades.price * o.trades_quantity} 원</p>
+                                                        {o.receiver.id !== user.info.id && (
+                                                            <p style={{ padding: '5px', paddingLeft: '0px' }}>{o.chat}</p>
+                                                        )}
+                                                        {o.trades.state === 1 &&
+                                                            <button
+                                                                disabled={o.trades_state === true}
+                                                                onClick={(e) => alert('미구현입니다.')}
+                                                                style={{ width: '100%', marginTop: '5px', background: o.trades_state ? 'whitesmoke' : 'rgb(255,173,198)', border: '0', padding: '5px', borderRadius: '5px' }}
+                                                            >
+                                                                결제하기
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                    {o.receiver.id === user.info.id && (
+                                                        <img src={`${o.trades.main_img}`} style={{ width: '100px', height: '100px' }} />
+                                                    )}
+                                                </div>
+                                                <small>{new Date(o.create_date).toISOString().slice(0, 10)}</small>
+                                            </span>
+                                        </li>
+                                    </>)
+                                }
+                            }
+                        })
                     ) : (
                         <div className="talkLog-empty">
                             <p style={{ fontSize: '1.2rem' }}>새로운 채팅방 입니다.</p>
@@ -123,7 +226,7 @@ export function MyPageTalkLog({ user }) {
                             }
                         }}
                     />
-                    <button type="submit" className="talkLog-button">입력</button>
+                    <button type="submit" className="talkLog-button">전송</button>
                 </form>
             </div>
         </div>

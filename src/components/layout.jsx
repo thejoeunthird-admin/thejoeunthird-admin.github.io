@@ -14,6 +14,7 @@ import { LayoutMenuTop } from './Layout.Menu.Top'
 import { FaUserCircle } from "react-icons/fa";
 import logo from '../logo.png';
 import { FaArrowAltCircleRight } from "react-icons/fa";
+import * as Stlye from './Layout.style'
 
 
 const board_init = (categories) => {
@@ -31,7 +32,7 @@ const board_init = (categories) => {
     return matchedPath;
 };
 
-const SearchBar = forwardRef((props, ref) => {
+const SearchBar = forwardRef(({}, ref) => {
     const [isFocused, setIsFocused] = useState(false);
     return (
         <form className="inputBox"
@@ -151,7 +152,7 @@ export function Layout({ children }) {
                         >
                             홈
                         </p>
-                        {categories.filter((o) => o.id !== 16).map((o, k) => (
+                        {categories.filter((o) => ![16, 26].includes(o.id)).map((o, k) => (
                             <React.Fragment key={k}>
                                 <p
                                     className={`board-item ${o.url === board[0]?.url ? 'red' : ''}`}
