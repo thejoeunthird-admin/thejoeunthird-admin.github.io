@@ -185,7 +185,7 @@ export function MyPageTalkLog({ user }) {
                                                         {o.receiver.id !== user.info.id && (
                                                             <p style={{ padding: '5px', paddingLeft: '0px' }}>{o.chat}</p>
                                                         )}
-                                                        {o.trades.state === 1 &&
+                                                        {o.trades.state === 1 && o.receiver.id !== user.info.id &&
                                                             <button
                                                                 disabled={o.trades_state === true}
                                                                 onClick={(e) => alert('미구현입니다.')}

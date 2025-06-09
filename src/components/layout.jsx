@@ -14,8 +14,6 @@ import { LayoutMenuTop } from './Layout.Menu.Top'
 import { FaUserCircle } from "react-icons/fa";
 import logo from '../logo.png';
 import { FaArrowAltCircleRight } from "react-icons/fa";
-import * as Stlye from './Layout.style'
-
 
 const board_init = (categories) => {
     const location = useLocation();
@@ -32,7 +30,7 @@ const board_init = (categories) => {
     return matchedPath;
 };
 
-const SearchBar = forwardRef(({}, ref) => {
+const SearchBar = forwardRef(({ }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
     return (
         <form className="inputBox"
@@ -40,22 +38,18 @@ const SearchBar = forwardRef(({}, ref) => {
                 e.preventDefault();
             }}
         >
-            <input 
-                ref={ref} 
+            <input
+                ref={ref}
                 placeholder="검색어를 입력해주세요..."
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
             />
-                <button type="submit" className={isFocused ? 'focused' : ''}>
-                    {isFocused ? <FaArrowAltCircleRight /> : <FaSearch />}
-                </button>
+            <button type="submit" className={isFocused ? 'focused' : ''}>
+                {isFocused ? <FaArrowAltCircleRight /> : <FaSearch />}
+            </button>
         </form>
     );
 });
-
-function SideBar({ }) {
-
-} 
 
 export function Layout({ children }) {
     const navigate = useNavigate();
@@ -285,19 +279,53 @@ export function Layout({ children }) {
                         <LayoutMenu board={board} />
                         <main className="mainLayout">
                             {board[0].url !== 'my' && (<SearchBar ref={refInput} />)}
-                            <main className="mainLayout">
-                                <div>{children}</div>
-                            </main>
+                            <div>{children}</div>
                         </main>
                     </div>
                 </div>
             ) : (
                 <main className="mainLayout">
-                    <div className="div">{children}</div>
+                    <div className='div'>{children}</div>
                 </main>
             )}
             <footer className='layout_footer'>
-                <div className="breakpoints">( 푸터 내용을 적어주세요 )</div>
+                <div className="footer_container">
+                    <div className="footer_content">
+                        {categories.map((o, index) =>
+                            <ul key={index} className="footer_category">
+                                <li className="footer_category_title">{o.name}</li>
+                                {o.children.map((oj, key) =>
+                                    <li key={oj.id} className="footer_category_item">
+                                        <a>{oj.name}</a>
+                                    </li>
+                                )}
+                            </ul>
+                        )}
+                        <ul className="footer_portfolio">
+                            <li className="footer_category_title">포트폴리오</li>
+                            {
+                                [
+                                    { name: ' ⓒ 3team', url: 'google.net', },
+                                    { name: '김종현', url: 'google.net', },
+                                    { name: '강수아', url: 'google.net', },
+                                    { name: '이신아', url: 'google.net', },
+                                    { name: '박희원', url: 'google.net', },
+                                    { name: '백종욱', url: 'google.net', },
+                                ].map((o, k) =>
+                                    <li key={k} className="footer_category_item">
+                                        {o.name}&nbsp;:&nbsp;
+                                        <a
+                                            href="https://example.com" target="_blank" rel="noopener noreferrer"
+                                            className="footer_link"
+                                        >
+                                            {o.url}
+                                        </a>
+                                    </li>
+                                )
+                            }
+                        </ul>
+                    </div>
+                </div>
             </footer>
         </div>
     );
