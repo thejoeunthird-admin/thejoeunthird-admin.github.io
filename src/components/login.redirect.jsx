@@ -64,8 +64,9 @@ export function LoginRedirect() {
       isTable().then((data) => {
         console.log(data)
         if (!data.created) {
-          alert(`로그인 되었습니다.`)
-          navigate('/');
+          // alert(`로그인 되었습니다.`)
+          // navigate('/');
+          setToggle(false);
         }
         else {
           setName(data.user[0].name)
@@ -77,7 +78,7 @@ export function LoginRedirect() {
 
   return (<>
     <div className="login">
-      <section className="login_sectoin">
+      <section className={`login_sectoin redirect ${!toggle?'full':''}`}>
         <img />
         <div className={`bouncyingBox ${toggle ? "" : "out"}`}>
           <div className="ball" />

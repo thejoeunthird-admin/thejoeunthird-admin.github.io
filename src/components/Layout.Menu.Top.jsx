@@ -1,6 +1,5 @@
 import { useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 
 export const LayoutMenuTop = ({ board }) => {
   const scrollRef = useRef(null);
@@ -78,9 +77,11 @@ export const LayoutMenuTop = ({ board }) => {
   };
 
   return (
-    <Container>
+    <div className="layout_menu_top">
       <div className="breakpoints">
-        <Contents
+        <div className="layout_menu_top_wrapper"></div>
+        <ul
+          className="layout_menu_top_ul"
           ref={scrollRef}
           style={{ paddingRight: '5px', cursor: 'grab', userSelect: dragState.current.isDown ? 'none' : 'auto' }}
           onMouseDown={onMouseDown}
@@ -110,37 +111,8 @@ export const LayoutMenuTop = ({ board }) => {
               {o.name}
             </li>
           ))}
-        </Contents>
+        </ul>
       </div>
-    </Container>
+    </div>
   );
 };
-
-const Container = styled.div`
-  // position: sticky;
-  // top: 60px;
-  min-width: calc(var(--breakpoint-min));
-  overflow: visible;
-  width: calc(100% - 0px);
-  height: fit-content;
-  background: var(--base-color-5);
-  box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
-`
-
-const Contents = styled.ul`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.9em;
-  font-weight: 600;
-  color: #ffffff;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  padding: 10px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-`
-
-
