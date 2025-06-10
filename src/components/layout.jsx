@@ -12,8 +12,10 @@ import "../css/layout.css";
 import { LayoutMenu } from './Layout.Menu';
 import { LayoutMenuTop } from './Layout.Menu.Top'
 import { FaUserCircle } from "react-icons/fa";
-import logo from '../logo.png';
+import logo from '../public/logo.png';
+import profile from '../public/profile.png'
 import { FaArrowAltCircleRight } from "react-icons/fa";
+import { useImage } from '../hooks/useImage';
 
 const board_init = (categories) => {
     const location = useLocation();
@@ -60,6 +62,7 @@ export function Layout({ children }) {
     const [showSearch, setShowSearch] = useState(false);
     const [humbeger, setHumbeger] = useState(false);
     const { info: categories, loading: categoriesLoding } = useCategoriesTable();
+    const { getImages }= useImage();
     const board = board_init(categories);
     const {
         city, setCity,
@@ -136,16 +139,21 @@ export function Layout({ children }) {
                         className="logo"
                         src={logo}
                         alt="logo"
-                        style={{ transform: 'rotate(305deg)' }}
                         onClick={(e) => handleNavigate(e, '/')}
                     />
+                    <p
+                        className={`logoName  ${location.pathname === '/'?'red':''}`}
+                        onClick={(e) => handleNavigate(e, '/')}
+                    >
+                        오생꿀
+                        </p>
                     <div className='displayOff'>
-                        <p
+                        {/* <p
                             className={`board-item ${location.pathname === '/' ? 'red' : ''}`}
                             onClick={(e) => handleNavigate(e, `/`)}
                         >
                             홈
-                        </p>
+                        </p> */}
                         {categories.filter((o) => ![16, 26].includes(o.id)).map((o, k) => (
                             <React.Fragment key={k}>
                                 <p
@@ -203,10 +211,14 @@ export function Layout({ children }) {
                                 onMouseEnter={handleMouseEnter}
                                 onMouseLeave={handleMouseLeave}
                             >
-                                {/* <FaBell className='bell shaking' />
-                                <FaUserCircle className='red' /> */}
-                                <FaBell className='bell' />
-                                <FaUserCircle className='' />
+                                {(board.length === 0 || !['my', 'login'].includes(board[0]?.url)) && (
+                                    <div className='profile_img' style={{ width:'100%', height:"100%" }}>
+                                        <img 
+                                            src={user?.info?.img ?getImages(user.info.img) :profile} 
+                                            style={{ border:'2px solid var(--base-color-1)' }}
+                                        />
+                                    </div>
+                                )}
                                 <div
                                     className={`humbeger ${humbeger ? 'on' : ''}`}
                                     onMouseEnter={handleMouseEnter}
@@ -252,12 +264,12 @@ export function Layout({ children }) {
                     style={{ display: 'flex', alignItems: 'flex-start', gap: '2px' }}
                 >
                     <div className='displayOn' style={{ width: 'calc( 100% - 64px )' }}>
-                        <p
+                        {/* <p
                             className={`board-item ${location.pathname === '/' ? 'red' : ''}`}
                             onClick={(e) => handleNavigate(e, `/`)}
                         >
                             홈
-                        </p>
+                        </p> */}
                         {categories.filter((o) => o.id !== 16).map((o, k) => (
                             <React.Fragment key={k}>
                                 <p
@@ -275,7 +287,7 @@ export function Layout({ children }) {
             </header>
             {board[0] !== undefined ? (
                 <div className="breakpoints main">
-                    <div className="div">
+                    <div className='div' style={{ marginBottom: '50px' }}>
                         <LayoutMenu board={board} />
                         <main className="mainLayout">
                             {board[0].url !== 'my' && (<SearchBar ref={refInput} />)}
@@ -284,8 +296,11 @@ export function Layout({ children }) {
                     </div>
                 </div>
             ) : (
-                <main className="mainLayout">
-                    <div className='div'>{children}</div>
+                <main
+                    className="mainLayout"
+                    style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                >
+                    <div className='div' style={{ marginBottom: '50px' }}>{children}</div>
                 </main>
             )}
             <footer className='layout_footer'>
@@ -293,10 +308,18 @@ export function Layout({ children }) {
                     <div className="footer_content">
                         {categories.map((o, index) =>
                             <ul key={index} className="footer_category">
-                                <li className="footer_category_title">{o.name}</li>
+                                <li
+                                    className="footer_category_title"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        navigate(o.url)
+                                    }}
+                                >
+                                    <a className='footer_link' href={`/${o.url}`}>{o.name}</a>
+                                </li>
                                 {o.children.map((oj, key) =>
                                     <li key={oj.id} className="footer_category_item">
-                                        <a>{oj.name}</a>
+                                        <a className='footer_link' href={`/${o.url}/${oj.url}`}>{oj.name}</a>
                                     </li>
                                 )}
                             </ul>

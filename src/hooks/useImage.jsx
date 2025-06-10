@@ -44,6 +44,7 @@ export const useImage = () => {
 
         // 여러 장을 한 번에 imageList에 추가
         setImageList((prev) => [...prev, ...newImagePaths]);
+        return newImagePaths;
     };
 
     const getImages = (path) => {
@@ -57,5 +58,8 @@ export const useImage = () => {
         setImages: setWebp,
         /** 스토리지 경로로 가져오기 */
         getImages,
+        initImage:(init=[])=>{
+            setImageList(init)
+        }
     };
 };

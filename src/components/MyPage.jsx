@@ -12,22 +12,21 @@ import { MyPageSell } from './MyPage.Sell';
 import { MyPageBuy } from './MyPage.Buy';
 import { MyPageGroupBuy } from './MyPage.Group.Buy';
 import { MyPageGroupSell } from './MyPage.Group.Sell';
+import profile from '../public/profile.png'
+import { useImage } from '../hooks/useImage';
+import { FiPlusCircle } from "react-icons/fi";
 
-const createNickname = async (name, city, district, email = null) => {
+const createNickname = async (name, city, district, email, img) => {
     try {
         const { user } = await getUser();
         if (!user) throw new Error("로그인된 유저가 없습니다.");
-
         const res = await fetch('https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/user', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${user.token}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                id: user.id, name: name, region: JSON.stringify([city, district]),
-                email: email === null ? user.email : email
-            }),
+            body: JSON.stringify({ id: user.id, name: name, region: JSON.stringify([city, district]), email: email, img: img }),
         });
 
         if (!res.ok) {
@@ -35,7 +34,6 @@ const createNickname = async (name, city, district, email = null) => {
             console.error("닉네임 업데이트 실패:", errorData.error ?? res.statusText);
             return;
         }
-        return await res.json();
     } catch (err) {
         console.error("예외 발생:", err.message);
     }
@@ -48,24 +46,61 @@ function Default({ user }) {
     const [city, setCity] = useState(user.info.region[0])
     const [district, setDistrict] = useState(user.info.region[1])
     const [realName, setRealName] = useState('')
-    const { citys, districts, setBoth } = useRegion();
+    const {citys, districts, setBoth } = useRegion();
+    const {
+        images,
+        setImages,
+        getImages,
+        initImage
+    } = useImage();
 
     useEffect(() => {
         (async () => {
             try {
-                const { user } = await getUser();
-                setRealName(user.name);
+                const { user:my } = await getUser();
+                setRealName(my.name);
+                initImage(user.info.img !== null ?[ user.info.img ]: [ 'null' ])
             } catch (error) {
-                console.error("유저 데이터 불러오기 실패:", error);
+                
             }
-        })();/*  */
+        })();
     }, []);
 
+    if(images.length === 0) return;
     return (<>
         <div className='wrapper'>
             <span className='title'>내 정보</span>
             <ul className='wrapper_ul'>
-                <li className='wrapper_li rhwjd'>
+                <li className='wrapper_li' style={{ justifyContent: 'center', padding: '10px 0px' }}>
+                    <div className='profile_img' style={{ width: '210px' }}>
+                        <img src={images[0] === 'null'?profile :getImages(images[0])}/>
+                        <div
+                            style={{ width: '100%' }}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const input = document.createElement('input');
+                                input.type = 'file';
+                                input.accept = 'image/*';
+                                input.multiple = true;
+                                input.style.display = 'none';
+                                input.onchange = (event) => {
+                                    setImages(event).then((obj) => {
+                                        if (obj.length !== 0) {
+                                            createNickname(user.info.name, user.info.region[0], user.info.region[1], user.info.email, obj[0]).then(() => {
+                                                initImage([ obj[0], ])
+                                            })
+                                        }
+                                    })
+                                    document.body.removeChild(input);
+                                };
+                                document.body.appendChild(input);
+                                input.click();
+                            }}>
+                            <FiPlusCircle />
+                        </div>
+                    </div>
+                </li>
+                <li className='wrapper_li'>
                     <span>이름</span>
                     <p className='none'>{realName}</p>
                 </li>
@@ -121,7 +156,9 @@ function Default({ user }) {
                                 setEmail(user.info.email);
                             }
                             else {
-                                createNickname(user.info.name, user.info.region[0], user.info.region[1], email).then(() => {
+                                const postEmail = email === null ? user.info.email : email
+                                console.log(postEmail)
+                                createNickname(user.info.name, user.info.region[0], user.info.region[1], postEmail).then(() => {
                                     user.refetch().then(() => {
                                         setEmail(null);
                                     });
@@ -135,7 +172,7 @@ function Default({ user }) {
         </div>
         <div className='wrapper'>
             <span className='title' style={{ marginTop: '10px' }}>내 위치</span>
-           <ul className='wrapper_ul'>
+            <ul className='wrapper_ul'>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                     <select
                         className="wrapper_region"
@@ -195,32 +232,40 @@ export function MyPage() {
         return () => window.removeEventListener('resize', checkSize);
     }, []);
 
+    //로그인 안했을때 킥하기
+
     if (user.loading) { return <>로딩중</> }
-    switch (tap) {
-        case 'talk': {
-            if (isMobile) {
-                if (!item) { return (<MyPageTalk user={user} />) }
-                else { return (<MyPageTalkLog user={user} />) }
+    else if (user.info !== null) {
+        switch (tap) {
+            case 'talk': {
+                if (isMobile) {
+                    if (!item) { return (<MyPageTalk user={user} />) }
+                    else { return (<MyPageTalkLog user={user} />) }
+                }
+                else return (<MyPageTalk user={user} />)
+            } break;
+            case 'like': {
+                return (<MyPageLike user={user} />);
+            } break;
+            case 'buy': {
+                return (<MyPageBuy user={user} />)
             }
-            else return (<MyPageTalk user={user} />)
-        } break;
-        case 'like': {
-            return (<MyPageLike user={user} />);
-        } break;
-        case 'buy': {
-            return (<MyPageBuy user={user}/>)
+            case 'groupBuy': {
+                return (<MyPageGroupBuy user={user} />)
+            }
+            case 'sell': {
+                return (<MyPageSell user={user} />);
+            } break;
+            case 'groupSell': {
+                return (<MyPageGroupSell user={user} />)
+            }
+            default: {
+                return (<Default user={user} />)
+            } break;
         }
-        case 'groupBuy': {
-            return (<MyPageGroupBuy user={user}/>)
-        }
-        case 'sell': {
-            return (<MyPageSell user={user} />);
-        } break;
-        case 'groupSell':{
-            return(<MyPageGroupSell user={user}/>)
-        }
-        default: {
-            return (<Default user={user} />)
-        } break;
+    }
+    else {
+        // alert('로그인한 유저만 가능합니다.')
+        // window.location.href = '/';
     }
 }

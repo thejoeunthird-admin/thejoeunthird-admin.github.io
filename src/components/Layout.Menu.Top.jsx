@@ -101,7 +101,7 @@ export const LayoutMenuTop = ({ board }) => {
           </li>
           {board[0].children.map((o, k) => (
             <li
-              style={{ paddingRight: '0' }}
+              style={{ paddingRight: '0', marginTop:'0px' }}
               key={k}
               className={o.url === board[1]?.url ? 'layout_menu_top_li select' : 'layout_menu_top_li'}
               onClick={(e) => {

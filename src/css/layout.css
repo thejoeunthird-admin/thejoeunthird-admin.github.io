@@ -41,7 +41,7 @@
 } 
 
 .layout .breakpoints.header {
-    margin: 0 0px 10px 0;
+    margin: 0 0px 5px 0;
 }
 
 .layout .breakpoints.header .link {
@@ -74,11 +74,24 @@
     height: 42px;
 }
 
-.layout_header .breakpoints .logo {
+.logo {
     width: 42px;
     height: 42px;
     margin-left: 10px;
     cursor: pointer;
+}
+.logoName {
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-left: 5px;
+    cursor: pointer;
+    color: var(--base-color-1)
+}
+.logoName.red {
+    color: var(--base-color-5)
+}
+.logoName:hover {
+    color: var(--base-color-5);
 }
 
 .layout_header .breakpoints .right {
@@ -463,8 +476,8 @@
 .layout .select_region {
     padding: 10px;
     margin-left: 5px;
-    background: #ffffff;
-    border: 1px solid whitesmoke;
+    background: transparent;
+    border: 1px solid transparent;
     border-radius: 5px;
     font-weight: 600;
 }
@@ -480,6 +493,18 @@
 
 .layout .select_region option:hover {
     color: whitesmoke;
+}
+.layout .select_region::-webkit-scrollbar-track {
+    background: transparent;
+}
+.layout .select_region::-webkit-scrollbar {
+    width: 4px;
+}
+.layout .select_region::-webkit-scrollbar-thumb,
+.layout .select_region::-webkit-scrollbar-thumb:hover,
+.layout .select_region::-webkit-scrollbar-thumb:hover {
+    background: var(--base-color-3);; /* 원하는 호버 색상으로 변경 */
+    border-radius: 4px;
 }
 
 /* 푸터 */
@@ -550,8 +575,8 @@
 }
 
 .profile {
-    width: 42px;
-    height: 42px;
+    width: 48px;
+    height: 48px;
     margin-left: 5px;
     cursor: pointer;
     display: flex;
@@ -618,8 +643,8 @@
     height: fit-content;
     background: white;
     border-radius: 5px;
-    right: 10px;
-    top: 45px;
+    right: 0px;
+    top: 47.5px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -657,6 +682,49 @@
     display: none;
     height: 0px;
 }
+
+.profile_img {
+    width: 210px;
+    height: 210px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.profile_img img {
+    display: block;
+    border-radius: 100%;
+    width: calc(100% - 10px);
+    aspect-ratio: 1;
+    border: 5px solid var(--base-color-1);
+}
+.profile_img div,
+.profile_img input {
+    all: unset;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-weight: 'bold';
+    width: calc(100% - 55px);
+    aspect-ratio: 1;
+    background-color: rgb(0,0,0,0.2);
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    font-size: 3rem;
+    cursor: pointer;
+}
+
+.profile_img input,
+.profile_img div:hover {
+    opacity: 1;
+}
+
 /* 미디어 쿼리 */
 @media screen and (max-width: 720px) {
     .layout {
@@ -664,7 +732,7 @@
     }
 
     .layout .breakpoints {
-        margin: 10px 0 10px 0;
+        margin: 10px 0 0px 0;
     }
 
     .layout_header {
@@ -674,6 +742,7 @@
     .layout_header.top .layout_menu_top {
         display: flex;
         opacity: 1;
+        padding-bottom: 7.5px;
         transform: translateY(0px);
     }
     .layout_header .layout_menu_top {

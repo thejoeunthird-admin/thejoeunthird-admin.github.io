@@ -3,8 +3,7 @@ import "../css/login.css"
 import { supabase } from '../supabase/supabase'
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoGithub } from "react-icons/io";
-
-
+import logo from '../public/logo.png';
 
 //** 로그인만들기 */
 const signInWithGoogle = async (e, path) => {
@@ -32,23 +31,29 @@ const signInWithGoogle = async (e, path) => {
 export function Login() {
   return (<>
     <div className="login">
-      <section className="login_sectoin">
-        <img />
-        <h2
-        style={{ fontWeight: 700, padding:'10px' }}
-        >간편 로그인</h2>
-        <div className="forWeb_div">
-          <div
-            className="forWeb"
-            onClick={(e) => { signInWithGoogle(e, 'google') }}
-          >
-            <FcGoogle />
-          </div>
-          <div
-            className="forWeb github"
-            onClick={(e) => signInWithGoogle(e, 'github')}
-          >
-            <IoLogoGithub />
+      <section className="login_sectoin_new">
+        <img src={logo} alt="logo" />
+        {/* <h2
+          style={{ fontWeight: 700, padding: '10px' }}
+        >간편 로그인</h2> */}
+
+        <div style={{ display:'flex', flexDirection:'column', justifyContent: 'center',}}>
+          <h2 className="h2">
+            꿀 찾으러 가는 중... 🌼
+          </h2>
+          <div style={{ display:'flex', flexDirection:'column' }}>
+            <div
+              className="glass-btn"
+              onClick={(e) => { signInWithGoogle(e, 'google') }}
+            >
+              <FcGoogle style={{ padding: '0px 10px', paddingLeft:'0px'}}/>으로 로그인하기
+            </div>
+            <div
+              className="glass-btn"
+              onClick={(e) => signInWithGoogle(e, 'github')}
+            >
+              <IoLogoGithub style={{ padding: '0px 10px', paddingLeft:'0px' }}/>으로 로그인하기
+            </div>
           </div>
         </div>
       </section>
