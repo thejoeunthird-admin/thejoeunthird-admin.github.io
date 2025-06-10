@@ -206,7 +206,9 @@ export function Layout({ children }) {
                             <div className="profile"
                                 onClick={(e) => {
                                     e.preventDefault()
-                                    setHumbeger(!humbeger);
+                                    if(board.length > 0 && !['my', 'login'].includes(board[0].url)){
+                                        setHumbeger(!humbeger);
+                                    }
                                 }}
                                 onMouseEnter={handleMouseEnter}
                                 onMouseLeave={handleMouseLeave}
