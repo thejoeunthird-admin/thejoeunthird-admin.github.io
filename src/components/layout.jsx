@@ -11,7 +11,6 @@ import { useCategoriesTable } from "../hooks/useCategoriesTable";
 import "../css/layout.css";
 import { LayoutMenu } from './Layout.Menu';
 import { LayoutMenuTop } from './Layout.Menu.Top'
-import { FaUserCircle } from "react-icons/fa";
 import logo from '../public/logo.png';
 import profile from '../public/profile.png'
 import { FaArrowAltCircleRight } from "react-icons/fa";
