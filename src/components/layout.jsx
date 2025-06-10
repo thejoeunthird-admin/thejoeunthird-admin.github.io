@@ -61,7 +61,7 @@ export function Layout({ children }) {
     const [showSearch, setShowSearch] = useState(false);
     const [humbeger, setHumbeger] = useState(false);
     const { info: categories, loading: categoriesLoding } = useCategoriesTable();
-    const { getImages }= useImage();
+    const { getImages } = useImage();
     const board = board_init(categories);
     const {
         city, setCity,
@@ -141,11 +141,11 @@ export function Layout({ children }) {
                         onClick={(e) => handleNavigate(e, '/')}
                     />
                     <p
-                        className={`logoName  ${location.pathname === '/'?'red':''}`}
+                        className={`logoName  ${location.pathname === '/' ? 'red' : ''}`}
                         onClick={(e) => handleNavigate(e, '/')}
                     >
                         오생꿀
-                        </p>
+                    </p>
                     <div className='displayOff'>
                         {/* <p
                             className={`board-item ${location.pathname === '/' ? 'red' : ''}`}
@@ -202,50 +202,48 @@ export function Layout({ children }) {
                             </button>
                         </>)}
                         {user.info ? (
-                            <div className="profile"
-                                onClick={(e) => {
-                                    e.preventDefault()
-                                    if(board.length > 0 && !['my', 'login'].includes(board[0].url)){
+                            (board.length === 0 || !['my', 'login'].includes(board[0]?.url)) && (
+                                <div className="profile"
+                                    onClick={(e) => {
+                                        e.preventDefault()
                                         setHumbeger(!humbeger);
-                                    }
-                                }}
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                            >
-                                {(board.length === 0 || !['my', 'login'].includes(board[0]?.url)) && (
-                                    <div className='profile_img' style={{ width:'100%', height:"100%" }}>
-                                        <img 
-                                            src={user?.info?.img ?getImages(user.info.img) :profile} 
-                                            style={{ border:'2px solid var(--base-color-1)' }}
-                                        />
-                                    </div>
-                                )}
-                                <div
-                                    className={`humbeger ${humbeger ? 'on' : ''}`}
+                                    }}
                                     onMouseEnter={handleMouseEnter}
                                     onMouseLeave={handleMouseLeave}
                                 >
-                                    <b className='humbeger_btn'
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            navigate('/my')
-                                        }}
+                                    <div className='profile_img' style={{ width: '100%', height: "100%" }}>
+                                        <img
+                                            src={user?.info?.img ? getImages(user.info.img) : profile}
+                                            style={{ border: '2px solid var(--base-color-1)' }}
+                                        />
+                                    </div>
+
+                                    <div
+                                        className={`humbeger ${humbeger ? 'on' : ''}`}
+                                        onMouseEnter={handleMouseEnter}
+                                        onMouseLeave={handleMouseLeave}
                                     >
-                                        내정보
-                                    </b>
-                                    <b className='humbeger_btn'
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            navigate('/my/talk')
-                                        }}
-                                    >
-                                        채팅
-                                    </b>
-                                    <b className='humbeger_btn logout' onClick={handleLogout}>
-                                        로그아웃
-                                    </b>
-                                </div>
-                            </div>)
+                                        <b className='humbeger_btn'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                navigate('/my')
+                                            }}
+                                        >
+                                            내정보
+                                        </b>
+                                        <b className='humbeger_btn'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                navigate('/my/talk')
+                                            }}
+                                        >
+                                            채팅
+                                        </b>
+                                        <b className='humbeger_btn logout' onClick={handleLogout}>
+                                            로그아웃
+                                        </b>
+                                    </div>
+                                </div>))
                             : (
                                 <div
                                     className='link'
