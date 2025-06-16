@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Spinner, Alert, Badge, Image, Button } from "react-bootstrap";
 import { supabase } from '../supabase/supabase';
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
+import { LoadingCircle } from "./LoadingCircle";
 
 export function Trade() {
   const navigate = useNavigate();
@@ -133,7 +134,7 @@ export function Trade() {
   }
 
   const TradeContent = () => {
-    if (loading) return <Container className="text-center mt-5"><Spinner animation="border" /></Container>;
+    if (loading) return <Container className="text-center mt-5"><LoadingCircle/></Container>;
     if (fetchTradesError) return <Container className="mt-5"><Alert variant="danger">{fetchTradesError}</Alert></Container>;
 
     return (

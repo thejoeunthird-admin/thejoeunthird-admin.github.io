@@ -811,6 +811,7 @@
     margin-top: 5px;
     animation: shake 2s ease-in-out infinite;
 }
+
 .loading .center-image img {
     width: 80%;
     height: 80%;
