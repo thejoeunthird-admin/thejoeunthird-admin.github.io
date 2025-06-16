@@ -5,6 +5,6 @@ export function TestPage() {
 
 
   return (<>
-    <LoadingCircle dontText/>
+    <LoadingCircle/>
   </>);
 }

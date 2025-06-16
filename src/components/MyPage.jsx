@@ -263,5 +263,5 @@ export function MyPage() {
             } break;
         }
     }
-    else { return(<LoadingCircle fail text='내 꿀통 찾는중..'/>)}
+    else { return(<LoadingCircle fail text={`내 꿀통을 찾지 못했어요... \n로그인하거나, 새로고침 해주세요.`}/>) }
 }

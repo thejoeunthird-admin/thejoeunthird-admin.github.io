@@ -732,7 +732,7 @@
 }
 
 .displayOn {
-    width: calc(100% - 64px);
+    margin-left: 7.5px;
     display: none;
     height: 0px;
 }
@@ -817,7 +817,6 @@
     border-radius: 100%;
 }
 .loading .loading-text {
-    padding: '10px';
     font-weight: 800;
     font-size: 1.3rem;
     color: var(--base-color-1);
@@ -826,7 +825,6 @@
     text-align: center;
     line-height: 1.6;
 }
-
 
 @keyframes rotate {
     from {

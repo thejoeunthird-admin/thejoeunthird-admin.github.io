@@ -30,11 +30,13 @@ function App() {
             <Route path='/my/:tap' element={<MyPage />} />
             <Route path='/my/:tap/:item' element={<MyPage />} />
             {/* 강수아 작업 -- 중고거래, 나눔, 판매 */}
-            <Route path='/trade' element={<Trade />} />
             <Route path='/trade/sell' element={<UsedSell />} />
             <Route path='/trade/share' element={<UsedShare />} />
             <Route path='/trade/buy' element={<UsedBuy />} />
+            {/* 김종현 작업 -- 공구, 전체 */}
+            <Route path='/trade' element={<Trade />} />
             <Route path='/trade/gonggu' element={<Trade />} />
+            
           </Routes>
         </Layout>
       </ReduxProvider>
