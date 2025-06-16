@@ -69,20 +69,16 @@ export function MyPageTalk({ user }) {
                                 </li>
                             );
                         })
-                    ) : (
-                        <div className="mytalk-nochat">
-                            <p className='mytalk-noReceiver'>채팅이 없습니다.</p>
-                        </div>
-                    )}
+                    ) : (<>노채팅</>)}
                 </div>
             </ul>
             {item !== undefined ? (
                 <MyPageTalkLog item={talkList[item]} user={user} />
-            ):(
-                <p style={{ marginTop: '30px', padding: '10px', color: 'rgb(0,0,0,0.5)' }}>
-                    {talkList.length !== 0 && '채팅방을 선택 해주세요.'}
-                </p>
-            )}
+            ):( <>
+                <div className='talkLog-scroll output'>
+                    <p style={{ marginTop:'100px' }}>채팅방을 선택 해주세요!</p>
+                </div>
+            </>)}
         </div>
     );
 }

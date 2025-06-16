@@ -1,4 +1,4 @@
-import '../css/MyPage.css'
+import '../css/myPage.css'
 import { useEffect, useState } from 'react';
 import { useParams, } from 'react-router-dom';
 import { useUserTable } from '../hooks/useUserTable'
@@ -15,6 +15,7 @@ import { MyPageGroupSell } from './MyPage.Group.Sell';
 import profile from '../public/profile.png'
 import { useImage } from '../hooks/useImage';
 import { FiPlusCircle } from "react-icons/fi";
+import { LoadingCircle } from './LoadingCircle';
 
 const createNickname = async (name, city, district, email, img) => {
     try {
@@ -232,9 +233,7 @@ export function MyPage() {
         return () => window.removeEventListener('resize', checkSize);
     }, []);
 
-    //로그인 안했을때 킥하기
-
-    if (user.loading) { return <>로딩중</> }
+    if (user.loading) { return(<LoadingCircle text='내 꿀통 찾는중..'/>) }
     else if (user.info !== null) {
         switch (tap) {
             case 'talk': {
@@ -264,8 +263,5 @@ export function MyPage() {
             } break;
         }
     }
-    else {
-        // alert('로그인한 유저만 가능합니다.')
-        // window.location.href = '/';
-    }
+    else { return(<LoadingCircle fail text='내 꿀통 찾는중..'/>)}
 }

@@ -15,6 +15,7 @@ import logo from '../public/logo.png';
 import profile from '../public/profile.png'
 import { FaArrowAltCircleRight } from "react-icons/fa";
 import { useImage } from '../hooks/useImage';
+import { LoadingCircle } from './LoadingCircle';
 
 const board_init = (categories) => {
     const location = useLocation();
@@ -129,7 +130,7 @@ export function Layout({ children }) {
     }, []);
 
 
-    if (isLoading()) return <></>;
+    if (isLoading()) return(<></>);
     return (
         <div className="layout">
             <header className={atTop ? "layout_header top" : "layout_header"}>

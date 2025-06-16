@@ -155,11 +155,13 @@
     font-weight: 700;
     overflow: hidden;
     text-overflow: ellipsis;
-      display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%; /* 또는 필요한 너비 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    /* 또는 필요한 너비 */
 }
+
 .likes-category {
     font-size: 0.9rem;
 }
@@ -173,7 +175,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    
+
 }
 
 .likes-content {
@@ -185,7 +187,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.likes-content small{
+
+.likes-content small {
     font-size: 0.75rem;
 }
 
@@ -225,29 +228,36 @@
     cursor: pointer;
     height: 100%;
 }
-.chat-btn{
+
+.chat-btn {
     padding: 4px 10px;
     border-radius: 4px;
     background: #ffaaaa;
     border: none;
     cursor: pointer;
-    color:white;
+    color: white;
     font-weight: 750;
     height: 100%;
-    
+
 }
-.likes-plus-line{
+
+.likes-plus-line {
     grid-column: span 2;
     display: flex;
     flex-direction: row;
     /* align-items: center; */
     padding: 7.5px;
     gap: 10px;
-    white-space: nowrap;       /* 줄바꿈 안 함 */
-    overflow: hidden;          /* 넘친 부분 숨김 */
-    text-overflow: ellipsis;   /* 말줄임표 (...) 표시 */
-      background-color: #f2f4f6; /* 연한 회색 톤 */
+    white-space: nowrap;
+    /* 줄바꿈 안 함 */
+    overflow: hidden;
+    /* 넘친 부분 숨김 */
+    text-overflow: ellipsis;
+    /* 말줄임표 (...) 표시 */
+    background-color: #f2f4f6;
+    /* 연한 회색 톤 */
 }
+
 .likes-plues-line p {
     font-size: 0.75rem;
 }
@@ -272,7 +282,7 @@
 }
 
 .mytalk-scroll {
-    height: calc(100% - 75px);
+    height: calc(100% - 110px);
     overflow-y: scroll;
 }
 
@@ -321,6 +331,7 @@
     justify-content: space-between;
     background: whitesmoke;
 }
+
 .mytalk-name small {
     display: inline-block;
     font-size: 0.8rem;
@@ -331,7 +342,8 @@
 .mytalk-name.read {
     background: var(--base-color-4);
 }
-.mytalk-name.read small{
+
+.mytalk-name.read small {
     color: white;
 }
 
@@ -427,8 +439,9 @@
     padding: 10px;
     min-width: 150px;
 }
+
 .talkLog-message.is-read {
-    background: rgb(255,200,210);
+    background: rgb(255, 200, 210);
     border-radius: 10px 0px 10px 10px;
 }
 
@@ -458,10 +471,17 @@
 }
 
 .talkLog-scroll {
-    height: calc(100% - 100px );
+    height: calc(100% - 100px);
     overflow-y: scroll;
     overflow-x: hidden;
-    background: white;
+    background-image: url('../public/chatLog.png');
+    /* 이미지 경로 설정 */
+    background-size: 50%;
+    /* 영역을 꽉 채우도록 */
+    background-repeat: no-repeat;
+    /* 반복 방지 */
+    background-position: center;
+    /* 가운데 정렬 */
     padding-bottom: 10px;
 }
 
@@ -534,6 +554,26 @@
     color: rgba(0, 0, 0, 0.5);
 }
 
+.talkLog-scroll.output {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    overflow: hidden;
+    color:var(--base-color-1);
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-shadow: 
+        -1px -1px 0 #fff,
+        1px -1px 0 #fff,
+        -1px 1px 0 #fff,
+        1px 1px 0 #fff,
+        0 -1px 0 #fff,
+        0 1px 0 #fff,
+        -1px 0 0 #fff,
+        1px 0 0 #fff;
+}
+
 @media screen and (max-width: 940px) {
     .mytalk-wrapper {
         flex-direction: column;
@@ -547,6 +587,13 @@
 
     .mytalk-scroll {
         overflow-y: auto;
+        background-image: url('../public/chat.png');
+        /* 이미지 경로 설정 */
+        background-size: 50%;
+        /* 영역을 꽉 채우도록 */
+        background-repeat: no-repeat;
+        /* 반복 방지 */
+        background-position: center 100%;
     }
 
     .talkLog-wrapper {
@@ -555,8 +602,12 @@
         justify-content: center;
     }
 
-    .talkLog-container{
-        height: calc( 100vh - 115px);
+    .talkLog-container {
+        height: calc(100vh - 92.5px);
+    }
+
+    .talkLog-scroll.output{
+        display: none;
     }
 }
 
@@ -609,8 +660,8 @@
     .likes-list {
         max-width: none;
     }
-    
-    .likes-plus-line{
+
+    .likes-plus-line {
         flex-direction: column;
     }
 }

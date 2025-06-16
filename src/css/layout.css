@@ -11,7 +11,7 @@
     width: 100%;
     min-width: var(--breakpoint-min);
     max-width: var(--breakpoint-max);
-    margin: 10px 10px 0px 10px;
+    margin: 5px 10px 0px 10px;
 }
 
 /* 헤더 */
@@ -30,15 +30,15 @@
     transition: all 0.1s ease;
     z-index: 99;
 }
+
 .layout_header.top,
 .layout_header.top .board-item,
 .layout_header.top .right .link,
 .layout_header .board-item,
-.layout_header.top .right .link.red
-{
+.layout_header.top .right .link.red {
     height: fit-content;
     opacity: 1;
-} 
+}
 
 .layout .breakpoints.header {
     margin: 0 0px 5px 0;
@@ -52,7 +52,8 @@
     height: fit-content;
     overflow: visible;
 }
-.layout_header:hover .layout_menu_top{
+
+.layout_header:hover .layout_menu_top {
     opacity: 1;
 }
 
@@ -80,6 +81,7 @@
     margin-left: 10px;
     cursor: pointer;
 }
+
 .logoName {
     font-weight: 800;
     font-size: 1.1rem;
@@ -87,9 +89,11 @@
     cursor: pointer;
     color: var(--base-color-1)
 }
+
 .logoName.red {
     color: var(--base-color-5)
 }
+
 .logoName:hover {
     color: var(--base-color-5);
 }
@@ -130,11 +134,25 @@
 }
 
 @keyframes shaking {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(-15deg); }
-    50% { transform: rotate(15deg); }
-    75% { transform: rotate(-10deg); }
-    100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-15deg);
+    }
+
+    50% {
+        transform: rotate(15deg);
+    }
+
+    75% {
+        transform: rotate(-10deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 /* 링크 */
@@ -166,7 +184,7 @@
     transition: opacity 0.3s ease;
 }
 
-.displayOn .board-item{
+.displayOn .board-item {
     opacity: 0;
 }
 
@@ -319,7 +337,7 @@
     padding-bottom: 5px;
     width: 100%;
     display: flex;
-    flex-direction: row;    
+    flex-direction: row;
     align-items: center;
     padding: 5px;
     font-size: 1.2rem;
@@ -341,23 +359,25 @@
 .layout_menu_li.select:hover {
     color: var(--base-color-5);
 }
+
 .layout_menu_li:hover {
     color: var(--base-color-1);
 }
 
 /* 2. 초기화 레이어 (상위 스타일 무시) */
 @layer reset {
-  .mainLayout {
-    /* 상위 스타일을 완전히 무시하고 기본값으로 되돌림 */
-    all: revert-layer;
-    isolation: isolate;
-    display: block;
-    width: 100%;
-  }
-  
-  .mainLayout * {
-    all: revert-layer; /* 하위 요소도 모두 초기화 */
-  }
+    .mainLayout {
+        /* 상위 스타일을 완전히 무시하고 기본값으로 되돌림 */
+        all: revert-layer;
+        isolation: isolate;
+        display: block;
+        width: 100%;
+    }
+
+    .mainLayout * {
+        all: revert-layer;
+        /* 하위 요소도 모두 초기화 */
+    }
 }
 
 .mainLayout .div {
@@ -452,6 +472,7 @@
     border: 2px solid var(--base-color-5);
     outline: 0;
 }
+
 .layout .inputBox button {
     all: unset;
     position: absolute;
@@ -465,6 +486,7 @@
     z-index: 2;
     transition: all 0.2s ease;
 }
+
 .layout .inputBox button.focused {
     color: var(--base-color-5);
     font-size: 20px;
@@ -494,16 +516,21 @@
 .layout .select_region option:hover {
     color: whitesmoke;
 }
+
 .layout .select_region::-webkit-scrollbar-track {
     background: transparent;
 }
+
 .layout .select_region::-webkit-scrollbar {
     width: 4px;
 }
+
 .layout .select_region::-webkit-scrollbar-thumb,
 .layout .select_region::-webkit-scrollbar-thumb:hover,
 .layout .select_region::-webkit-scrollbar-thumb:hover {
-    background: var(--base-color-3);; /* 원하는 호버 색상으로 변경 */
+    background: var(--base-color-3);
+    ;
+    /* 원하는 호버 색상으로 변경 */
     border-radius: 4px;
 }
 
@@ -585,17 +612,19 @@
     position: relative;
 }
 
-.profile svg{
+.profile svg {
     font-size: 35px;
     cursor: pointer;
     z-index: 99;
     color: var(--base-color-1);
     border-radius: 100%;
 }
+
 .profile svg.red {
     border: 2px solid var(--base-color-5);
 }
-.profile svg.bell{
+
+.profile svg.bell {
     position: absolute;
     font-size: 13px;
     cursor: pointer;
@@ -608,17 +637,34 @@
     display: none;
     z-index: 100;
 }
+
 .profile svg.bell.shaking {
     display: flex;
     animation: shaking 0.6s ease-in-out infinite;
 }
+
 @keyframes shaking {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(-15deg); }
-    50% { transform: rotate(15deg); }
-    75% { transform: rotate(-10deg); }
-    100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-15deg);
+    }
+
+    50% {
+        transform: rotate(15deg);
+    }
+
+    75% {
+        transform: rotate(-10deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
+
 .serchBtn {
     all: unset;
     margin-left: 5px;
@@ -632,6 +678,7 @@
     opacity: 0;
     transition: all 0.2s ease-in;
 }
+
 .serchBtn.show {
     opacity: 1;
     width: 42px;
@@ -649,36 +696,43 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-end;
-    box-shadow: 0px 5px 10px rgb(0,0,0,0.2);
+    box-shadow: 0px 5px 10px rgb(0, 0, 0, 0.2);
     opacity: 0;
     z-index: 101;
     transition: all 0.1s ease-in;
     border-radius: 5px;
     pointer-events: none;
 }
+
 .humbeger.on {
     opacity: 1;
     pointer-events: auto;
 }
+
 .humbeger_btn {
     padding: 10px;
-    width: calc( 100% - 20px );
+    width: calc(100% - 20px);
     text-align: right;
     border-top: 1px solid white;
 }
-.humbeger_btn:hover{
-   background-color: #f0f0f0; /* 밝은 회색 배경 */
+
+.humbeger_btn:hover {
+    background-color: #f0f0f0;
+    /* 밝은 회색 배경 */
     border-top: 1px solid #f0f0f0;
 }
+
 .humbeger_btn.logout {
     background: var(--base-color-5);
     color: #ffffff;
 }
-.humbeger_btn.logout:hover{
+
+.humbeger_btn.logout:hover {
     filter: brightness(0.95);
 }
+
 .displayOn {
-    width: calc( 100% - 64px );
+    width: calc(100% - 64px);
     display: none;
     height: 0px;
 }
@@ -692,6 +746,7 @@
     justify-content: center;
     position: relative;
 }
+
 .profile_img img {
     display: block;
     border-radius: 100%;
@@ -699,6 +754,7 @@
     aspect-ratio: 1;
     border: 5px solid var(--base-color-1);
 }
+
 .profile_img div,
 .profile_img input {
     all: unset;
@@ -710,7 +766,7 @@
     font-weight: 'bold';
     width: calc(100% - 55px);
     aspect-ratio: 1;
-    background-color: rgb(0,0,0,0.2);
+    background-color: rgb(0, 0, 0, 0.2);
     border-radius: 100%;
     display: flex;
     align-items: center;
@@ -725,6 +781,74 @@
     opacity: 1;
 }
 
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loading .loading_circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--base-color-3) 10%, var(--base-color-1) 100%);
+    animation: rotate 2s linear infinite;
+    position: relative;
+}
+
+.loading .center-image {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 140px;
+    background: var(--base-color-3);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    z-index: 10;
+    margin-top: 5px;
+    animation: shake 2s ease-in-out infinite;
+}
+.loading .center-image img {
+    width: 80%;
+    height: 80%;
+    border-radius: 100%;
+}
+.loading .loading-text {
+    padding: '10px';
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--base-color-1);
+    padding: 10px;
+    white-space: pre-line;
+    text-align: center;
+    line-height: 1.6;
+}
+
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 행성 궤도 애니메이션 (역방향) */
+@keyframes orbit-reverse {
+    from {
+        transform: rotate(360deg) translateX(79px) rotate(-360deg);
+    }
+
+    to {
+        transform: rotate(0deg) translateX(79px) rotate(0deg);
+    }
+}
+
 /* 미디어 쿼리 */
 @media screen and (max-width: 720px) {
     .layout {
@@ -732,7 +856,7 @@
     }
 
     .layout .breakpoints {
-        margin: 10px 0 0px 0;
+        margin: 5px 0 0px 0;
     }
 
     .layout_header {
@@ -745,6 +869,7 @@
         padding-bottom: 7.5px;
         transform: translateY(0px);
     }
+
     .layout_header .layout_menu_top {
         display: flex;
         opacity: 0;
