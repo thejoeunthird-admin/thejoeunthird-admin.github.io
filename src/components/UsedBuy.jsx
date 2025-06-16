@@ -4,6 +4,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "../supabase/supabase";
 import { UsedItem } from './UsedItem';
+import { LoadingCircle } from './LoadingCircle';
 
 export function UsedBuy() {
     const shadowHostRef = useRef(null);
@@ -88,8 +89,7 @@ export function UsedBuy() {
     };
 
     const UsedBuyContent = () => {
-        if (!posts) return <div>로딩중</div>;
-
+        if (!posts) return <LoadingCircle />;
         return (
             <Container className="mt-4">
                 <Row className="g-4">
