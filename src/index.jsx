@@ -14,8 +14,7 @@ import { UsedSell } from './components/UsedSell';
 import { UsedShare } from './components/UsedShare';
 import { UsedBuy } from './components/UsedBuy';
 import { Main } from './components/Main';
-
-
+import { UsedDetail } from './components/UsedDetail';
 
 function App() {
   return (
@@ -34,10 +33,10 @@ function App() {
             <Route path='/trade/sell' element={<UsedSell />} />
             <Route path='/trade/share' element={<UsedShare />} />
             <Route path='/trade/buy' element={<UsedBuy />} />
+            <Route path="/trade/:id/:item" element={<UsedDetail />} />
             {/* 김종현 작업 -- 공구, 전체 */}
             <Route path='/trade' element={<Trade />} />
             <Route path='/trade/gonggu' element={<Trade />} />
-
           </Routes>
         </Layout>
       </ReduxProvider>
