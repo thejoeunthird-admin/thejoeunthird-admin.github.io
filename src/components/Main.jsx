@@ -10,8 +10,11 @@ import { formatDateTime } from '../utils/formatDateTime';
 import { useImage } from '../hooks/useImage';
 import { LoadingCircle } from './LoadingCircle';
 import { formatTime } from '../utils/fomatTime';
+import { useNavigate } from 'react-router-dom';
 
 function BestItems() {
+    const nav = useNavigate();
+    const { findById } =useCategoriesTable();
     const [gonggu, setGonggu] = useState([])
     const [items, setItems] = useState([]);
     const [error, setError] = useState(false);
@@ -66,7 +69,14 @@ function BestItems() {
                 <ul className='row trade'>
                     <h2 className='row_title'>중고 거래</h2>
                     {items.map((o, k) =>
-                        <li key={k} className='contents'>
+                        <li 
+                            key={k} 
+                            className='contents'
+                            onClick={(e)=>{
+                                e.preventDefault();
+                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}`)
+                            }}
+                        >
                             <img src={o.main_img} className='contents-img' />
                             <div className='contents-box'>
                                 <p className='start-string'>
@@ -102,7 +112,14 @@ function BestItems() {
                 <ul className='row trade'>
                     <h2 className='row_title'>공동 구매</h2>
                     {gonggu.map((o, k) =>
-                        <li key={k} className='contents'>
+                        <li 
+                            key={k} 
+                            className='contents'
+                            onClick={(e)=>{
+                                e.preventDefault();
+                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}`)
+                            }}
+                        >
                             <img src={o.main_img} className='contents-img' />
                             <div className='contents-box'>
                                 <p className='start-string'>
@@ -142,11 +159,13 @@ function BestItems() {
 
 
 function BestBoards() {
+    const nav = useNavigate();
     const { findById } = useCategoriesTable();
     const { getImages } = useImage();
     const [boardsTop3, setBoardsTop3] = useState([]);
     const [boards, setBoards] = useState([]);
     const [error, setError] = useState(false);
+    
     useEffect(() => {
         const fetchBoards = async () => {
             const { data, error: dataError } = await supabase.rpc('get_top_liked_boards');
@@ -179,7 +198,14 @@ function BestBoards() {
         return (<>
             <ul className="bestBoards">
                 {boardsTop3.map((o, k) =>
-                    <li key={k} className='contents'>
+                    <li 
+                        key={k} 
+                        className='contents'
+                        onClick={(e)=>{
+                            e.preventDefault();
+                            nav(`/life/detail/${o.id}`)
+                        }}
+                    >
                         <p className='contents_title'>
                             {o.title}
                         </p>
@@ -206,7 +232,14 @@ function BestBoards() {
                 )}
                 <li className='contents-span'>
                     {boards.map((o, k) =>
-                        <a key={k} className='line'>
+                        <a 
+                            key={k} 
+                            className='line'
+                            onClick={(e)=>{
+                                e.preventDefault();
+                                nav(`/life/detail/${o.id}`)
+                            }}
+                        >
                             <strong className='contents_tag'>{findById(o.category_id).name}</strong>
                             <small className='contents_title'>{o.title}</small>
                             <div style={{ display: 'flex', flexDirection: 'row', flex: '1' }}>
