@@ -14,7 +14,9 @@ import { UsedSell } from './components/UsedSell';
 import { UsedShare } from './components/UsedShare';
 import { UsedBuy } from './components/UsedBuy';
 import { Main } from './components/Main';
+import { UsedCreate } from './components/UsedCreate';
 import { UsedDetail } from './components/UsedDetail';
+import { UsedUpdate } from './components/UsedUpdate';
 
 function App() {
   return (
@@ -23,9 +25,9 @@ function App() {
       <ReduxProvider store={redux}>
         <Layout>
           <Routes>
-            <Route path='/' element={<Main/>} />
-            <Route path='/login' element={<Login/>} />
-            <Route path='/login/redirect' element={<LoginRedirect/>} />
+            <Route path='/' element={<Main />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/login/redirect' element={<LoginRedirect />} />
             <Route path='/my' element={<MyPage />} />
             <Route path='/my/:tap' element={<MyPage />} />
             <Route path='/my/:tap/:item' element={<MyPage />} />
@@ -34,6 +36,8 @@ function App() {
             <Route path='/trade/share' element={<UsedShare />} />
             <Route path='/trade/buy' element={<UsedBuy />} />
             <Route path="/trade/:id/:item" element={<UsedDetail />} />
+            <Route path='/trade/deal/register' element={<UsedCreate />} />
+            <Route path='/trade/:id/:item/update' element={<UsedUpdate />} />
             {/* 김종현 작업 -- 공구, 전체 */}
             <Route path='/trade' element={<Trade />} />
             <Route path='/trade/gonggu' element={<Trade />} />
@@ -47,7 +51,7 @@ function App() {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
-    <App />
+  <App />
   // </React.StrictMode>
 );
 
