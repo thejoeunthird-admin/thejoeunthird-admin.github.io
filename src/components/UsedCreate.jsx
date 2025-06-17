@@ -8,6 +8,8 @@ import { useUserTable } from "../hooks/useUserTable";
 import { useRegion } from "../hooks/useRegion";
 import { Form, Button, FloatingLabel, Image, Spinner, InputGroup } from "react-bootstrap";
 
+// useRef()_
+
 export function UsedCreate() {
     const shadowHostRef = useRef(null);
     const [shadowRoot, setShadowRoot] = useState(null);
@@ -26,6 +28,7 @@ export function UsedCreate() {
     const { images, setImages, getImages, initImage } = useImage();
     const [fileCount, setFileCount] = useState(0);
     const fileInputRef = useRef();
+    const titleRef = useRef();
 
     // useUserTable 훅
     const { info: userInfo, loading, error } = useUserTable();
@@ -131,7 +134,7 @@ export function UsedCreate() {
             alert("카테고리를 선택해주세요.");
             return;
         }
-        if (!title || !content) {
+        if (!titleRef.current.value || !content) {
             alert("제목과 내용을 모두 작성해주세요.");
             return;
         }
@@ -208,8 +211,7 @@ export function UsedCreate() {
                         <FloatingLabel label="제목">
                             <Form.Control
                                 type="text"
-                                value={title}
-                                onChange={e => setTitle(e.target.value)}
+                                ref={titleRef}
                                 placeholder="제목"
                                 required
                             />

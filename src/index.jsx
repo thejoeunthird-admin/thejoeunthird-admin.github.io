@@ -47,6 +47,7 @@ function App() {
             <Route path='/trade' element={<Trade />} />
             <Route path='/trade/gonggu' element={<Trade />} />
             {/* 이신아 작업 -- 일반 게시판 */}
+            <Route path="/life" element={<BoardListPage />} />
             <Route path="/life/:tap" element={<BoardListPage />} />
             <Route path="/life/write" element={<WritePage />} />
             <Route path="/life/detail/:id" element={<BoardDetailPage />} />

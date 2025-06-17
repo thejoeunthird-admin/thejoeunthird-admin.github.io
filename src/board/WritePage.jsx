@@ -1,35 +1,33 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { useParams, useNavigate } from "react-router-dom";
-import { Container, Row, Col, Card, Button, Spinner, Badge, Image } from "react-bootstrap";
-import { supabase } from "../supabase/supabase";
+import { useNavigate, useParams } from "react-router-dom";
+import { supabase } from '../supabase/supabase';
 import { useUserTable } from "../hooks/useUserTable";
-import { Comments } from "../components/Comments";
+import { useImage } from "../hooks/useImage";
 
 const getImages = (path) =>
     `https://mkoiswzigibhylmtkzdh.supabase.co/storage/v1/object/public/images/${path}`;
 
-export default function BoardDetailPage() {
+export default function WritePage() {
     const shadowHostRef = useRef(null);
     const [shadowRoot, setShadowRoot] = useState(null);
-
-    const { id } = useParams();
+    
+    const { id: editId } = useParams();
+    const [title, setTitle] = useState("");
+    const [contents, setContents] = useState("");
+    const [categoryId, setCategoryId] = useState("");
+    const [categories, setCategories] = useState([]);
+    const [mainIndex, setMainIndex] = useState(0);
+    const [oldImages, setOldImages] = useState([]);
     const navigate = useNavigate();
     const user = useUserTable();
-
-    const [post, setPost] = useState(null);
-    const [currentUserId, setCurrentUserId] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    const [likesCount, setLikesCount] = useState(0);
-    const [isLiked, setIsLiked] = useState(false);
-    const [isLiking, setIsLiking] = useState(false);
+    const { images, setImages } = useImage();
 
     // Shadow DOM 설정
     useEffect(() => {
         if (shadowHostRef.current && !shadowRoot) {
             const shadow = shadowHostRef.current.attachShadow({ mode: 'open' });
-
+            
             // Bootstrap CSS를 Shadow DOM에 추가
             const bootstrapLink = document.createElement('link');
             bootstrapLink.rel = 'stylesheet';
@@ -42,261 +40,218 @@ export default function BoardDetailPage() {
             bootstrapScript.async = true;
             shadow.appendChild(bootstrapScript);
 
-            // 추가 스타일링
-            const style = document.createElement('style');
-            style.textContent = `
-                .hover-shadow:hover {
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                    transition: box-shadow 0.2s ease;
-                }
-            `;
-            shadow.appendChild(style);
-
             const mountPoint = document.createElement('div');
             shadow.appendChild(mountPoint);
-
+            
             setShadowRoot(mountPoint);
         }
     }, [shadowRoot]);
 
+    // 카테고리 로드
     useEffect(() => {
-        async function getUser() {
-            const { data } = await supabase.auth.getUser();
-            setCurrentUserId(data?.user?.id ?? null);
-        }
-        getUser();
+        supabase.from("categories").select("id, name, parent_id").then(({ data }) => {
+            const lifeCategories = (data || []).filter(cat => cat.parent_id === 1);
+            setCategories(lifeCategories);
+        });
     }, []);
 
+    // 수정모드: 기존 데이터 불러오기 (이미지는 oldImages에!)
     useEffect(() => {
-        const fetchDetail = async () => {
-            setLoading(true);
-            const numericId = Number(id);
-            if (isNaN(numericId)) return;
-
-            const { data: postData, error } = await supabase
-                .from("boards")
-                .select("*, users(name), categories(name)")
-                .eq("id", numericId)
-                .single();
-
-            if (!postData || error) {
-                setLoading(false);
-                return;
+        if (!editId) return;
+        (async () => {
+            const { data } = await supabase.from("boards").select("*").eq("id", editId).single();
+            if (data) {
+                setTitle(data.title);
+                setContents(data.contents);
+                setCategoryId(data.category_id + "");
+                const imgs = [data.main_img, data.detail_img1, data.detail_img2, data.detail_img3, data.detail_img4].filter(Boolean);
+                setOldImages(imgs);
+                setMainIndex(0);
             }
+        })();
+    }, [editId]);
 
-            await supabase
-                .from("boards")
-                .update({ cnt: (postData.cnt ?? 0) + 1 })
-                .eq("id", numericId);
+    // 기존 이미지 삭제
+    const handleRemoveOldImage = (idx) => {
+        setOldImages(oldImages.filter((_, i) => i !== idx));
+        // 메인 인덱스 조정 (삭제 시)
+        if (mainIndex === idx) setMainIndex(0);
+        else if (mainIndex > idx) setMainIndex(mainIndex - 1);
+    };
 
-            setPost({ ...postData, cnt: (postData.cnt ?? 0) + 1 });
-            setLoading(false);
-        };
-        fetchDetail();
-    }, [id]);
+    // 기존+새이미지 합치기
+    const allImages = [...oldImages, ...images.filter(Boolean)];
+    const currentMainImg = allImages[mainIndex];
 
-    useEffect(() => {
-        const fetchLikes = async () => {
-            if (!post) return;
+    // 대표/디테일 추출
+    const main_img = currentMainImg || null;
+    const detailImages = allImages
+        .map((img, idx) => ({ img, idx }))
+        .filter(obj => obj.idx !== mainIndex)
+        .map(obj => obj.img)
+        .concat(Array(4).fill(null))
+        .slice(0, 4);
+    const [detail_img1, detail_img2, detail_img3, detail_img4] = detailImages;
 
-            const { count } = await supabase
-                .from("likes")
-                .select("*", { count: "exact", head: true })
-                .eq("category_id", post.category_id)
-                .eq("table_id", post.id);
-            setLikesCount(count || 0);
+    // 파일 input에서 새 이미지 추가
+    const handleFileChange = (e) => {
+        setImages(e); // useImage 내부에서만 처리
+    };
 
-            if (user.info) {
-                const { data } = await supabase
-                    .from("likes")
-                    .select("id")
-                    .eq("category_id", post.category_id)
-                    .eq("table_id", post.id)
-                    .eq("user_id", user.info.id);
-                setIsLiked(data.length > 0);
-            } else {
-                setIsLiked(false);
-            }
-        };
-
-        fetchLikes();
-    }, [post, user.info]);
-
-    const handleLikeToggle = async () => {
-        if (!user.info || !post) {
-            alert("로그인이 필요합니다.");
+    // 저장/수정
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!title || !contents || !categoryId) {
+            alert("모든 값을 입력하세요.");
             return;
         }
 
-        setIsLiking(true);
-        try {
-            if (isLiked) {
-                await supabase
-                    .from("likes")
-                    .delete()
-                    .eq("category_id", post.category_id)
-                    .eq("table_id", post.id)
-                    .eq("user_id", user.info.id);
-                setIsLiked(false);
-            } else {
-                await supabase
-                    .from("likes")
-                    .insert({
-                        category_id: post.category_id,
-                        table_id: post.id,
-                        user_id: user.info.id,
-                    });
-                setIsLiked(true);
-            }
+        const payload = {
+            title,
+            contents,
+            category_id: Number(categoryId),
+            user_id: user.info.id,
+            main_img,
+            detail_img1,
+            detail_img2,
+            detail_img3,
+            detail_img4
+        };
 
-            const { count } = await supabase
-                .from("likes")
-                .select("*", { count: "exact", head: true })
-                .eq("category_id", post.category_id)
-                .eq("table_id", post.id);
-            setLikesCount(count || 0);
-        } catch (err) {
-            console.error("좋아요 처리 오류:", err);
-            alert("좋아요 처리 중 오류가 발생했습니다.");
-        } finally {
-            setIsLiking(false);
+        let error;
+        let newId = editId;
+        if (editId) {
+            ({ error } = await supabase.from("boards").update(payload).eq("id", editId));
+        } else {
+            const { data, error: insertError } = await supabase.from("boards").insert([payload]).select();
+            error = insertError;
+            if (data && data[0]?.id) newId = data[0].id;
+        }
+
+        if (error) {
+            alert((editId ? "수정" : "글 등록") + " 실패: " + error.message);
+        } else {
+            alert(editId ? "수정되었습니다!" : "등록되었습니다!");
+            navigate(`/life/detail/${newId}`);
         }
     };
 
-    const handleDelete = async () => {
-        if (!window.confirm("정말 삭제하시겠습니까?")) return;
-        await supabase.from("boards").delete().eq("id", post.id);
-        navigate("/life/all");
-    };
-
-    const formatDate = (dateStr) => {
-        if (!dateStr) return "";
-        const d = new Date(dateStr);
-        const plus9 = new Date(d.getTime() + 9 * 60 * 60 * 1000);
-        return `${plus9.getFullYear()}. ${plus9.getMonth() + 1}. ${plus9.getDate()}. ${plus9
-            .getHours()
-            .toString()
-            .padStart(2, "0")}:${plus9.getMinutes().toString().padStart(2, "0")}`;
-    };
-
-    const BoardDetailContent = () => {
-        if (loading || !post) {
-            return (
-                <Container className="text-center py-5">
-                    <Spinner animation="border" />
-                </Container>
-            );
-        }
-
-        const detailImages = [
-            post?.detail_img1,
-            post?.detail_img2,
-            post?.detail_img3,
-            post?.detail_img4,
-        ].filter(Boolean);
-
+    const WritePageContent = () => {
         return (
             <>
-                {/* 본문 카드 영역 */}
-                <Container style={{ maxWidth: "1100px", margin: "30px auto" }}>
-                    <Card className="shadow rounded-4 border-0 p-4">
-                        {/* 상단 버튼 */}
-                        <div className="d-flex justify-content-end mb-3">
-                            <Button
-                                variant="outline-secondary"
-                                size="sm"
-                                onClick={() => navigate(-1)}
-                                style={{ borderRadius: 8 }}
-                            >
-                                목록
-                            </Button>
-                        </div>
-
-                        {/* 카테고리, 날짜, 조회수 */}
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                            <div>
-                                <Badge bg="light" text="dark" className="me-2">
-                                    {post.categories?.name || "-"}
-                                </Badge>
-                                <span style={{ color: "#888", fontSize: 13 }}>
-                                    {formatDate(post.create_date)} · 조회 {post.cnt}
-                                </span>
-                            </div>
-                            <div style={{ color: "#888", fontSize: 14 }}>
-                                {post.users?.name || "익명"}
-                            </div>
-                        </div>
-
-                        {/* 제목 */}
-                        <h2 className="fw-bold mb-3">{post.title}</h2>
-
-                        {/* 메인 이미지 */}
-                        {post.main_img && (
-                            <Image
-                                src={getImages(post.main_img)}
-                                alt="대표 이미지"
-                                rounded
-                                className="mb-3"
-                                style={{ width: "100%", maxHeight: 400, objectFit: "contain" }}
+                {/* 왼쪽 전체 카테고리 ul(ul.ul)만 BoardDetailPage에서 숨김 */}
+                <style>
+                    {`
+                  .ul {
+                    display: none !important;
+                  }
+                `}
+                </style>
+                <div>
+                    <h2>{editId ? "게시글 수정" : "게시글 작성"}</h2>
+                    <form onSubmit={handleSubmit}>
+                        <span>
+                            <select value={categoryId} onChange={e => setCategoryId(e.target.value)}>
+                                <option value="">카테고리 선택</option>
+                                {categories.map(cat => (
+                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                ))}
+                            </select>
+                        </span>
+                        <span>
+                            <input type="text"
+                                placeholder="제목"
+                                value={title}
+                                onChange={e => setTitle(e.target.value)}
                             />
-                        )}
-
-                        {/* 상세 이미지 */}
-                        {detailImages.map((img, i) => (
-                            <Image
-                                key={i}
-                                src={getImages(img)}
-                                alt={`상세 이미지 ${i + 1}`}
-                                rounded
-                                className="mb-3"
-                                style={{ width: "100%", maxHeight: 400, objectFit: "contain" }}
+                        </span>
+                        <div>
+                            <textarea
+                                placeholder="내용"
+                                value={contents}
+                                onChange={e => setContents(e.target.value)}
+                                rows={8}
+                                cols={40}
                             />
-                        ))}
-
-                        {/* 내용 */}
-                        <div
-                            style={{
-                                fontSize: 15,
-                                whiteSpace: "pre-line",
-                                lineHeight: 1.8,
-                                color: "#333",
-                            }}
-                            className="mb-4"
-                        >
-                            {post.contents}
                         </div>
 
-                        {/* 좋아요 */}
-                        <div className="mb-3">
-                            <Button
-                                variant={isLiked ? "danger" : "outline-danger"}
-                                size="sm"
-                                onClick={handleLikeToggle}
-                                disabled={isLiking}
-                            >
-                                {isLiked ? "❤️ 좋아요 취소" : "🤍 좋아요"}
-                            </Button>
-                            <span style={{ marginLeft: 12, color: "#888", fontSize: 14 }}>
-                                좋아요 {likesCount}개
-                            </span>
+                        {/* 이미지 프리뷰 영역 */}
+                        <div style={{ margin: "16px 0", display: "flex", gap: 8, flexWrap: "wrap" }}>
+                            {/* 기존 이미지 */}
+                            {oldImages.map((img, idx) => (
+                                <div key={`old-${idx}`} style={{ position: "relative", cursor: "pointer" }}>
+                                    <img
+                                        src={getImages(img)}
+                                        alt={`기존이미지${idx + 1}`}
+                                        style={{
+                                            width: 80,
+                                            height: 80,
+                                            objectFit: "cover",
+                                            borderRadius: 5,
+                                            border: mainIndex === idx ? "3px solid #e14989" : "1px solid #eee",
+                                            boxSizing: "border-box"
+                                        }}
+                                        onClick={() => setMainIndex(idx)}
+                                    />
+                                    <button
+                                        type="button"
+                                        style={{
+                                            position: "absolute", top: 4, right: 4, background: "none", nborder: "none", 
+                                            color: "#d32f2f", fontSize: 22, fontWeight: "bold", cursor: "pointer", padding: 0, zIndex: 10
+                                        }}
+                                        onClick={() => handleRemoveOldImage(idx)}
+                                        aria-label="이미지 삭제"
+                                    > X </button>
+
+                                    {mainIndex === idx && (
+                                        <span style={{
+                                            position: "absolute", top: 4, left: 4, background: "#e14989", color: "#fff",
+                                            padding: "1px 7px", fontSize: 11, borderRadius: 3, fontWeight: 700
+                                        }}>
+                                            대표
+                                        </span>
+                                    )}
+                                </div>
+                            ))}
+                            {/* 새 이미지 */}
+                            {images.filter(Boolean).map((img, idx) => (
+                                <div key={`new-${idx}`} style={{ position: "relative", cursor: "pointer" }}>
+                                    <img
+                                        src={getImages(img)}
+                                        alt={`업로드이미지${idx + 1}`}
+                                        style={{
+                                            width: 80,
+                                            height: 80,
+                                            objectFit: "cover",
+                                            borderRadius: 5,
+                                            border: mainIndex === (oldImages.length + idx) ? "3px solid #e14989" : "1px solid #eee",
+                                            boxSizing: "border-box"
+                                        }}
+                                        onClick={() => setMainIndex(oldImages.length + idx)}
+                                    />
+                                    {mainIndex === (oldImages.length + idx) && (
+                                        <span style={{
+                                            position: "absolute", top: 4, left: 4, background: "#e14989", color: "#fff",
+                                            padding: "1px 7px", fontSize: 11, borderRadius: 3, fontWeight: 700
+                                        }}> 대표 </span>
+                                    )}
+                                </div>
+                            ))}
                         </div>
 
-                        {/* 수정/삭제 */}
-                        {post.user_id === currentUserId && (
-                            <div className="d-flex justify-content-end gap-2">
-                                <Button
-                                    variant="outline-primary"
-                                    onClick={() => navigate(`/life/edit/${post.id}`)}
-                                >
-                                    수정
-                                </Button>
-                                <Button variant="outline-danger" onClick={handleDelete}>
-                                    삭제
-                                </Button>
-                            </div>
-                        )}
-                    </Card>
-                </Container>
+                        <div style={{ margin: "16px 0" }}>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={handleFileChange}
+                            />
+                            <p style={{ color: "#888", fontSize: 13 }}>대표이미지로 지정할 이미지를 클릭하세요! (최대 5장)</p>
+                        </div>
+
+                        <button type="submit">{editId ? "수정" : "등록"}</button>
+                    </form>
+                </div>
             </>
         );
     };
@@ -304,16 +259,7 @@ export default function BoardDetailPage() {
     return (
         <div>
             <div ref={shadowHostRef}></div>
-            {shadowRoot && createPortal(<BoardDetailContent />, shadowRoot)}
-
-            {/* 댓글 영역 - Shadow DOM 외부에 유지 */}
-            {!loading && post && (
-                <Container style={{ maxWidth: "1100px", marginTop: 30, marginBottom: 60 }}>
-                    <Card className="shadow-sm border-0 rounded-4 p-4">
-                        <Comments productId={post.id} categoryId={post.category_id} />
-                    </Card>
-                </Container>
-            )}
+            {shadowRoot && createPortal(<WritePageContent />, shadowRoot)}
         </div>
     );
 }
