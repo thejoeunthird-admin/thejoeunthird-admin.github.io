@@ -1,0 +1,247 @@
+.container {
+    width: calc(100% - 20px);
+    padding: 0px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container .boardsHeader {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 800;
+    padding: 20px 0px;
+    width: 100%;
+}
+
+.container .bestBoards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+}
+
+.container .bestBoards .contents {
+    width: calc(33% - 5px);
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px rgb(0,0,0,0.1);
+}
+.container .bestBoards .contents .contents_title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 750;
+    width: 90%;                    /* 또는 max-width: 90%; */
+    margin: 15px 0px 10px 5%;
+    padding: 0 2px;
+    padding-bottom: 3.5px;
+    color: var(--base-color-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.container .bestBoards .contents .contents_img {
+    width: 90%;
+    aspect-ratio: 1 / 0.65;
+    padding: 0px 5%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container .bestBoards .contents .contents_img img{
+    width: 100%;
+}
+
+.container .bestBoards .contents .contents_box {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    padding: 5px 5%;
+}
+.container .bestBoards .contents .contents_box .tag {
+    width: fit-content;
+    font-weight: 500;
+}
+.container .bestBoards .contents .contents_box .timestamp{
+    flex: 1;
+    text-align: right;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+    font-weight: 650;
+}
+.container .bestBoards .contents .contents_area {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 650;
+    padding: 5px 5%;
+    color: rgb(0,0,0,0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.container .bestBoards .contents .contents_icon {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 0.95rem;
+    font-weight: 650;
+    padding: 5px 5%;
+    padding-bottom: 15px;
+    color: rgba(0, 0, 0, 1);
+    height: 1rem;
+}
+.container .bestBoards .contents-span {
+    width: 66%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 7.5px;
+}
+.container .bestBoards .contents-span .line {
+    display: flex;
+    flex-direction: row;
+    width: calc(100% -40px);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px rgb(0,0,0,0.1);
+}
+.container .bestBoards .contents-span .line .contents_tag {
+    font-weight: 750;
+    margin-right: 5px;
+    white-space: nowrap;
+}
+.container .bestBoards .contents-span .line .contents-row-tag {
+    display: none;
+    color: rgba(0, 0, 0, 0.4);
+    font-weight: 650;
+    font-size: 0.9rem;
+    margin-top: 0.1rem;
+    margin-right: 5px;
+}
+.container .bestBoards .contents-span .line .contents_title {
+    display: inline-block;         /* 또는 block / flex 가능 */
+    white-space: nowrap;           /* 줄바꿈 없이 한 줄로 유지 */
+    overflow: hidden;              /* 넘치는 텍스트 숨김 */
+    text-overflow: ellipsis;       /* 넘치는 텍스트를 ...으로 */
+    max-width: fit-content;              /* 또는 width 지정이 꼭 필요함 */
+    font-weight: 500;
+}
+
+.container .bestBoards .contents-span .line .contents_icon {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 0.95rem;
+    font-weight: 650;
+    color: rgba(0, 0, 0, 1);
+    height: 1rem;
+    white-space: nowrap;
+}
+.container .bestBoards .contents-hidden {
+    width: calc(33% - 5px);
+}
+
+/* items */
+.container .bestItems {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+}
+.container .bestItems .row {
+    width: 50%;
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px rgb(0,0,0,0.1);
+    padding-bottom: 10px;
+    height: fit-content;
+}
+.container .bestItems .row .row_title {
+    padding: 20px 20px;
+    padding-bottom: 5px;
+    font-weight: 800;
+}
+.container .bestItems .contents {
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    width: calc(100% - 40px);
+    height: fit-content;
+    gap: 10px;
+}
+.container .bestItems .contents .contents-img {
+    height: 100px;
+    width: 100px;
+}
+.container .bestItems .contents .contents-box {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 5px;
+}
+.container .bestItems .contents .contents-box .start-string{
+    display: flex;
+    flex-direction: row;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.4);
+}
+.container .bestItems .contents .contents-box .start-string .end-string{
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-left: auto;
+    color: black;
+}
+.container .bestItems .contents .contents-box .contents-title{
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 1px 0px;
+}
+.container .bestItems .contents .contents-box .contents-string{
+    font-size: 1.rem;
+    font-weight: 600;
+    padding: 1px 0px;
+    color: rgb(0,0,0,0.5);
+}
+
+
+@media screen and (max-width: 840px) {
+    .container .bestBoards .contents {
+        width: calc(50% - 5px);
+    }
+    .container .bestBoards .contents-span {
+        width: calc(50% - 5px);
+    }
+    .container .bestBoards .contents-span .line {
+        flex-direction: column;
+    }
+    .container .bestBoards .contents-span .line .contents_title{
+        padding: 5px 0px;
+    }
+    .container .bestBoards .contents-span .line .contents_tag {
+        display: none;
+    }
+    .container .bestBoards .contents-span .line .contents-row-tag {
+        display: block;
+    }
+    .container .bestBoards .contents-hidden {
+        display: none;
+    }
+    .container .bestItems {
+        flex-direction: column;
+    }
+    .container .bestItems .row {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .container .bestBoards .contents {
+        width: calc(100% - 5px);
+    }
+    .container .bestBoards .contents-span {
+        width: calc(100% - 5px);
+    }
+}

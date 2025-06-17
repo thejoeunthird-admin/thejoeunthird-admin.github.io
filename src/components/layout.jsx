@@ -33,11 +33,15 @@ const board_init = (categories) => {
 };
 
 const SearchBar = forwardRef(({ }, ref) => {
+    const navigate = useNavigate();
     const [isFocused, setIsFocused] = useState(false);
     return (
         <form className="inputBox"
             onSubmit={(e) => {
                 e.preventDefault();
+                const value = ref.current?.value.trim();
+                navigate(`?keyword=${encodeURIComponent(value)}`);
+                ref.current.value = '';
             }}
         >
             <input
@@ -130,7 +134,7 @@ export function Layout({ children }) {
     }, []);
 
 
-    if (isLoading()) return(<></>);
+    if (isLoading()) return (<></>);
     return (
         <div className="layout">
             <header className={atTop ? "layout_header top" : "layout_header"}>
@@ -158,7 +162,7 @@ export function Layout({ children }) {
                             <React.Fragment key={k}>
                                 <p
                                     className={`board-item ${o.url === board[0]?.url ? 'red' : ''}`}
-                                    onClick={(e) => handleNavigate(e, `/${o.url}`)}
+                                    onClick={(e) => handleNavigate(e, `/${o.url}?keyword=`)}
                                 >
                                     {o.name}
                                 </p>
@@ -204,7 +208,7 @@ export function Layout({ children }) {
                         </>)}
                         {user.info ? (
                             (board.length === 0 || !['my', 'login'].includes(board[0]?.url)) && (
-                                <div className="profile"
+                                <div className="profile red"
                                     onClick={(e) => {
                                         e.preventDefault()
                                         setHumbeger(!humbeger);
@@ -274,7 +278,7 @@ export function Layout({ children }) {
                             <React.Fragment key={k}>
                                 <p
                                     className={`board-item ${o.url === board[0]?.url ? 'red' : ''}`}
-                                    onClick={(e) => handleNavigate(e, `/${o.url}`)}
+                                    onClick={(e) => handleNavigate(e, `/${o.url}?keyword=`)}
                                 >
                                     {o.name}
                                 </p>
@@ -296,12 +300,13 @@ export function Layout({ children }) {
                     </div>
                 </div>
             ) : (
-                <main
-                    className="mainLayout"
-                    style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                >
-                    <div className='div' style={{ marginBottom: '50px' }}>{children}</div>
-                </main>
+                <div className="breakpoints main" >
+                    <div className='div' style={{ marginBottom: '50px', }}>
+                        <main className="mainLayout">
+                            <div>{children}</div>
+                        </main>
+                    </div>
+                </div>
             )}
             <footer className='layout_footer'>
                 <div className="footer_container">

@@ -13,6 +13,7 @@ import { Trade } from './components/Trade'
 import { UsedSell } from './components/UsedSell';
 import { UsedShare } from './components/UsedShare';
 import { UsedBuy } from './components/UsedBuy';
+import { Main } from './components/Main';
 
 
 
@@ -23,7 +24,7 @@ function App() {
       <ReduxProvider store={redux}>
         <Layout>
           <Routes>
-            <Route path='/' element={<TestPage/>} />
+            <Route path='/' element={<Main/>} />
             <Route path='/login' element={<Login/>} />
             <Route path='/login/redirect' element={<LoginRedirect/>} />
             <Route path='/my' element={<MyPage />} />
@@ -36,7 +37,7 @@ function App() {
             {/* 김종현 작업 -- 공구, 전체 */}
             <Route path='/trade' element={<Trade />} />
             <Route path='/trade/gonggu' element={<Trade />} />
-            
+
           </Routes>
         </Layout>
       </ReduxProvider>

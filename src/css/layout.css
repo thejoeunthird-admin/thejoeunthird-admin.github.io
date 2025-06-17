@@ -387,6 +387,11 @@
     min-width: var(--breakpoint-min);
     max-width: var(--breakpoint-max);
 }
+/* 
+.mainLayout.mainPage {
+    
+
+} */
 
 /* 토글 아이템 */
 .layout .breakpoints.main .div .div.toogle_item {
@@ -681,7 +686,7 @@
 
 .serchBtn.show {
     opacity: 1;
-    width: 42px;
+    width: 30px;
 }
 
 .humbeger {
@@ -781,52 +786,6 @@
     opacity: 1;
 }
 
-.loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.loading .loading_circle {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--base-color-3) 10%, var(--base-color-1) 100%);
-    animation: rotate 2s linear infinite;
-    position: relative;
-}
-
-.loading .center-image {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    width: 140px;
-    height: 140px;
-    background: var(--base-color-3);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 30px;
-    z-index: 10;
-    margin-top: 5px;
-    animation: shake 2s ease-in-out infinite;
-}
-
-.loading .center-image img {
-    width: 80%;
-    height: 80%;
-    border-radius: 100%;
-}
-.loading .loading-text {
-    font-weight: 800;
-    font-size: 1.3rem;
-    color: var(--base-color-1);
-    padding: 10px;
-    white-space: pre-line;
-    text-align: center;
-    line-height: 1.6;
-}
-
 @keyframes rotate {
     from {
         transform: rotate(0deg);
@@ -865,7 +824,6 @@
     .layout_header.top .layout_menu_top {
         display: flex;
         opacity: 1;
-        padding-bottom: 7.5px;
         transform: translateY(0px);
     }
 

@@ -70,6 +70,7 @@ export function MyPageTalkLog({ user }) {
             receiver_id: user.info.id,
             chat: message,
         });
+        // 알림 인서트 
         if (!error) inputRef.current.value = '';
         fetchChatLog();
     }, [talk]);
@@ -77,7 +78,8 @@ export function MyPageTalkLog({ user }) {
     // 일반 구매
     const handleOrder = useCallback(async (e, item) => {
         e.preventDefault();
-        if (item.trades.state !== 1) return;
+        console.log(item.trades)
+        if (item.trades.state >= 1) return;
         if (item.trades.category_id === 7) {
             // 공구 구매?
         }

@@ -10,7 +10,7 @@ export function LayoutMenu({ board }) {
                 className={board[1] === undefined ? 'layout_menu_li select' : 'layout_menu_li'}
                 onClick={(e) => {
                     e.preventDefault();
-                    nav(`/${board[0].url}`);
+                    nav(`/${board[0].url}?keyword=`);
                 }}
             >
                 { board[1] === undefined?<FaDotCircle/>:<FaRegCircle/> }
@@ -22,7 +22,7 @@ export function LayoutMenu({ board }) {
                     className={o.url === board[1]?.url ? 'layout_menu_li select' : 'layout_menu_li'}
                     onClick={(e) =>{
                         e.preventDefault();
-                        nav(`/${board[0].url}/${o.url}`)
+                        nav(`/${board[0].url}/${o.url}/?keyword=`)
                     }}
                 >
                     { o.url === board[1]?.url?<FaDotCircle/>:  <FaRegCircle/>}

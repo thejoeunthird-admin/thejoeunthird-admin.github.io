@@ -78,7 +78,7 @@ export const LayoutMenuTop = ({ board }) => {
 
   return (
     <div className="layout_menu_top">
-      <div className="breakpoints" style={{ marginTop:'7.5px' }}>
+      <div className="breakpoints" style={{ padding:'5px 0px' }}>
         <div className="layout_menu_top_wrapper"></div>
         <ul
           className="layout_menu_top_ul"
@@ -94,7 +94,7 @@ export const LayoutMenuTop = ({ board }) => {
             className={board[1] === undefined ? 'layout_menu_top_li select' : 'layout_menu_top_li'}
             onClick={(e) => {
               e.preventDefault();
-              navigate(`/${board[0].url}`);
+              navigate(`/${board[0].url}?keyword=`);
             }}
           >
             {board[0].url !== 'my' ? '전체' : '내정보'}
@@ -105,7 +105,7 @@ export const LayoutMenuTop = ({ board }) => {
               key={k}
               className={o.url === board[1]?.url ? 'layout_menu_top_li select' : 'layout_menu_top_li'}
               onClick={(e) => {
-                handleNavigate(e, `/${board[0].url}/${o.url}`);
+                handleNavigate(e, `/${board[0].url}/${o.url}/?keyword=`);
               }}
             >
               {o.name}
