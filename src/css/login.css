@@ -1,0 +1,373 @@
+.login {
+    display: flex;
+    justify-content: center;
+}
+
+.login_sectoin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    height: fit-content;
+    gap: 10px;
+    padding: 40px 0px;
+    border-radius: 10px;
+    margin-top: 40px;
+    box-shadow: 1px 5px 10px rgb(0, 0, 0, 0.1);
+    border: 1px solid #e1e3e5;
+}
+
+.login_sectoin img {
+    width: 70%;
+    aspect-ratio: 1;
+}
+
+.login_sectoin.redirect {
+    max-height: 300px;
+    overflow: hidden;
+    transition: all 0.2s ease-in;
+}
+
+.login_sectoin.redirect.full {
+    max-height: 320px;
+}
+
+.login_sectoin_new {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: fit-content;
+    height: fit-content;
+    gap: 10px;
+    padding: 40px 0px;
+    border-radius: 10px;
+    margin-top: 40px;
+    box-shadow: 1px 5px 10px rgb(0, 0, 0, 0.1);
+    border: 1px solid #e1e3e5;
+}
+
+.login_sectoin_new img {
+    width: 180px;
+    aspect-ratio: 1;
+    animation:
+        fly-vertical 1.5s infinite ease-in-out,
+        bee-wobble 1.5s infinite ease-in;
+}
+
+.login_sectoin_new .h2 {
+    font-size: 1.3rem;
+    font-weight: 750;
+    margin-bottom: 10px;
+    padding-right: 20px;
+    color: var(--base-color-1);
+
+}
+
+.glass-btn {
+    width: calc(100% - 50px);
+    height: fit-content;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.15);
+    /* backdrop-filter: blur(15px); */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 32px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--base-color-1);
+}
+
+.glass-btn svg {
+    font-size: 2rem;
+
+}
+
+.glass-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+}
+
+.honey {
+    animation: shake 2s ease infinite;
+}
+.loding {
+    font-size: 1.3rem;
+    font-weight: 750;
+    margin-top: 25px;
+    color: var(--base-color-1);
+}
+.login_sectoin.redirect.full .loding{
+    opacity: 0;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    15% {
+        transform: rotate(-5deg);
+    }
+
+    30% {
+        transform: rotate(5deg);
+    }
+
+    45% {
+        transform: rotate(-3deg);
+    }
+
+    60% {
+        transform: rotate(3deg);
+    }
+
+    75% {
+        transform: rotate(-1deg);
+    }
+
+    90% {
+        transform: rotate(1deg);
+    }
+}
+
+/* 미디어 쿼리 */
+@media screen and (max-width: 720px) {
+    .login_sectoin_new {
+        flex-direction: column;
+        align-items: center;
+        width: 355px;
+    }
+
+    .login_sectoin_new .h2 {
+        padding: 5px 20px;
+        margin-bottom: 0;
+    }
+
+    .glass-btn {
+        width: 100%;
+        justify-content: center;
+        margin-top: 5px;
+    }
+}
+
+@keyframes fly-horizontal {
+    0% {
+        transform: translateX(-100px);
+    }
+
+    100% {
+        transform: translateX(100px);
+    }
+}
+
+/* 위아래로 흔들리는 애니메이션 */
+@keyframes fly-vertical {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* 벌이 살짝 좌우로 흔들리는 효과 */
+@keyframes bee-wobble {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(2deg);
+    }
+
+    75% {
+        transform: rotate(-2deg);
+    }
+}
+
+.forWeb_div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    gap: 10px;
+}
+
+.forWeb {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    /* background: var(--base-color-4); */
+    border-radius: 100%;
+    cursor: pointer;
+    border: 1px solid #e1e3e5;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: all 0.1s ease-in;
+}
+
+.forWeb:hover {
+    filter: brightness(0.8);
+    background-color: whitesmoke;
+}
+
+.forWeb svg {
+    font-size: 40px;
+    padding: 5px;
+}
+
+.forWeb.github svg {
+    color: #a304fa;
+}
+
+.forWeb .logobox {
+    width: 50px;
+    height: 50px;
+    background: #ffffff;
+    border-radius: 5px 0px 0px 5px;
+}
+
+.forWeb .logobox img {
+    width: calc(100% - 10px);
+    padding: 5px;
+}
+
+.bouncyingBox {
+    width: fit-content;
+    min-width: 70%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+    transition: all 0.2s ease-in;
+}
+
+.bouncyingBox.out {
+    opacity: 0;
+    transform: translateY(-90px);
+}
+
+.bouncyingBox .ball {
+    width: 25px;
+    aspect-ratio: 1;
+    background: var(--base-color-1);
+    border-radius: 100%;
+    animation: bounce 1s infinite ease-in-out;
+}
+
+.bouncyingBox .ball:nth-child(1) {
+    background: var(--base-color-5);
+    animation-delay: 0.1s;
+}
+
+.bouncyingBox .ball:nth-child(2) {
+    background: var(--base-color-4);
+    animation-delay: 0.5s;
+}
+
+.bouncyingBox .ball:nth-child(3) {
+    background: var(--base-color-3);
+    animation-delay: 0.2s;
+}
+
+.bouncyingBox .ball:nth-child(4) {
+    background: var(--base-color-2);
+    animation-delay: 0.4s;
+}
+
+.bouncyingBox .ball:nth-child(5) {
+    background: var(--base-color-1);
+    animation-delay: 0.3s;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.box {
+    opacity: 0;
+    transition: all 0.2s ease-in;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.box input {
+    width: 70%;
+    aspect-ratio: 1 / 0.15;
+    padding-left: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+.box button {
+    width: 70%;
+    aspect-ratio: 1 / 0.15;
+    padding-left: 10px;
+    border: 1px solid var(--base-color-4);
+    box-sizing: border-box;
+    background: var(--base-color-4);
+    font-weight: 600;
+    border-radius: 5px;
+}
+
+.box button:hover {
+    filter: brightness(0.95);
+}
+
+.welcome {
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.welcome span {
+    font-size: 2rem;
+    padding: 10px;
+}
+
+.welcome span:last-child {
+    display: inline-block;
+    transform: scaleX(-1);
+}
+
+.box.out {
+    opacity: 1;
+    transform: translateY(-80px);
+}
+
+.toggleBox {
+    width: 70%;
+    aspect-ratio: 1 / 0.15;
+}
+
+.toggleBox select {
+    width: 50%;
+    height: 100%;
+}

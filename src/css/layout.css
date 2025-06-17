@@ -1,0 +1,870 @@
+/* 레이아웃 기본 구조 */
+.layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: fit-content;
+}
+
+.layout .breakpoints {
+    width: 100%;
+    min-width: var(--breakpoint-min);
+    max-width: var(--breakpoint-max);
+    margin: 5px 10px 0px 10px;
+}
+
+/* 헤더 */
+.layout_header {
+    position: sticky;
+    top: 0;
+    min-width: calc(var(--breakpoint-min));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* overflow: hidden; */
+    width: calc(100% - 0px);
+    height: 60px;
+    background: var(--base-color-3);
+    box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
+    transition: all 0.1s ease;
+    z-index: 99;
+}
+
+.layout_header.top,
+.layout_header.top .board-item,
+.layout_header.top .right .link,
+.layout_header .board-item,
+.layout_header.top .right .link.red {
+    height: fit-content;
+    opacity: 1;
+}
+
+.layout .breakpoints.header {
+    margin: 0 0px 5px 0;
+}
+
+.layout .breakpoints.header .link {
+    opacity: 0;
+}
+
+.layout_header:hover {
+    height: fit-content;
+    overflow: visible;
+}
+
+.layout_header:hover .layout_menu_top {
+    opacity: 1;
+}
+
+.layout_header:hover .board-item {
+    opacity: 1;
+}
+
+.layout_header:hover .breakpoints.header .link {
+    opacity: 1;
+}
+
+.layout_header .breakpoints {
+    display: flex;
+    align-items: center;
+}
+
+.layout_header div a img {
+    width: 42px;
+    height: 42px;
+}
+
+.logo {
+    width: 42px;
+    height: 42px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.logoName {
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-left: 5px;
+    cursor: pointer;
+    color: var(--base-color-1)
+}
+
+.logoName.red {
+    color: var(--base-color-5)
+}
+
+.logoName:hover {
+    color: var(--base-color-5);
+}
+
+.layout_header .breakpoints .right {
+    margin-left: auto;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.layout_header .breakpoints .right a,
+.layout_header div .a {
+    width: 38px;
+    height: 38px;
+    background: var(--base-color-2);
+    border-radius: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+}
+
+.layout_header div .a {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.layout_header div a svg {
+    width: 60%;
+    height: 60%;
+}
+
+.layout_header div .right a.shaking {
+    background: var(--base-color-5);
+    animation: shaking 0.6s ease-in-out infinite;
+}
+
+@keyframes shaking {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-15deg);
+    }
+
+    50% {
+        transform: rotate(15deg);
+    }
+
+    75% {
+        transform: rotate(-10deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+/* 링크 */
+.link {
+    display: inline-block;
+    padding: 0px 2px 0px 2px;
+    cursor: pointer;
+    color: var(--base-color-2);
+    font-weight: 750;
+    transition: opacity 0.3s ease;
+    margin-left: 5px;
+}
+
+.link.red {
+    border-bottom: 3px solid var(--base-color-5);
+    color: var(--base-color-5);
+}
+
+/* 게시판 메뉴 항목 */
+.board-item {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+    padding: 5px 0px;
+    font-weight: 750;
+    color: var(--base-color-1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.displayOn .board-item {
+    opacity: 0;
+}
+
+.board-item:hover {
+    color: var(--base-color-5);
+}
+
+.board-item.red {
+    color: var(--base-color-5);
+}
+
+/* 드롭다운 메뉴 */
+.board-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: fit-content;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 99;
+    display: none;
+    background: var(--base-color-4);
+    color: var(--base-color-1);
+    overflow: hidden;
+}
+
+.board-item:hover .board-dropdown {
+    display: block;
+}
+
+.board-dropdown p {
+    font-size: 14px;
+    padding: 10px;
+    white-space: nowrap;
+}
+
+.board-dropdown p:hover {
+    background: var(--base-color-5);
+    color: #ffffff;
+}
+
+/* 상단 메뉴 */
+.layout_menu_top {
+    position: sticky;
+    top: 60px;
+    min-width: calc(var(--breakpoint-min));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: visible;
+    width: calc(100% - 0px);
+    height: fit-content;
+    background: var(--base-color-5);
+    box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    transform: translateY(-40px);
+    opacity: 0;
+    display: none;
+}
+
+.layout_menu_top.none {
+    opacity: 0;
+    display: none;
+}
+
+.layout_menu_top_ul {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-left: 10px;
+    color: #ffffff;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.layout_menu_top_ul::-webkit-scrollbar {
+    display: none;
+}
+
+.layout_menu_top_li {
+    padding-right: 5px;
+    padding-bottom: 5px;
+    width: fit-content;
+    display: flex;
+    white-space: nowrap;
+}
+
+.layout_menu_top_li.select {
+    padding-right: 5px;
+    padding-bottom: 5px;
+    width: fit-content;
+    border-bottom: 2px solid #ffffff;
+}
+
+/* 메인 콘텐츠 */
+.layout .breakpoints.main {
+    margin: 0 0px 0 0px;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 60px);
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.layout .breakpoints.main .p {
+    width: calc(70% - 30px);
+    padding: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    background: linear-gradient(to right, var(--base-color-3) 0%, white 100%);
+    font-weight: 600;
+    border-radius: 5px;
+}
+
+.layout .breakpoints.main .p .strong {
+    font-size: 1.1em;
+    font-weight: 1000;
+}
+
+.layout .breakpoints.main .div {
+    margin: 0 0px 0 0px;
+    display: flex;
+    flex-direction: row;
+}
+
+/* 사이드 메뉴 */
+.layout_menu_ul,
+.layout .breakpoints.main .div .ul {
+    padding: 10px;
+    padding-top: 10px;
+    min-height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 1.1em;
+    font-weight: 600;
+    width: 200px;
+    margin-top: 10px;
+    flex-shrink: 0;
+}
+
+.layout_menu_li,
+.layout .breakpoints.main .div .ul .li {
+    padding-right: 10px;
+    padding-bottom: 5px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px;
+    font-size: 1.2rem;
+    gap: 10px;
+    color: #b0b0b0;
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s ease-in;
+}
+
+.layout_menu_li.select,
+.layout .breakpoints.main .div .ul .li.select {
+    color: var(--base-color-5);
+}
+
+.layout .breakpoints.main .div .ul .li:hover {
+    border-bottom: 3px solid var(--base-color-1);
+}
+
+.layout_menu_li.select:hover {
+    color: var(--base-color-5);
+}
+
+.layout_menu_li:hover {
+    color: var(--base-color-1);
+}
+
+/* 2. 초기화 레이어 (상위 스타일 무시) */
+@layer reset {
+    .mainLayout {
+        /* 상위 스타일을 완전히 무시하고 기본값으로 되돌림 */
+        all: revert-layer;
+        isolation: isolate;
+        display: block;
+        width: 100%;
+    }
+
+    .mainLayout * {
+        all: revert-layer;
+        /* 하위 요소도 모두 초기화 */
+    }
+}
+
+.mainLayout .div {
+    height: calc(100vh);
+    min-height: calc(100% - 60px);
+    width: 100%;
+    min-width: var(--breakpoint-min);
+    max-width: var(--breakpoint-max);
+}
+/* 
+.mainLayout.mainPage {
+    
+
+} */
+
+/* 토글 아이템 */
+.layout .breakpoints.main .div .div.toogle_item {
+    margin-left: 10px;
+    font-weight: 600;
+    background: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.layout .breakpoints.main .div .div.toogle_item div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.layout .breakpoints.main div div.toogle_item div p {
+    background: whitesmoke;
+    border-right: 2px solid white;
+    width: 110px;
+}
+
+.layout .breakpoints.main div div.toogle_item div svg {
+    padding: 10px;
+}
+
+.layout .breakpoints.main div div.toogle_item .toogle_list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    z-index: 99;
+    width: 100%;
+    min-width: calc(100% - 2px);
+    display: flex;
+    flex-direction: column;
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+.layout .breakpoints.main div div.toogle_item .toogle_list.hover {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.layout .breakpoints.main div div.toogle_item .toogle_list b {
+    padding: 10px;
+}
+
+.layout .breakpoints.main div div.toogle_item .toogle_list b:hover {
+    background: whitesmoke;
+}
+
+/* 입력 박스 */
+.layout .inputBox {
+    width: 47.5%;
+    max-width: 400px;
+    height: 32px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 10px;
+}
+
+.layout .inputBox input {
+    width: 100%;
+    height: 100%;
+    padding-left: 10px;
+    border: 0;
+    border-radius: 5px;
+    z-index: 1;
+    border: 3px solid transparent;
+    background: rgb(245, 245, 245);
+}
+
+.layout .inputBox input:focus {
+    border: 2px solid var(--base-color-5);
+    outline: 0;
+}
+
+.layout .inputBox button {
+    all: unset;
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 10px;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.2s ease;
+}
+
+.layout .inputBox button.focused {
+    color: var(--base-color-5);
+    font-size: 20px;
+    transform: rotate(360deg);
+}
+
+
+/* 선택 영역 */
+.layout .select_region {
+    padding: 10px;
+    margin-left: 5px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-weight: 600;
+}
+
+.layout .select_region:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.layout .select_region option {
+    font-weight: 600;
+}
+
+.layout .select_region option:hover {
+    color: whitesmoke;
+}
+
+.layout .select_region::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.layout .select_region::-webkit-scrollbar {
+    width: 4px;
+}
+
+.layout .select_region::-webkit-scrollbar-thumb,
+.layout .select_region::-webkit-scrollbar-thumb:hover,
+.layout .select_region::-webkit-scrollbar-thumb:hover {
+    background: var(--base-color-3);
+    ;
+    /* 원하는 호버 색상으로 변경 */
+    border-radius: 4px;
+}
+
+/* 푸터 */
+.layout_footer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-width: var(--breakpoint-min);
+    background: var(--base-color-1);
+    color: var(--base-color-3);
+    top: 10px;
+    box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.5);
+}
+
+.footer_container {
+    width: 100%;
+    min-width: var(--breakpoint-min);
+    max-width: var(--breakpoint-max);
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.footer_content {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    overflow: hidden;
+}
+
+.footer_category {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.footer_category_title {
+    padding: 5px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.footer_category_item {
+    padding: 4px 5px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.footer_portfolio {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    /* 만약 맨 아래로 내리고 싶으면 align-self 추가 가능 */
+    /* align-self: flex-end; */
+}
+
+.footer_link {
+    color: var(--base-color-3);
+    text-decoration: none;
+}
+
+.profile {
+    width: 48px;
+    height: 48px;
+    margin-left: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.profile svg {
+    font-size: 35px;
+    cursor: pointer;
+    z-index: 99;
+    color: var(--base-color-1);
+    border-radius: 100%;
+}
+
+.profile svg.red {
+    border: 2px solid var(--base-color-5);
+}
+
+.profile svg.bell {
+    position: absolute;
+    font-size: 13px;
+    cursor: pointer;
+    right: -2px;
+    top: -2px;
+    color: var(--base-color-1);
+    padding: 3px;
+    background-color: var(--base-color-5);
+    border-radius: 100%;
+    display: none;
+    z-index: 100;
+}
+
+.profile svg.bell.shaking {
+    display: flex;
+    animation: shaking 0.6s ease-in-out infinite;
+}
+
+@keyframes shaking {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-15deg);
+    }
+
+    50% {
+        transform: rotate(15deg);
+    }
+
+    75% {
+        transform: rotate(-10deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.serchBtn {
+    all: unset;
+    margin-left: 5px;
+    width: 0px;
+    height: 42px;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--base-color-1);
+    opacity: 0;
+    transition: all 0.2s ease-in;
+}
+
+.serchBtn.show {
+    opacity: 1;
+    width: 30px;
+}
+
+.humbeger {
+    position: absolute;
+    width: 100px;
+    height: fit-content;
+    background: white;
+    border-radius: 5px;
+    right: 0px;
+    top: 47.5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    box-shadow: 0px 5px 10px rgb(0, 0, 0, 0.2);
+    opacity: 0;
+    z-index: 101;
+    transition: all 0.1s ease-in;
+    border-radius: 5px;
+    pointer-events: none;
+}
+
+.humbeger.on {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.humbeger_btn {
+    padding: 10px;
+    width: calc(100% - 20px);
+    text-align: right;
+    border-top: 1px solid white;
+}
+
+.humbeger_btn:hover {
+    background-color: #f0f0f0;
+    /* 밝은 회색 배경 */
+    border-top: 1px solid #f0f0f0;
+}
+
+.humbeger_btn.logout {
+    background: var(--base-color-5);
+    color: #ffffff;
+}
+
+.humbeger_btn.logout:hover {
+    filter: brightness(0.95);
+}
+
+.displayOn {
+    margin-left: 7.5px;
+    display: none;
+    height: 0px;
+}
+
+.profile_img {
+    width: 210px;
+    height: 210px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.profile_img img {
+    display: block;
+    border-radius: 100%;
+    width: calc(100% - 10px);
+    aspect-ratio: 1;
+    border: 5px solid var(--base-color-1);
+}
+
+.profile_img div,
+.profile_img input {
+    all: unset;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-weight: 'bold';
+    width: calc(100% - 55px);
+    aspect-ratio: 1;
+    background-color: rgb(0, 0, 0, 0.2);
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    font-size: 3rem;
+    cursor: pointer;
+}
+
+.profile_img input,
+.profile_img div:hover {
+    opacity: 1;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 행성 궤도 애니메이션 (역방향) */
+@keyframes orbit-reverse {
+    from {
+        transform: rotate(360deg) translateX(79px) rotate(-360deg);
+    }
+
+    to {
+        transform: rotate(0deg) translateX(79px) rotate(0deg);
+    }
+}
+
+/* 미디어 쿼리 */
+@media screen and (max-width: 720px) {
+    .layout {
+        align-items: flex-start;
+    }
+
+    .layout .breakpoints {
+        margin: 5px 0 0px 0;
+    }
+
+    .layout_header {
+        align-items: normal;
+    }
+
+    .layout_header.top .layout_menu_top {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0px);
+    }
+
+    .layout_header .layout_menu_top {
+        display: flex;
+        opacity: 0;
+        transform: translateY(0px);
+    }
+
+    .layout .breakpoints.main .div .ul,
+    .layout_menu_ul {
+        display: none;
+    }
+
+    .layout .breakpoints.main div main {
+        flex: 1;
+        min-height: calc(100vh - 60px);
+    }
+
+    .layout .breakpoints.main .p {
+        width: calc(100% - 30px);
+        background: var(--base-color-3);
+    }
+
+    .layout .inputBox {
+        margin-top: 5px;
+        margin-left: 5px;
+        width: calc(100% - 30px);
+        max-width: unset;
+    }
+
+    .displayOn {
+        height: fit-content;
+        display: block;
+    }
+
+    .displayOff {
+        display: none;
+    }
+
+    .footer_category {
+        display: none;
+    }
+}
