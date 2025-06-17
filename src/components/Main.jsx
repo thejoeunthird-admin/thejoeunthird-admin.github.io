@@ -9,127 +9,117 @@ import { useCategoriesTable } from '../hooks/useCategoriesTable';
 import { formatDateTime } from '../utils/formatDateTime';
 import { useImage } from '../hooks/useImage';
 import { LoadingCircle } from './LoadingCircle';
+import { formatTime } from '../utils/fomatTime';
 
 function BestItems() {
+    const [gonggu, setGonggu] = useState([])
+    const [items, setItems] = useState([]);
+    const [error, setError] = useState(false);
 
+    useEffect(() => {
+        const fetchBoards = async () => {
+            const { data, error: dataError } = await supabase.rpc('get_earliest_trades_with_counts');
+            if (dataError) {
+                setError(true)
+                return;
+            }
+            if (data) {
+                setItems(data)
+            }
+        };
+        fetchBoards();
+    }, []);
+
+    useEffect(() => {
+        //get_earliest_trades_category_5
+        const fetchBoards = async () => {
+            const { data, error: dataError } = await supabase.rpc('get_earliest_trades_category_5');
+            if (dataError) {
+                setError(true)
+                return;
+            }
+            if (data) {
+                setGonggu(data)
+            }
+        };
+        fetchBoards();
+
+    }, [])
+
+    console.log(gonggu)
     return (<>
         <div className='bestItems'>
             <ul className='row trade'>
                 <h2 className='row_title'>중고 거래</h2>
-
-                <li className='contents'>
-                    <img className='contents-img' />
-                    <div className='contents-box'>
-                        <p className='start-string'>
-                            서울시 마포구
-                            <small
-                                className='end-string'
-                                style={{ fontSize: '0.9rem', fontWeight: '500' }}
+                {items.map((o, k) =>
+                    <li key={k} className='contents'>
+                        <img src={o.main_img} className='contents-img' />
+                        <div className='contents-box'>
+                            <p className='start-string'>
+                                {o.location}
+                                <small
+                                    className='end-string'
+                                    style={{ fontSize: '0.9rem', fontWeight: '500' }}
+                                >
+                                    {formatDateTime(o.create_date)}
+                                </small>
+                            </p>
+                            <p className='contents-title'>
+                                {o.title}
+                            </p>
+                            <p className='contents-string'>
+                                {o.content}
+                            </p>
+                            <p
+                                className='start-string'
+                                style={{ marginTop: 'auto', marginBottom: '5px', color: 'black', fontSize: '1.2rem' }}
                             >
-                                04:02
-                            </small>
-                        </p>
-                        <p className='contents-title'>제목</p>
-                        <p className='contents-string'>글쓴내용</p>
-                        <p
-                            className='start-string'
-                            style={{ marginTop: 'auto', marginBottom: '5px', color: 'black', fontSize: '1.2rem' }}
-                        >
-                            1,000원
-                            <small className='end-string'>
-                                <MdChat />&nbsp;23
-                                &nbsp;
-                                <FaHeart />&nbsp;211
-                            </small>
-                        </p>
-                    </div>
-                </li>
-                <li className='contents'>
-                    <img className='contents-img' />
-                    <div className='contents-box'>
-                        <p className='start-string'>
-                            서울시 마포구
-                            <small
-                                className='end-string'
-                                style={{ fontSize: '0.9rem', fontWeight: '500' }}
-                            >
-                                04:02
-                            </small>
-                        </p>
-                        <p className='contents-title'>제목</p>
-                        <p className='contents-string'>글쓴내용</p>
-                        <p
-                            className='start-string'
-                            style={{ marginTop: 'auto', marginBottom: '5px', color: 'black', fontSize: '1.2rem' }}
-                        >
-                            1,000원
-                            <small className='end-string'>
-                                <MdChat />&nbsp;23
-                                &nbsp;
-                                <FaHeart />&nbsp;211
-                            </small>
-                        </p>
-                    </div>
-                </li>
-                <li className='contents'>
-                    <img className='contents-img' />
-                    <div className='contents-box'>
-                        <p className='start-string'>
-                            서울시 마포구
-                            <small
-                                className='end-string'
-                                style={{ fontSize: '0.9rem', fontWeight: '500' }}
-                            >
-                                04:02
-                            </small>
-                        </p>
-                        <p className='contents-title'>제목</p>
-                        <p className='contents-string'>글쓴내용</p>
-                        <p
-                            className='start-string'
-                            style={{ marginTop: 'auto', marginBottom: '5px', color: 'black', fontSize: '1.2rem' }}
-                        >
-                            1,000원
-                            <small className='end-string'>
-                                <MdChat />&nbsp;23
-                                &nbsp;
-                                <FaHeart />&nbsp;211
-                            </small>
-                        </p>
-                    </div>
-                </li>
+                                {(o.price).toLocaleString()} 원
+                                <small className='end-string'>
+                                    <MdChat />&nbsp;{o.comment_count}
+                                    &nbsp;
+                                    <FaHeart />&nbsp;{o.like_count}
+                                </small>
+                            </p>
+                        </div>
+                    </li>
+                )}
             </ul>
             <ul className='row trade'>
                 <h2 className='row_title'>공동 구매</h2>
-
-                <li className='contents'>
-                    <img className='contents-img' />
-                    <div className='contents-box'>
-                        <p className='start-string'>
-                            서울시 마포구
-                            <small
-                                className='end-string'
-                                style={{ fontSize: '0.9rem', fontWeight: '500' }}
+                {gonggu.map((o, k) =>
+                     <li key={k} className='contents'>
+                        <img src={o.main_img} className='contents-img' />
+                        <div className='contents-box'>
+                            <p className='start-string'>
+                                {o.location}
+                                <small
+                                    className='end-string'
+                                    style={{ fontSize: '0.9rem', fontWeight: '500' }}
+                                >
+                                    {formatDateTime(o.create_date)}
+                                </small>
+                            </p>
+                            <p className='contents-title'>
+                                {o.title}
+                            </p>
+                            <p className='contents-string'>
+                                {o.content}
+                            </p>
+                            <p
+                                className='start-string'
+                                style={{ marginTop: 'auto', marginBottom: '5px', color: 'black', fontSize: '1.2rem' }}
                             >
-                                04:02
-                            </small>
-                        </p>
-                        <p className='contents-title'>제목</p>
-                        {/* <p className='contents-string'>글쓴내용</p> */}
-                        <p> 진행률 적기 </p>
-                        <p
-                            className='start-string'
-                            style={{ marginTop: 'auto', marginBottom: '5px', color: 'black', fontSize: '1.2rem' }}
-                        >
-                            1,000원
-                            <small className='end-string'>
-                                <MdChat />&nbsp;23
-                                &nbsp;
-                                <FaHeart />&nbsp;211
-                            </small>
-                        </p>
-                    </div>
-                </li>
+                                {(o.price).toLocaleString()} 원
+                                <small className='end-string'>
+                                    <MdChat />&nbsp;{o.comment_count}
+                                    &nbsp;
+                                    <FaHeart />&nbsp;{o.like_count}
+                                </small>
+                            </p>
+                        </div>
+                    </li>
+                )}
             </ul>
         </div>
     </>)
@@ -156,16 +146,20 @@ function BestBoards() {
         };
         fetchBoards();
     }, []);
-    if (error) { return (<>
-        <ul className="bestBoards">
-            에러메세지
-        </ul>
-    </>)}
-    else if (boards.length === 0 || boardsTop3.length === 0) { return(<>
-        <ul className="bestBoards">
-            <LoadingCircle />
-        </ul>
-    </>)}
+    if (error) {
+        return (<>
+            <ul className="bestBoards">
+                에러메세지
+            </ul>
+        </>)
+    }
+    else if (boards.length === 0 || boardsTop3.length === 0) {
+        return (<>
+            <ul className="bestBoards">
+                <LoadingCircle />
+            </ul>
+        </>)
+    }
     else {
         return (<>
             <ul className="bestBoards">
@@ -182,7 +176,7 @@ function BestBoards() {
                                 {findById(o.category_id).name}
                             </p>
                             <p className='timestamp'>
-                                {formatDateTime(o.create_date)}
+                                {formatTime(o.create_date)}
                             </p>
                         </div>
                         <span className='contents_area'>

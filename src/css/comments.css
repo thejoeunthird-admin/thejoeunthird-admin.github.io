@@ -6,6 +6,7 @@
     /* padding: 20px; */
     background-color: white;
     border-radius: 10px;
+    height: fit-content;
     /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
 }
 
@@ -18,7 +19,7 @@
 
 /* 댓글 리스트 스타일 */
 #comments-section .comments-list {
-    max-height: 300px;
+    /* max-height: 300px; */
     /* overflow-y: auto; */
     margin-bottom: 20px;
 }
@@ -156,7 +157,7 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
-    min-height: 100px;
+    height: 80px;
 }
 
 #comments-section .comment-input:focus {
@@ -191,9 +192,9 @@
 /*대댓글 스타일*/
 
 #comments-section .replies .reply-item {
-    margin-left: 20px;
     border-top: 1px solid lightgray;
-    padding: 10px 0;
+    padding: 10px 0px;
+    margin: 10px 0px 10px 20px;
 }
 
 

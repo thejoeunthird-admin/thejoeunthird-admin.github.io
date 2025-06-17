@@ -290,7 +290,7 @@ export function Layout({ children }) {
                 )}
             </header>
             {board[0] !== undefined ? (
-                <div className="breakpoints main">
+                <div className="breakpoints main" style={{ height:'fit-content' }}>
                     <div className='div' style={{ marginBottom: '50px' }}>
                         <LayoutMenu board={board} />
                         <main className="mainLayout">
