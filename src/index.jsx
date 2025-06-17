@@ -17,6 +17,11 @@ import { Main } from './components/Main';
 import { UsedCreate } from './components/UsedCreate';
 import { UsedDetail } from './components/UsedDetail';
 import { UsedUpdate } from './components/UsedUpdate';
+import BoardListPage from './board/BoardListPage';
+import WritePage from './board/WritePage';
+import BoardDetailPage from './board/BoardDetailPage';
+import EditPage from './board/EditPage';
+
 
 function App() {
   return (
@@ -41,6 +46,12 @@ function App() {
             {/* 김종현 작업 -- 공구, 전체 */}
             <Route path='/trade' element={<Trade />} />
             <Route path='/trade/gonggu' element={<Trade />} />
+            {/* 이신아 작업 -- 일반 게시판 */}
+            <Route path="/life/:tap" element={<BoardListPage />} />
+            <Route path="/life/write" element={<WritePage />} />
+            <Route path="/life/detail/:id" element={<BoardDetailPage />} />
+            <Route path="/life/write" element={<WritePage />} />
+            <Route path="/life/edit/:id" element={<EditPage />} />
           </Routes>
         </Layout>
       </ReduxProvider>

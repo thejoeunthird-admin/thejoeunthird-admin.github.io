@@ -1,0 +1,165 @@
+.boardlist-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+
+}
+
+.detail-button {
+    padding: 10px 26px;
+    font-size: 1rem;
+    border: none;
+    background: #e14989;
+    color: #fff;
+    border-radius: 7px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.16s;
+}
+
+.detail-button:hover {
+    background: #d23270;
+}
+
+/* 카드 리스트 전체 */
+.board-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 10px;
+}
+
+/* 개별 카드 */
+.board-card {
+    display: flex;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 12px 0 rgba(60, 60, 60, 0.10);
+    cursor: pointer;
+    padding: 18px 20px;
+    align-items: flex-start;
+    transition: box-shadow 0.15s;
+}
+
+.board-card:hover {
+    box-shadow: 0 4px 16px 0 rgba(60, 60, 60, 0.18);
+}
+
+.board-card-thumb {
+    flex-shrink: 0;
+    margin-right: 20px;
+}
+
+.board-card-thumb img {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+    background: #fafafd;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+.board-card-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.board-card-name {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.board-card-meta {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.board-card-title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 6px;
+    color: #222;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.board-card-preview {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.board-card-footer {
+    color: #bbb;
+    font-size: 13px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.boarddetail-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+
+.board-card-footer {
+    color: #bbb;
+    font-size: 15px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-top: 6px;
+}
+
+.board-card-footer span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+}
+
+.update-delete{
+    display: flex;
+    justify-content: end;
+    margin-bottom: 16px;
+}
+
+
+
+@media (max-width: 900px) {
+    .board-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .board-card-thumb img {
+        width: 56px;
+        height: 56px;
+        border-radius: 8px;
+    }
+
+    .board-card-title {
+        font-size: 15px;
+    }
+
+    .board-card-list {
+        gap: 12px;
+    }
+}
