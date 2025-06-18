@@ -14,8 +14,7 @@ export function UsedCreate() {
     
     const now = new Date().toISOString();
     const navigate = useNavigate();
-    
-    // useRef로 고치기
+
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [price, setPrice] = useState("");
