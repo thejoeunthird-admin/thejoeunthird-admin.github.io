@@ -315,7 +315,7 @@ export function UsedUpdate() {
                                 이미지 업로드 중입니다...
                             </div>
                         )}
-                        <div className="d-flex flex-wrap gap-2 mt-3">
+                        {/* <div className="d-flex flex-wrap gap-2 mt-3">
                             {images.length > 0 && images.map((img, idx) => (
                                 <Image
                                     key={idx}
@@ -324,6 +324,77 @@ export function UsedUpdate() {
                                     style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: 12, border: "1px solid #eee" }}
                                     thumbnail
                                 />
+                            ))}
+                        </div> */}
+                        <div className="d-flex flex-wrap gap-2 mt-3">
+                            {images.length > 0 && images.map((img, idx) => (
+                                <div key={idx} style={{ position: 'relative', display: "inline-block" }}>
+                                    {/* 대표 뱃지 */}
+                                    {idx === 0 && (
+                                        <span style={{
+                                            position: 'absolute',
+                                            top: 5,
+                                            left: 5,
+                                            background: '#dc3545',
+                                            color: '#fff',
+                                            borderRadius: 8,
+                                            padding: '2px 7px',
+                                            fontSize: 12,
+                                            zIndex: 2
+                                        }}>
+                                            대표
+                                        </span>
+                                    )}
+                                    {/* X 버튼 */}
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            // 삭제 로직
+                                            initImage(prev => prev.filter((_, i) => i !== idx));
+                                            setFileCount(prev => prev - 1);
+                                        }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: 5,
+                                            right: 5,
+                                            background: '#fff',
+                                            border: 'none',
+                                            borderRadius: '50%',
+                                            width: 24,
+                                            height: 24,
+                                            zIndex: 2,
+                                            color: '#dc3545',
+                                            fontWeight: 'bold',
+                                            cursor: 'pointer',
+                                        }}
+                                    >×</button>
+                                    {/* 이미지 클릭시 대표 지정 */}
+                                    <Image
+                                        src={getImages(img)}
+                                        alt={`이미지${idx + 1}`}
+                                        style={{
+                                            width: '100px', height: '100px',
+                                            objectFit: 'cover',
+                                            borderRadius: 12,
+                                            border: "1px solid #eee",
+                                            opacity: idx === 0 ? 1 : 0.8,
+                                            cursor: 'pointer'
+                                        }}
+                                        thumbnail
+                                        onClick={() => {
+                                            // 클릭한 이미지가 이미 대표라면 무시
+                                            if (idx === 0) return;
+                                            // 대표로 이동(맨 앞으로)
+                                            initImage(prev => {
+                                                const newArr = [...prev];
+                                                const [selected] = newArr.splice(idx, 1);
+                                                newArr.unshift(selected);
+                                                return newArr;
+                                            });
+                                        }}
+                                        title={idx === 0 ? "대표 이미지" : "대표로 지정"}
+                                    />
+                                </div>
                             ))}
                         </div>
                         <Button className="mt-2"
