@@ -78,7 +78,9 @@ export function UsedUpdate() {
 
     // 드림해요-> 가격 내용 비움(썼다가 중간에 바꾸면 내용이 남으므로 비워줌)
     useEffect(() => {
-        if (category === "5") setPrice("");
+        if (category === "5") {
+            if (priceRef.current) priceRef.current.value = "";
+        }
     }, [category]);
 
     const UsedUpdateContent = ({ }) => {
@@ -99,9 +101,9 @@ export function UsedUpdate() {
                     console.log("data: ", data);
                 }
                 if (data) {
-                    setTitle(data.title)
-                    setContent(data.content)
-                    setPrice(data.price)
+                    if (titleRef.current) titleRef.current.value = data.title;
+                    if (contentRef.current) contentRef.current.value = data.content;
+                    if (priceRef.current) priceRef.current.value = data.price;
                     setCategory(String(data.category_id))
                     setLocation(data.location)
                     //기존 이미지들 배열로 만듦
@@ -195,7 +197,6 @@ export function UsedUpdate() {
             if (error) {
                 console.log('error', error);
             } if (data) {
-                // todo: 글작성한 카테고리로 자동 이동하게 하기
                 const categoryString = CATEGORY_MAP[category];
                 const newItem = data.id;
                 navigate(`/trade/${categoryString}/${newItem}`);
@@ -208,7 +209,10 @@ export function UsedUpdate() {
                 <Form>
                     <Form.Group className="mb-3" controlId="category">
                         <Form.Label>글수정</Form.Label>
-                        <Form.Select value={category} onChange={e => setCategory(e.target.value)} required>
+                        <Form.Select value={category} onChange={e => {
+                            setCategory(e.target.value);
+                            console.log('카테고리: ', e.target.value)
+                        }} required>
                             <option value="">카테고리 선택</option>
                             <option value="4">벼룩해요</option>
                             <option value="5">드림해요</option>
