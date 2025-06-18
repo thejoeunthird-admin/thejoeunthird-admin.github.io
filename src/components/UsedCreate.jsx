@@ -14,13 +14,10 @@ export function UsedCreate() {
 
     const now = new Date().toISOString();
     const navigate = useNavigate();
-    const titleRef = useRef();
-    const contentRef = useRef();
-    const priceRef = useRef();
 
-    //const [title, setTitle] = useState("");
-    //const [content, setContent] = useState("");
-    //const [price, setPrice] = useState("");
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [price, setPrice] = useState("");
 
     // type-> 4: 벼룩해요 5: 드림해요 6. 구해요 7. 공구해요
     const [category, setCategory] = useState("");
@@ -138,11 +135,11 @@ export function UsedCreate() {
                 alert("카테고리를 선택해주세요.");
                 return;
             }
-            if (!titleRef.current.value || !contentRef.current.value) {
+            if (!title || !content) {
                 alert("제목과 내용을 모두 작성해주세요.");
                 return;
             }
-            if (category !== "5" && !priceRef.current.value) {
+            if (category !== "5" && !price) {
                 alert("가격을 입력해주세요.");
                 return;
             }
@@ -153,9 +150,9 @@ export function UsedCreate() {
                 .from('trades')
                 .insert([{
                     user_id: userInfo.id,
-                    title: titleRef.current.value,
-                    content: contentRef.current.value,
-                    price: Number(priceRef.current.value),
+                    title,
+                    content,
+                    price: Number(price),
                     location,
                     main_img: images[0] ? images[0] : null,
                     detail_img1: images[1] ? images[1] : null,
@@ -215,9 +212,8 @@ export function UsedCreate() {
                         <FloatingLabel label="제목">
                             <Form.Control
                                 type="text"
-                                // value={title}
-                                // onChange={e => setTitle(e.target.value)}
-                                ref={titleRef}
+                                value={title}
+                                onChange={e => setTitle(e.target.value)}
                                 placeholder="제목"
                                 required
                             />
@@ -229,9 +225,8 @@ export function UsedCreate() {
                             <Form.Control
                                 as="textarea"
                                 style={{ minHeight: 120 }}
-                                // value={content}
-                                // onChange={e => setContent(e.target.value)}
-                                ref={contentRef}
+                                value={content}
+                                onChange={e => setContent(e.target.value)}
                                 placeholder="내용"
                                 required
                             />
@@ -242,9 +237,8 @@ export function UsedCreate() {
                         <InputGroup>
                             <Form.Control
                                 type="number"
-                                // value={price.toLocaleString()}
-                                // onChange={e => setPrice(e.target.value)}
-                                ref={priceRef}
+                                value={price.toLocaleString()}
+                                onChange={e => setPrice(e.target.value)}
                                 placeholder={category === "5" ? "나눔" : "가격"}
                                 disabled={category === "5"}
                                 min={0}

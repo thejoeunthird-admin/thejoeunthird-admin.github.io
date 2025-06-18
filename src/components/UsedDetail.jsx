@@ -8,12 +8,12 @@ import { Carousel, Row, Col, Button, Badge, Card } from 'react-bootstrap';
 import { Comments } from "./Comments";
 import { useImage } from "../hooks/useImage";
 import { LoadingCircle } from './LoadingCircle';
+import noImg from '../public/noImg.png'
+import '../css/useddetail.css'
 
 export function UsedDetail() {
-    const shadowHostRef = useRef(null);
-    const [shadowRoot, setShadowRoot] = useState(null);
-    const { images, setImages, getImages, initImage } = useImage();
-    
+    const { getImages } = useImage();
+
     const { item } = useParams();
     const navigate = useNavigate();
     const now = new Date().toISOString();
@@ -38,56 +38,11 @@ export function UsedDetail() {
         6: "buy"  // 나눔
     };
 
-    // Shadow DOM 설정
-    useEffect(() => {
-        if (shadowHostRef.current && !shadowRoot) {
-            const shadow = shadowHostRef.current.attachShadow({ mode: 'open' });
-            
-            // Bootstrap CSS를 Shadow DOM에 추가
-            const bootstrapLink = document.createElement('link');
-            bootstrapLink.rel = 'stylesheet';
-            bootstrapLink.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
-            shadow.appendChild(bootstrapLink);
-
-            // Bootstrap JavaScript를 Shadow DOM에 추가
-            const bootstrapScript = document.createElement('script');
-            bootstrapScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
-            bootstrapScript.async = true;
-            shadow.appendChild(bootstrapScript);
-
-            // 추가 스타일링
-            const style = document.createElement('style');
-            style.textContent = `
-                .hover-shadow:hover {
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                    transition: box-shadow 0.2s ease;
-                }
-                .position-fixed {
-                    position: fixed !important;
-                }
-                .bottom-0 {
-                    bottom: 0 !important;
-                }
-                .start-0 {
-                    left: 0 !important;
-                }
-                .position-absolute {
-                    position: absolute !important;
-                }
-            `;
-            shadow.appendChild(style);
-
-            const mountPoint = document.createElement('div');
-            shadow.appendChild(mountPoint);
-            
-            setShadowRoot(mountPoint);
-        }
-    }, [shadowRoot]);
 
     const handleToggleMenu = () => {
         setShowRegisterMenu(prev => !prev);
     };
-    
+
     const handleRegisterNavigate = (path) => {
         console.log('Navigate to', path);
         setShowRegisterMenu(false);
@@ -224,7 +179,7 @@ export function UsedDetail() {
         }
     };
 
-    // 글 삭제
+    // 글 삭제(안할수도.............)
     const deleteDetails = async () => {
         if (!confirm('게시글을 삭제할까요?')) {
             return;
@@ -247,7 +202,7 @@ export function UsedDetail() {
 
     // 구매하기/나눔받기/팔기 -> 판매자 채팅으로
     const makeChats = async () => {
-        if(!confirm('거래 요청 메시지를 보낼까요?')) return;
+        if (!confirm('거래 요청 메시지를 보낼까요?')) return;
         const { data, error } = await supabase
             .from('chats')
             .insert([{
@@ -275,8 +230,8 @@ export function UsedDetail() {
         if (userInfo && userInfo.id === detail.user_id) {
             return (
                 <div>
-                    <Button variant="outline-secondary" onClick={handleUpdate}>글수정</Button>
-                    <Button variant="outline-danger" onClick={deleteDetails}>삭제</Button>
+                    <button onClick={handleUpdate}>글수정</button>
+                    <button onClick={deleteDetails}>삭제</button>
                 </div>
             );
         } else {
@@ -319,125 +274,212 @@ export function UsedDetail() {
         return "방금 전";
     }
 
+
+
     const UsedDetailContent = () => {
-        if (!detail) return <div><LoadingCircle text={`물건 가져오는 중...`}/></div>;
+        if (!detail) return <div><LoadingCircle text={`물건 가져오는 중...`} /></div>;
 
         const images = [detail.main_img, detail.detail_img1, detail.detail_img2, detail.detail_img3, detail.detail_img4].filter(Boolean);
         const isEdited = detail.create_date !== detail.update_date;
         const baseTime = isEdited ? detail.update_date : detail.create_date;
 
+        const [current, setCurrent] = useState(0);
+        const total = images?.length || 0;
+
+        const goPrev = () => setCurrent(prev => (prev === 0 ? total - 1 : prev - 1));
+        const goNext = () => setCurrent(prev => (prev === total - 1 ? 0 : prev + 1));
+
+        // return (
+        //     <>
+        //         <div
+        //             className="position-fixed bottom-0 start-0 m-4"
+        //             style={{ zIndex: 1050 }}
+        //         >
+        //             <Button
+        //                 variant="danger"
+        //                 className="d-flex justify-content-center align-items-center shadow rounded-3"
+        //                 style={{ width: '100px', height: '50px', whiteSpace: 'nowrap' }}
+        //                 onClick={handleToggleMenu}
+        //             >
+        //                 + 글쓰기
+        //             </Button>
+
+        //             {showRegisterMenu && (
+        //                 <div
+        //                     className="bg-danger rounded-3 shadow p-2 mt-3 position-absolute start-0"
+        //                     style={{
+        //                         bottom: '70px',
+        //                         width: '200px',
+        //                         userSelect: 'none',
+        //                         boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+        //                     }}
+        //                 >
+        //                     {['거래 등록', '공구 등록'].map((label, idx) => {
+        //                         const path = label === '거래 등록'
+        //                             ? '/trade/deal/register'
+        //                             : '/trade/gonggu/register';
+
+        //                         return (
+        //                             <Button
+        //                                 key={idx}
+        //                                 variant="danger"
+        //                                 className="w-100 text-start mb-2 rounded-2"
+        //                                 onClick={() => handleRegisterNavigate(path)}
+        //                             >
+        //                                 {label}
+        //                             </Button>
+        //                         );
+        //                     })}
+        //                 </div>
+        //             )}
+        //         </div>
+
+        //         <Card className="border-0" style={{ maxWidth: 1100, margin: "30px auto", borderRadius: 18 }}>
+        //             <Row className="g-0">
+        //                 {/* 왼쪽: 이미지 */}
+        //                 <Col md={6} xs={12}>
+        //                     <div style={{ background: "#fafafa", borderRadius: "18px 0 0 18px", height: "100%", minHeight: 400 }}>
+        //                         <Carousel indicators={images.length > 1}>
+        //                             {images.length === 0 ? (
+        //                                 <Carousel.Item>
+        //                                     <div className="text-center text-muted p-5">이미지가 없습니다.</div>
+        //                                 </Carousel.Item>
+        //                             ) : (
+        //                                 images.map((img, idx) => (
+        //                                     <Carousel.Item key={idx}>
+        //                                         <img
+        //                                             src={getImages(img)}
+        //                                             alt={`상세 이미지 ${idx + 1}`}
+        //                                             style={{
+        //                                                 width: "100%",
+        //                                                 height: 500,
+        //                                                 objectFit: "cover",
+        //                                                 borderRadius: "18px 0 0 18px"
+        //                                             }}
+        //                                         />
+        //                                     </Carousel.Item>
+        //                                 ))
+        //                             )}
+        //                         </Carousel>
+        //                     </div>
+        //                 </Col>
+        //                 {/* 오른쪽: 정보 */}
+        //                 <Col md={6} xs={12} className="p-5 d-flex flex-column justify-content-between">
+        //                     <div>
+        //                         <h4 className="fw-bold">{detail.title}</h4>
+        //                         <div className="text-secondary mb-2">
+        //                             {detail.categories?.name} · {detail.location}
+        //                             <span className="ms-3">{getDateDiff(baseTime)}{isEdited && (' (수정)')}</span>
+        //                         </div>
+        //                         <div className="mb-3 fs-4 fw-bold" style={{ color: "#333" }}>
+        //                             {detail.category_id === 5
+        //                                 ? <Badge bg="success" className="fs-6">나눔</Badge>
+        //                                 : `${Number(detail.price).toLocaleString()}원`
+        //                             }
+        //                         </div>
+        //                         <div className="mb-4" style={{ whiteSpace: "pre-line" }}>{detail.content}</div>
+        //                         <div className="mb-2 text-muted d-flex align-items-center gap-2" style={{ fontSize: 14 }}>
+        //                             <span>좋아요 {likesCount}</span>
+        //                             <span>· 조회 {detail.cnt ?? 0}</span>
+        //                         </div>
+
+        //                         <div className="mb-4 text-muted" style={{ fontSize: 14 }}>
+        //                             작성자: {detail.users?.name ?? '알 수 없음'}
+        //                         </div>
+        //                         <div className="d-flex gap-2">
+        //                             {handleButtons()}
+        //                         </div>
+        //                     </div>
+        //                 </Col>
+        //             </Row>
+        //         </Card>
+        //     </>
+        // );
         return (
-            <>
-                <div
-                    className="position-fixed bottom-0 start-0 m-4"
-                    style={{ zIndex: 1050 }}
-                >
-                    <Button
-                        variant="danger"
-                        className="d-flex justify-content-center align-items-center shadow rounded-3"
-                        style={{ width: '100px', height: '50px', whiteSpace: 'nowrap' }}
+            <div className="detail-root">
+                {/* 플로팅 버튼 */}
+                <div className="usedsell-fab-zone">
+                    {showRegisterMenu && (
+                        <div className="usedsell-menu up">
+                            <button
+                                className="usedsell-menu-btn"
+                                onClick={() => handleRegisterNavigate('/trade/deal/register')}
+                            >
+                                거래 등록
+                            </button>
+                            <button
+                                className="usedsell-menu-btn"
+                                onClick={() => handleRegisterNavigate('/trade/gonggu/register')}
+                            >
+                                공구 등록
+                            </button>
+                        </div>
+                    )}
+                    <button
+                        className="usedsell-fab"
                         onClick={handleToggleMenu}
                     >
                         + 글쓰기
-                    </Button>
-
-                    {showRegisterMenu && (
-                        <div
-                            className="bg-danger rounded-3 shadow p-2 mt-3 position-absolute start-0"
-                            style={{
-                                bottom: '70px',
-                                width: '200px',
-                                userSelect: 'none',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-                            }}
-                        >
-                            {['거래 등록', '공구 등록'].map((label, idx) => {
-                                const path = label === '거래 등록'
-                                    ? '/trade/deal/register'
-                                    : '/trade/gonggu/register';
-
-                                return (
-                                    <Button
-                                        key={idx}
-                                        variant="danger"
-                                        className="w-100 text-start mb-2 rounded-2"
-                                        onClick={() => handleRegisterNavigate(path)}
-                                    >
-                                        {label}
-                                    </Button>
-                                );
-                            })}
-                        </div>
-                    )}
+                    </button>
                 </div>
-                
-                <Card className="border-0" style={{ maxWidth: 1100, margin: "30px auto", borderRadius: 18 }}>
-                    <Row className="g-0">
-                        {/* 왼쪽: 이미지 */}
-                        <Col md={6} xs={12}>
-                            <div style={{ background: "#fafafa", borderRadius: "18px 0 0 18px", height: "100%", minHeight: 400 }}>
-                                <Carousel indicators={images.length > 1}>
-                                    {images.length === 0 ? (
-                                        <Carousel.Item>
-                                            <div className="text-center text-muted p-5">이미지가 없습니다.</div>
-                                        </Carousel.Item>
-                                    ) : (
-                                        images.map((img, idx) => (
-                                            <Carousel.Item key={idx}>
-                                                <img
-                                                    src={getImages(img)}
-                                                    alt={`상세 이미지 ${idx + 1}`}
-                                                    style={{
-                                                        width: "100%",
-                                                        height: 500,
-                                                        objectFit: "cover",
-                                                        borderRadius: "18px 0 0 18px"
-                                                    }}
-                                                />
-                                            </Carousel.Item>
-                                        ))
-                                    )}
-                                </Carousel>
-                            </div>
-                        </Col>
-                        {/* 오른쪽: 정보 */}
-                        <Col md={6} xs={12} className="p-5 d-flex flex-column justify-content-between">
-                            <div>
-                                <h4 className="fw-bold">{detail.title}</h4>
-                                <div className="text-secondary mb-2">
-                                    {detail.categories?.name} · {detail.location}
-                                    <span className="ms-3">{getDateDiff(baseTime)}{isEdited && (' (수정)')}</span>
-                                </div>
-                                <div className="mb-3 fs-4 fw-bold" style={{ color: "#333" }}>
-                                    {detail.category_id === 5
-                                        ? <Badge bg="success" className="fs-6">나눔</Badge>
-                                        : `${Number(detail.price).toLocaleString()}원`
-                                    }
-                                </div>
-                                <div className="mb-4" style={{ whiteSpace: "pre-line" }}>{detail.content}</div>
-                                <div className="mb-2 text-muted d-flex align-items-center gap-2" style={{ fontSize: 14 }}>
-                                    <span>좋아요 {likesCount}</span>
-                                    <span>· 조회 {detail.cnt ?? 0}</span>
-                                </div>
 
-                                <div className="mb-4 text-muted" style={{ fontSize: 14 }}>
-                                    작성자: {detail.users?.name ?? '알 수 없음'}
-                                </div>
-                                <div className="d-flex gap-2">
-                                    {handleButtons()}
-                                </div>
+                <div className="detail-card">
+                    {/* 캐러셀 이미지 */}
+                    <div className="detail-img-wrap detail-carousel">
+                        {total === 0 ? (
+                            <div className="detail-noimg">
+                                <img src={noImg} alt="이미지 없음" className="noimg" />
                             </div>
-                        </Col>
-                    </Row>
-                </Card>
-            </>
+                        ) : (
+                            <>
+                                <img
+                                    className="detail-img"
+                                    src={getImages(images[current])}
+                                    alt={`이미지 ${current + 1}`}
+                                />
+                                {/* 좌/우 버튼 (이미지 2장 이상일 때만) */}
+                                {total > 1 && (
+                                    <>
+                                        <button className="carousel-btn left" onClick={goPrev}>{'<'}</button>
+                                        <button className="carousel-btn right" onClick={goNext}>{'>'}</button>
+                                        <div className="carousel-indicator">{current + 1} / {total}</div>
+                                    </>
+                                )}
+                            </>
+                        )}
+                    </div>
+
+                    {/* 오른쪽 정보 */}
+                    <div className="detail-info">
+                        <div>
+                            <h2 className="detail-title">{detail.title}</h2>
+                            <div className="detail-meta">
+                                {detail.categories?.name} · {detail.location} <span className="detail-time">{getDateDiff(baseTime)}{isEdited && ' (수정)'}</span>
+                            </div>
+                            <div className="detail-price">
+                                {detail.category_id === 5
+                                    ? <span className="detail-badge-share">나눔</span>
+                                    : <>{Number(detail.price).toLocaleString()}<span className="detail-won">원</span></>
+                                }
+                            </div>
+                            <div className="detail-content">{detail.content}</div>
+                            <div className="detail-stat">
+                                <span>좋아요 {likesCount}</span>
+                                <span className="stat-dot">·</span>
+                                <span>조회 {detail.cnt ?? 0}</span>
+                            </div>
+                            <div className="detail-writer">작성자: {detail.users?.name ?? '알 수 없음'}</div>
+                        </div>
+                        <div className="detail-buttons">{handleButtons()}</div>
+                    </div>
+                </div>
+            </div>
         );
     };
 
     return (
         <div>
-            <div ref={shadowHostRef}></div>
-            {shadowRoot && createPortal(<UsedDetailContent />, shadowRoot)}
+            <UsedDetailContent />
             <Comments productId={detail?.id} categoryId={detail?.category_id} />
         </div>
     );
