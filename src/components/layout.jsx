@@ -268,12 +268,6 @@ export function Layout({ children }) {
                     style={{ display: 'flex', alignItems: 'flex-start', gap: '2px' }}
                 >
                     <div className='displayOn' style={{ width: 'calc( 100% - 64px )' }}>
-                        {/* <p
-                            className={`board-item ${location.pathname === '/' ? 'red' : ''}`}
-                            onClick={(e) => handleNavigate(e, `/`)}
-                        >
-                            홈
-                        </p> */}
                         {categories.filter((o) => o.id !== 16).map((o, k) => (
                             <React.Fragment key={k}>
                                 <p

@@ -65,23 +65,34 @@ export function MyPageTalkLog({ user }) {
         e.preventDefault();
         const message = inputRef.current.value.trim();
         if (!message) return;
-        const { error } = await supabase.from('chats').insert({
+        const { data, error } = await supabase.from('chats').insert({
             sender_id: receiver,
             receiver_id: user.info.id,
             chat: message,
-        });
-        // 알림 인서트 
+        }).select().single();
+        const { error: notifError } = await supabase
+            .from('notifications')
+            .insert([
+                {
+                    receiver_id: receiver,
+                    sender_id: user.info.id,
+                    type: 'chats',
+                    table_type: 'chats',
+                    table_id: data.id,
+                    message: `${user.info.name} 에게 메세지가 도착 했습니다.`,
+                },
+            ]);
         if (!error) inputRef.current.value = '';
         fetchChatLog();
     }, [talk]);
 
-    // 일반 구매
     const handleOrder = useCallback(async (e, item) => {
         e.preventDefault();
-        console.log(item.trades)
-        if (item.trades.state >= 1) return;
+        if (item.trades.state >= 1) {
+            alert('판매(공구) 종료되었거나, 예약중입니다.')
+        }
         if (item.trades.category_id === 7) {
-            // 공구 구매?
+            alert('미 완성입니다.')
         }
         else { // 일반 구매
             const { error } = await supabase.rpc('create_order_and_update_chat', {
@@ -166,7 +177,6 @@ export function MyPageTalkLog({ user }) {
                                     )
                                 }
                                 else {
-                                    console.log(o.trades.state === 1)
                                     return (<>
                                         <li
                                             key={k}

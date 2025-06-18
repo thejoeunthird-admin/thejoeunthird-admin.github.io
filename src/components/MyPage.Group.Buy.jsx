@@ -16,24 +16,24 @@ export function MyPageGroupBuy({ user }) {
     }, [])
 
     const updateTradeState = async (tradeId, newState) => {
-    const { error } = await supabase.rpc('update_trade_state', {
-        trade_id: tradeId,
-        new_state: Number(newState)
-    }); // ✅ .select() 제거
+        const { error } = await supabase.rpc('update_trade_state', {
+            trade_id: tradeId,
+            new_state: Number(newState)
+        }); // ✅ .select() 제거
 
-    if (error) {
-        console.error('업데이트 실패:', error.message);
-        throw error;
-    } else {
-        console.log('업데이트 성공');
-        setbuy(prevBuy =>
-        prevBuy.map(item =>
-            item.trade_id === tradeId // ✅ 필드명 수정
-            ? { ...item, state: Number(newState) }
-            : item
-        )
-        );
-    }
+        if (error) {
+            console.error('업데이트 실패:', error.message);
+            throw error;
+        } else {
+            console.log('업데이트 성공');
+            setbuy(prevBuy =>
+                prevBuy.map(item =>
+                    item.trade_id === tradeId // ✅ 필드명 수정
+                        ? { ...item, state: Number(newState) }
+                        : item
+                )
+            );
+        }
     };
 
 
@@ -69,18 +69,28 @@ export function MyPageGroupBuy({ user }) {
         }
     };
 
-    const buyTalk = async (orders,title) => {
-        // 이거 생각해보니까 이미 공구해요 보냈을땐 
-        // 같은걸 한번더 보내는 느낌이여야함 이전껄 펄스로 만들어준다?
+    const buyTalk = async (orders, title) => {
         const results = await Promise.all(
             orders.map(async (o) => {
                 const { error } = await supabase.from('chats').insert({
                     sender_id: o.user_id,
                     receiver_id: user.info.id,
-                    chat: `${title} 공구해요!`,
+                    chat: `${title} 공구 결제 해주세요!`,
                     trades_id: o.table_id,
                     trades_quantity: o.quantity,
                 });
+                const { error: notifError } = await supabase
+                    .from('notifications')
+                    .insert([
+                        {
+                            receiver_id: o.user_id,
+                            sender_id: user.info.id,
+                            type: 'chats',
+                            table_type: 'trades',
+                            table_id: o.table_id,
+                            message:`${title} 공구 결제 해주세요!`,
+                        },
+                    ]);
                 if (error) console.error('채팅 전송 실패:', error.message);
                 return error;
             })
@@ -147,7 +157,7 @@ export function MyPageGroupBuy({ user }) {
                                             style={{ background: 'green' }}
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                buyTalk(o.orders,o.title)
+                                                buyTalk(o.orders, o.title)
                                             }}
                                         >
                                             일괄 거래 메세지
@@ -176,7 +186,7 @@ export function MyPageGroupBuy({ user }) {
                                                 className="likes-link-btn"
                                                 onClick={(e) => {
                                                     e.preventDefault();
-                                                    buyTalk([oj],o.title)
+                                                    buyTalk([oj], o.title)
                                                 }}
                                             >
                                                 거래 메세지
