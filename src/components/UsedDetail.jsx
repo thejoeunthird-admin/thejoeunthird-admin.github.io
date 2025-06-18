@@ -440,3 +440,8 @@ export function UsedDetail() {
         </div>
     );
 }
+
+    // const getFinalUrl = (img) => {
+    //     if (!img) return null;
+    //     return img.startsWith("http") ? img : getImages(img);
+    // };

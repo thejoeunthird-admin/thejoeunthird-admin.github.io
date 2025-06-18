@@ -15,9 +15,15 @@ import { useNavigate } from 'react-router-dom';
 function BestItems() {
     const nav = useNavigate();
     const { findById } =useCategoriesTable();
+    const { getImages } = useImage();
     const [gonggu, setGonggu] = useState([])
     const [items, setItems] = useState([]);
     const [error, setError] = useState(false);
+
+    const getFinalUrl = (img) => {
+        if (!img) return null;
+        return img.startsWith("http") ? img : getImages(img);
+    };
 
     useEffect(() => {
         const fetchBoards = async () => {
@@ -77,7 +83,7 @@ function BestItems() {
                                 nav(`/trade/${(findById(o.category_id)).url}/${o.id}`)
                             }}
                         >
-                            <img src={o.main_img} className='contents-img' />
+                            <img src={getFinalUrl(o.main_img)} className='contents-img' />
                             <div className='contents-box'>
                                 <p className='start-string'>
                                     {o.location}
@@ -120,7 +126,7 @@ function BestItems() {
                                 nav(`/trade/${(findById(o.category_id)).url}/${o.id}`)
                             }}
                         >
-                            <img src={o.main_img} className='contents-img' />
+                            <img src={getFinalUrl(o.main_img)} className='contents-img' />
                             <div className='contents-box'>
                                 <p className='start-string'>
                                     {o.location}

@@ -3,12 +3,14 @@ import { supabase } from "../supabase/supabase";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
 import { formatDateTime } from "../utils/formatDateTime";
 import { useNavigate } from "react-router-dom";
+import { useImage } from "../hooks/useImage";
 
 export function MyPageGroupBuy({ user }) {
     const { findById, findByUrl } = useCategoriesTable();
     const nav = useNavigate();
     const [buy, setbuy] = useState([]);
     const selectRef = useRef();
+    const { getImages } =useImage();
 
     const fetchSellLog = useCallback(async () => {
         const { data, error } = await supabase.rpc('get_groups_trades', { uid: user.info.id });
@@ -97,6 +99,10 @@ export function MyPageGroupBuy({ user }) {
         );
     };
 
+    const getFinalUrl = (img) => {
+        if (!img) return null;
+        return img.startsWith("http") ? img : getImages(img);
+    };
 
     useEffect(() => {
         fetchSellLog();
@@ -115,7 +121,7 @@ export function MyPageGroupBuy({ user }) {
                             className={`likes-item`}
                         >
                             <section className="likes-card">
-                                <img alt="main" src={o.main_img} className="likes-img" />
+                                <img alt="main" src={getFinalUrl(o.main_img)} className="likes-img" />
                                 <span className="likes-category">
                                     {`${parntCategorie.name} > ${categorie.name}`}
                                     {/* <small>{ findById(o.state).name }</small> */}

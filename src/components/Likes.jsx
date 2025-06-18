@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { supabase } from "../supabase/supabase";
+import { useImage } from "../hooks/useImage";
 
 export function Likes({ categoryId, tableId, userInfo }) {
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수
     const [isLiked, setIsLiked] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
-
+    
     // 좋아요 수 및 상태 불러오기
     const fetchLikes = async () => {
         try {

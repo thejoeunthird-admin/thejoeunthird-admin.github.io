@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../supabase/supabase';
 import { useSubscribe } from '../hooks/useSubscribe';
+import { useImage } from '../hooks/useImage';
 
 export function MyPageTalkLog({ user }) {
     const talkRef = useRef();
@@ -9,7 +10,12 @@ export function MyPageTalkLog({ user }) {
     const [talk, setTalk] = useState([]);
     const { item: receiver } = useParams(); // 보낸사람
     const [receiverName, setReceiverName] = useState(null);
+    const { getImages } = useImage();
 
+    const getFinalUrl = (img) => {
+        if (!img) return null;
+        return img.startsWith("http") ? img : getImages(img);
+    };
     const fetchChatLog = async () => {
         if (!user) return;
         const { data, error } = await supabase.rpc('get_chats_by_sender_and_receiver', {
