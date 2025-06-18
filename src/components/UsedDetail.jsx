@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams } from "react-router-dom";
 import { supabase } from "../supabase/supabase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useUserTable } from "../hooks/useUserTable";
 import { Carousel, Row, Col, Button, Badge, Card } from 'react-bootstrap';
 import { Comments } from "./Comments";
@@ -10,6 +10,9 @@ import { useImage } from "../hooks/useImage";
 import { LoadingCircle } from './LoadingCircle';
 import noImg from '../public/noImg.png'
 import '../css/useddetail.css'
+    // const location = useLocation();
+    // const query = new URLSearchParams(location.search);
+    // const keyword = query.get('keyword') || '';
 
 export function UsedDetail() {
     const { getImages } = useImage();
@@ -37,6 +40,8 @@ export function UsedDetail() {
         5: "share",     // 구매
         6: "buy"  // 나눔
     };
+
+
 
 
     const handleToggleMenu = () => {

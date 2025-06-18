@@ -1,4 +1,4 @@
-.usedsell-container {
+.usedboard-container {
     width: 100%;
     padding: 30px 16px 90px 16px;
     margin: 0 auto;
@@ -7,14 +7,14 @@
     max-width: var(--breakpoint-max);
 }
 
-.usedsell-grid {
+.usedboard-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개 */
     gap: 24px;
     width: 100%;
 }
 
-.usedsell-col {
+.usedboard-col {
     width: 300px;
     /* 고정 너비 */
     min-width: 300px;
@@ -28,18 +28,18 @@
 }
 
 @media (max-width: 900px) {
-    .usedsell-col {
+    .usedboard-col {
         max-width: 48%;
     }
 }
 
 @media (max-width: 600px) {
-    .usedsell-col {
+    .usedboard-col {
         max-width: 100%;
     }
 }
 
-.usedsell-fab-zone {
+.usedboard-fab-zone {
     position: fixed;
     bottom: 30px;
     left: 30px;
@@ -49,7 +49,7 @@
     align-items: flex-start;
 }
 
-.usedsell-fab {
+.usedboard-fab {
     width: 100px;
     height: 50px;
     border: none;
@@ -63,11 +63,11 @@
     transition: background 0.13s;
 }
 
-.usedsell-fab:hover {
+.usedboard-fab:hover {
     background: #ad2130;
 }
 
-.usedsell-menu {
+.usedboard-menu {
     margin-top: 0;          /* 아래 여백 없애고 */
     margin-bottom: 14px;    /* 위에 뜨게! */
     /* 나머지 그대로 */
@@ -83,7 +83,7 @@
 }
 
 
-.usedsell-menu-btn {
+.usedboard-menu-btn {
     width: 100%;
     background: #dc3545;           /* 버튼 빨강 */
     color: #fff;                   /* 글씨 흰색 */
@@ -98,7 +98,7 @@
     transition: background 0.13s, color 0.13s;
 }
 
-.usedsell-menu-btn:hover {
+.usedboard-menu-btn:hover {
     background: #ad2130;           /* hover 더 진한 빨강 */
     color: #fff;                   /* 글씨 계속 흰색 */
 }
