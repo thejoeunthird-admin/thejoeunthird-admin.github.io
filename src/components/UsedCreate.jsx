@@ -14,7 +14,6 @@ export function UsedCreate() {
 
     const now = new Date().toISOString();
     const navigate = useNavigate();
-<<<<<<< HEAD
     const titleRef = useRef();
     const contentRef = useRef();
     const priceRef = useRef();
@@ -22,13 +21,6 @@ export function UsedCreate() {
     //const [title, setTitle] = useState("");
     //const [content, setContent] = useState("");
     //const [price, setPrice] = useState("");
-=======
-    
-    // useRef로 고치기
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [price, setPrice] = useState("");
->>>>>>> 4dfdd7d66b56b0d9c9914bc07c46769a4bf68164
 
     // type-> 4: 벼룩해요 5: 드림해요 6. 구해요 7. 공구해요
     const [category, setCategory] = useState("");
