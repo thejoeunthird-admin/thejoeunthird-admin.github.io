@@ -2,11 +2,19 @@ import { Card, Badge } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../supabase/supabase";
 import { useEffect, useState } from "react";
+import { useImage } from "../hooks/useImage";
 
 export function UsedItem({ used }) {
     const navigate = useNavigate();
     const { item } = useParams();
     const [likesCount, setLikesCount] = useState(0);    // 좋아요 수
+
+    // const getFinalUrl = (img) => {
+    //     if (!img) return null;
+    //     return img.startsWith("http") ? getImages(img) : img;
+    // };
+
+    const { images, setImages, getImages, initImage } = useImage();
 
     useEffect(() => {
         const fetchLikes = async () => {
@@ -59,7 +67,7 @@ export function UsedItem({ used }) {
             <div style={{ width: "100%", height: 180, overflow: "hidden", borderRadius: "1rem 1rem 0 0" }}>
                 {used.main_img ? (<Card.Img
                     variant="top"
-                    src={used.main_img}
+                    src={getImages(used.main_img)}
                     style={{ width: "100%", height: "100%", objectFit: "cover" }}
                     alt="썸네일"
                 />) : (<div className="text-center p-5 text-muted" style={{

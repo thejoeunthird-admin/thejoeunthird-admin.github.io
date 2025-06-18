@@ -9,7 +9,7 @@ import { Form, Button, FloatingLabel, InputGroup, Spinner, Image } from "react-b
 export function UsedUpdate() {
     const shadowHostRef = useRef(null);
     const [shadowRoot, setShadowRoot] = useState(null);
-    
+
     // TODO: 수정 시간 업데이트
     const now = new Date().toISOString();
     const navigate = useNavigate();
@@ -17,21 +17,18 @@ export function UsedUpdate() {
     const { item } = useParams();
 
     // 제목, 내용, 가격
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [price, setPrice] = useState("");
-    // 기존 사진
-    const [exPics, setExPics] = useState([]);
+    // const [title, setTitle] = useState("");
+    // const [content, setContent] = useState("");
+    // const [price, setPrice] = useState("");
+
+    const titleRef = useRef();
+    const contentRef = useRef();
+    const priceRef = useRef();
+
     const [location, setLocation] = useState("");
 
     // type-> 4: 벼룩해요 5: 드림해요 6. 구해요 7. 공구해요
     const [category, setCategory] = useState("");
-
-    // useImage 훅
-    const { images, setImages, getImages, initImage } = useImage();
-    const [fileCount, setFileCount] = useState(0);
-    const fileInputRef = useRef();
-
     // useUserTable 훅
     const { info: userInfo, loading, error } = useUserTable();
 
@@ -46,7 +43,7 @@ export function UsedUpdate() {
     useEffect(() => {
         if (shadowHostRef.current && !shadowRoot) {
             const shadow = shadowHostRef.current.attachShadow({ mode: 'open' });
-            
+
             // Bootstrap CSS를 Shadow DOM에 추가
             const bootstrapLink = document.createElement('link');
             bootstrapLink.rel = 'stylesheet';
@@ -74,7 +71,7 @@ export function UsedUpdate() {
 
             const mountPoint = document.createElement('div');
             shadow.appendChild(mountPoint);
-            
+
             setShadowRoot(mountPoint);
         }
     }, [shadowRoot]);
@@ -84,127 +81,128 @@ export function UsedUpdate() {
         if (category === "5") setPrice("");
     }, [category]);
 
-    // 기존 내용 불러옴
-    useEffect(() => {
-        const fetchForm = async () => {
+    const UsedUpdateContent = ({ }) => {
+        const { images, setImages, getImages, initImage } = useImage();
+        const [fileCount, setFileCount] = useState(0);
+        const fileInputRef = useRef();
+
+        const [exPics, setExPics] = useState([]);
+        useEffect(() => {
+            const fetchForm = async () => {
+                const { data, error } = await supabase
+                    .from('trades')
+                    .select('*, categories(name)')
+                    .eq('id', item)
+                    .single();
+                if (error) {
+                    console.log("error: ", error);
+                    console.log("data: ", data);
+                }
+                if (data) {
+                    setTitle(data.title)
+                    setContent(data.content)
+                    setPrice(data.price)
+                    setCategory(String(data.category_id))
+                    setLocation(data.location)
+                    //기존 이미지들 배열로 만듦
+                    setExPics([
+                        data.main_img,
+                        data.detail_img1,
+                        data.detail_img2,
+                        data.detail_img3,
+                        data.detail_img4
+                    ].filter(Boolean)); //비어있는 건 뺌
+                }
+            }
+            fetchForm();
+        }, [item]);
+
+        const handleRemoveImage = () => {
+            initImage([]);
+            setFileCount(0);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";   // input의 파일 선택 자체를 비움!
+            }
+        }
+
+        // fileCount: 사용자가 < input type = "file" multiple > 에서 고른 파일의 개수
+        // images.length: 실제로 서버에 업로드 끝난 이미지 개수(useImage 훅에서 관리)
+        // 이미지 업로드 개수 제한 함수
+        const handleFileChange = (e) => {
+            const files = Array.from(e.target.files);
+            console.log(files);
+            if (images.length + files.length > 5) {
+                alert("사진은 최대 5장까지만 업로드할 수 있습니다.");
+                fileInputRef.current.value = "";
+                return;
+            }
+            if (files.length > 0) {
+                // setExPics([]);
+                setImages(e).then(() => {
+                    // 기존이미지도 그냥 냅두는게 좋을 것 같음(미리보기)
+                    //setExPics([]);
+                    setFileCount(images.length + files.length);
+                });
+            }
+        }
+
+        // 이미지 수정했으면 기존 이미지는 빠지게
+        const finalPics = (images.length > 0 ? images : exPics).filter(Boolean);
+
+        const handleUpdate = async (e) => {
+            e.preventDefault();
+
+            if (!userInfo) {
+                alert("로그인해야 글수정이 가능합니다.");
+                navigate('/login');
+                return;
+            }
+
+            if (!category) {
+                alert("카테고리를 선택해주세요.");
+                return;
+            }
+            if (!titleRef.current.value || !contentRef.current.value) {
+                alert("제목과 내용을 모두 작성해주세요.");
+                return;
+            }
+            if (category !== "5" && !priceRef.current.value) { // '나눔' 아니면 가격 필요
+                alert("가격을 입력해주세요.");
+                return;
+            }
+            if (!confirm('게시글을 수정할까요?')) {
+                return;
+            }
+
             const { data, error } = await supabase
                 .from('trades')
-                .select('*, categories(name)')
+                .update({
+                    title: titleRef.current.value,
+                    content: contentRef.current.value,
+                    price: category === "5" ? 0 : Number(priceRef.current.value),
+                    category_id: Number(category),
+                    location,
+                    main_img: finalPics[0],
+                    detail_img1: finalPics[1],
+                    detail_img2: finalPics[2],
+                    detail_img3: finalPics[3],
+                    detail_img4: finalPics[4],
+                    update_date: now
+                })
                 .eq('id', item)
+                .select()
                 .single();
             if (error) {
-                console.log("error: ", error);
-                console.log("data: ", data);
-            }
-            if (data) {
-                setTitle(data.title)
-                setContent(data.content)
-                setPrice(data.price)
-                setCategory(String(data.category_id))
-                setLocation(data.location)
-                //기존 이미지들 배열로 만듦
-                setExPics([
-                    data.main_img,
-                    data.detail_img1,
-                    data.detail_img2,
-                    data.detail_img3,
-                    data.detail_img4
-                ].filter(Boolean)); //비어있는 건 뺌
+                console.log('error', error);
+            } if (data) {
+                // todo: 글작성한 카테고리로 자동 이동하게 하기
+                const categoryString = CATEGORY_MAP[category];
+                const newItem = data.id;
+                navigate(`/trade/${categoryString}/${newItem}`);
             }
         }
-        fetchForm();
-    }, [item]);
 
-    // fileCount: 사용자가 < input type = "file" multiple > 에서 고른 파일의 개수
-    // images.length: 실제로 서버에 업로드 끝난 이미지 개수(useImage 훅에서 관리)
-    // 이미지 업로드 개수 제한 함수
-    const handleFileChange = (e) => {
-        const files = Array.from(e.target.files);
-        console.log(files);
-        if (images.length+files.length > 5) {
-            alert("사진은 최대 5장까지만 업로드할 수 있습니다.");
-            fileInputRef.current.value="";
-            return;
-        }
-        setFileCount(images.length+files.length);
-        if (files.length > 0) {
-            setExPics([]);
-            setImages(e); // 기존대로
-        }
-    }
-
-    const handleRemoveImage = () => {
-        initImage([]);
-        setFileCount(0);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = "";   // input의 파일 선택 자체를 비움!
-        }
-    }
-
-    // 새로 업로드한 이미지가 있으면 새이미지 저장
-    const finalPics = (images.length > 0 ? images : exPics).filter(Boolean);
-
-    // 스토리지 경로 안붙었으면 붙이고 붙었으면 냅둠
-    const getFinalUrl = (img) => {
-        if (!img) return null;
-        return img.startsWith("http") ? img : getImages(img);
-    };
-
-    const handleUpdate = async (e) => {
-        e.preventDefault();
-
-        if (!userInfo) {
-            alert("로그인해야 글수정이 가능합니다.");
-            navigate('/login');
-            return;
-        }
-
-        if (!category) {
-            alert("카테고리를 선택해주세요.");
-            return;
-        }
-        if (!title || !content) {
-            alert("제목과 내용을 모두 작성해주세요.");
-            return;
-        }
-        if (category !== "5" && !price) { // '나눔' 아니면 가격 필요
-            alert("가격을 입력해주세요.");
-            return;
-        }
-        if (!confirm('게시글을 수정할까요?')) {
-            return;
-        }
-
-        const { data, error } = await supabase
-            .from('trades')
-            .update({
-                title,
-                content,
-                price: category === "5" ? 0 : Number(price),
-                category_id: Number(category),
-                location,
-                // 슈퍼베이스 경로 붙여줘야함
-                main_img: getFinalUrl(finalPics[0]),
-                detail_img1: getFinalUrl(finalPics[1]),
-                detail_img2: getFinalUrl(finalPics[2]),
-                detail_img3: getFinalUrl(finalPics[3]),
-                detail_img4: getFinalUrl(finalPics[4]),
-                update_date: now
-            })
-            .eq('id', item)
-            .select()
-            .single();
-        if (error) {
-            console.log('error', error);
-        } if (data) {
-            // todo: 글작성한 카테고리로 자동 이동하게 하기
-            const categoryString = CATEGORY_MAP[category];
-            const newItem = data.id;
-            navigate(`/trade/${categoryString}/${newItem}`);
-        }
-    }
-
-    const UsedUpdateContent = () => {
+        console.log(images)
         return (
             <div className="p-4 rounded-4 shadow-sm bg-white" style={{ maxWidth: 600, margin: "40px auto" }}>
                 <Form>
@@ -234,8 +232,9 @@ export function UsedUpdate() {
                         <FloatingLabel label="제목">
                             <Form.Control
                                 type="text"
-                                value={title}
-                                onChange={e => setTitle(e.target.value)}
+                                //value={title}
+                                // onChange={e => setTitle(e.target.value)}
+                                ref={titleRef}
                                 placeholder="제목"
                                 required
                             />
@@ -247,8 +246,9 @@ export function UsedUpdate() {
                             <Form.Control
                                 as="textarea"
                                 style={{ minHeight: 120 }}
-                                value={content}
-                                onChange={e => setContent(e.target.value)}
+                                // value={content}
+                                // onChange={e => setContent(e.target.value)}
+                                ref={contentRef}
                                 placeholder="내용"
                                 required
                             />
@@ -259,8 +259,9 @@ export function UsedUpdate() {
                         <InputGroup>
                             <Form.Control
                                 type="number"
-                                value={category === "5" ? 0 : price}
-                                onChange={e => setPrice(e.target.value)}
+                                // value={category === "5" ? 0 : price}
+                                // onChange={e => setPrice(e.target.value)}
+                                ref={priceRef}
                                 placeholder={category === "5" ? "나눔" : "가격"}
                                 disabled={category === "5"}
                                 min={0}
@@ -278,7 +279,7 @@ export function UsedUpdate() {
                                 exPics.map((img, i) => (
                                     <Image
                                         key={i}
-                                        src={img}
+                                        src={getImages(img)}
                                         alt={`기존 이미지 ${i + 1}`}
                                         style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: 12, border: "1px solid #eee" }}
                                         thumbnail
@@ -344,10 +345,12 @@ export function UsedUpdate() {
             </div>
         );
     };
+    //    const [exPics, setExPics] = useState([]);
 
     return (
         <div>
             <div ref={shadowHostRef}></div>
+            {/* {shadowRoot && createPortal(<UsedUpdateContent exPics={exPics} />, shadowRoot)} */}
             {shadowRoot && createPortal(<UsedUpdateContent />, shadowRoot)}
         </div>
     );

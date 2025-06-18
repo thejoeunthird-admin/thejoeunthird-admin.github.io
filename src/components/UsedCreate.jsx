@@ -11,21 +11,24 @@ import { Form, Button, FloatingLabel, Image, Spinner, InputGroup } from "react-b
 export function UsedCreate() {
     const shadowHostRef = useRef(null);
     const [shadowRoot, setShadowRoot] = useState(null);
-    
+
     const now = new Date().toISOString();
     const navigate = useNavigate();
+    const titleRef = useRef();
+    const contentRef = useRef();
+    const priceRef = useRef();
 
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [price, setPrice] = useState("");
+    //const [title, setTitle] = useState("");
+    //const [content, setContent] = useState("");
+    //const [price, setPrice] = useState("");
 
     // type-> 4: 벼룩해요 5: 드림해요 6. 구해요 7. 공구해요
     const [category, setCategory] = useState("");
 
     // useImage 훅
-    const { images, setImages, getImages, initImage } = useImage();
-    const [fileCount, setFileCount] = useState(0);
-    const fileInputRef = useRef();
+    // const { images, setImages, getImages, initImage } = useImage();
+    // const [fileCount, setFileCount] = useState(0);
+    // const fileInputRef = useRef();
 
     // useUserTable 훅
     const { info: userInfo, loading, error } = useUserTable();
@@ -45,16 +48,16 @@ export function UsedCreate() {
     useEffect(() => {
         if (shadowHostRef.current && !shadowRoot) {
             const shadow = shadowHostRef.current.attachShadow({ mode: 'open' });
-            
+
             // Bootstrap CSS를 Shadow DOM에 추가
             const bootstrapLink = document.createElement('link');
             bootstrapLink.rel = 'stylesheet';
-            bootstrapLink.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
+            bootstrapLink.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css';
             shadow.appendChild(bootstrapLink);
 
             // Bootstrap JavaScript를 Shadow DOM에 추가
             const bootstrapScript = document.createElement('script');
-            bootstrapScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
+            bootstrapScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js';
             bootstrapScript.async = true;
             shadow.appendChild(bootstrapScript);
 
@@ -73,7 +76,7 @@ export function UsedCreate() {
 
             const mountPoint = document.createElement('div');
             shadow.appendChild(mountPoint);
-            
+
             setShadowRoot(mountPoint);
         }
     }, [shadowRoot]);
@@ -94,92 +97,94 @@ export function UsedCreate() {
         if (category === "5") setPrice("");
     }, [category]);
 
-    // fileCount: 사용자가 < input type = "file" multiple > 에서 고른 파일의 개수
-    // images.length: 실제로 서버에 업로드 끝난 이미지 개수(useImage 훅에서 관리)
-    // 이미지 업로드 개수 제한 함수
-    const handleFileChange = (e) => {
-        const files = Array.from(e.target.files);
-        console.log(files);
-        if (images.length+files.length > 5) {
-            alert("사진은 최대 5장까지만 업로드할 수 있습니다.");
-            fileInputRef.current.value = ""; // 선택 취소
-            return;
-        }
-        setFileCount(images.length+files.length);
-        setImages(e);
-    }
-
-    // 이미지 삭제
-    const handleRemoveImage = () => {
-        initImage([]);
-        setFileCount(0);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = "";   // input의 파일 선택 자체를 비움
-        }
-    }
-
-    const handleCreate = async (e) => {
-        e.preventDefault();
-
-        if (!userInfo) {
-            alert("로그인해야 글작성이 가능합니다.");
-            navigate('/login');
-            return;
-        }
-
-        if (!category) {
-            alert("카테고리를 선택해주세요.");
-            return;
-        }
-        if (!title || !content) {
-            alert("제목과 내용을 모두 작성해주세요.");
-            return;
-        }
-        if (category !== "5" && !price) {
-            alert("가격을 입력해주세요.");
-            return;
-        }
-        if (!confirm('게시글을 등록할까요?')) {
-            return;
-        }
-        const { data, error } = await supabase
-            .from('trades')
-            .insert([{
-                user_id: userInfo.id,
-                title,
-                content,
-                price: Number(price),
-                location,
-                main_img: images[0] ? getImages(images[0]) : null,
-                detail_img1: images[1] ? getImages(images[1]) : null,
-                detail_img2: images[2] ? getImages(images[2]) : null,
-                detail_img3: images[3] ? getImages(images[3]) : null,
-                detail_img4: images[4] ? getImages(images[4]) : null,
-                category_id: Number(category),
-                super_category_id: 3,
-                create_date: now,
-                update_date: now,
-                cnt: 0,
-                state: 1,
-                // 공구에 들어가는 내용->null
-                sales_begin: null,
-                sales_end: null,
-                limit_type: null,
-                limit: null,
-            }])
-            .select()
-            .single();
-        if (error) {
-            console.log('error', error);
-        } if (data && data.id) {
-            // 숫자->문자열로 변환
-            const categoryString = CATEGORY_MAP[category];
-            const newItem = data.id;
-            navigate(`/trade/${categoryString}/${newItem}`);
-        }
-    }
 
     const UsedCreateContent = () => {
+        // useImage 훅 -> 게시글등록 함수 안에다 넣음
+        const { images, setImages, getImages, initImage } = useImage();
+        const [fileCount, setFileCount] = useState(0);
+        const fileInputRef = useRef();
+
+        const handleFileChange = (e) => {
+            const files = Array.from(e.target.files);
+            console.log(files);
+            if (images.length + files.length > 5) {
+                alert("사진은 최대 5장까지만 업로드할 수 있습니다.");
+                fileInputRef.current.value = ""; // 선택 취소
+                return;
+            }
+            setFileCount(images.length + files.length);
+            setImages(e);
+        }
+
+        // 이미지 삭제
+        const handleRemoveImage = () => {
+            initImage([]);
+            setFileCount(0);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";   // input의 파일 선택 자체를 비움
+            }
+        }
+
+        const handleCreate = async (e) => {
+            e.preventDefault();
+
+            if (!userInfo) {
+                alert("로그인해야 글작성이 가능합니다.");
+                navigate('/login');
+                return;
+            }
+
+            if (!category) {
+                alert("카테고리를 선택해주세요.");
+                return;
+            }
+            if (!titleRef.current.value || !contentRef.current.value) {
+                alert("제목과 내용을 모두 작성해주세요.");
+                return;
+            }
+            if (category !== "5" && !priceRef.current.value) {
+                alert("가격을 입력해주세요.");
+                return;
+            }
+            if (!confirm('게시글을 등록할까요?')) {
+                return;
+            }
+            const { data, error } = await supabase
+                .from('trades')
+                .insert([{
+                    user_id: userInfo.id,
+                    title: titleRef.current.value,
+                    content: contentRef.current.value,
+                    price: Number(priceRef.current.value),
+                    location,
+                    main_img: images[0] ? images[0] : null,
+                    detail_img1: images[1] ? images[1] : null,
+                    detail_img2: images[2] ? images[2] : null,
+                    detail_img3: images[3] ? images[3] : null,
+                    detail_img4: images[4] ? images[4] : null,
+                    category_id: Number(category),
+                    super_category_id: 3,
+                    create_date: now,
+                    update_date: now,
+                    cnt: 0,
+                    state: 1,
+                    // 공구에 들어가는 내용->null
+                    sales_begin: null,
+                    sales_end: null,
+                    limit_type: null,
+                    limit: null,
+                }])
+                .select()
+                .single();
+            if (error) {
+                console.log('error', error);
+            } if (data && data.id) {
+                // 숫자->문자열로 변환
+                const categoryString = CATEGORY_MAP[category];
+                const newItem = data.id;
+                navigate(`/trade/${categoryString}/${newItem}`);
+            }
+        }
         return (
             <div className="p-4 rounded-4 shadow-sm bg-white" style={{ maxWidth: 600, margin: "40px auto" }}>
                 <Form>
@@ -204,12 +209,15 @@ export function UsedCreate() {
                         </div>
                     </Form.Group>
 
+
+
                     <Form.Group className="mb-3" controlId="title">
                         <FloatingLabel label="제목">
                             <Form.Control
                                 type="text"
-                                value={title}
-                                onChange={e => setTitle(e.target.value)}
+                                // value={title}
+                                // onChange={e => setTitle(e.target.value)}
+                                ref={titleRef}
                                 placeholder="제목"
                                 required
                             />
@@ -221,8 +229,9 @@ export function UsedCreate() {
                             <Form.Control
                                 as="textarea"
                                 style={{ minHeight: 120 }}
-                                value={content}
-                                onChange={e => setContent(e.target.value)}
+                                // value={content}
+                                // onChange={e => setContent(e.target.value)}
+                                ref={contentRef}
                                 placeholder="내용"
                                 required
                             />
@@ -233,8 +242,9 @@ export function UsedCreate() {
                         <InputGroup>
                             <Form.Control
                                 type="number"
-                                value={price.toLocaleString()}
-                                onChange={e => setPrice(e.target.value)}
+                                // value={price.toLocaleString()}
+                                // onChange={e => setPrice(e.target.value)}
+                                ref={priceRef}
                                 placeholder={category === "5" ? "나눔" : "가격"}
                                 disabled={category === "5"}
                                 min={0}
@@ -243,7 +253,6 @@ export function UsedCreate() {
                             {category !== "5" && <InputGroup.Text>원</InputGroup.Text>}
                         </InputGroup>
                     </Form.Group>
-
                     <Form.Group className="mb-3" controlId="images">
                         <Form.Label>이미지 업로드</Form.Label>
                         <Form.Control
@@ -283,6 +292,7 @@ export function UsedCreate() {
                             전체 이미지 다시 선택
                         </Button>
                     </Form.Group >
+
 
                     <div className="d-grid gap-2 mt-4">
                         <Button

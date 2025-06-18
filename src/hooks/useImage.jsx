@@ -44,6 +44,7 @@ export const useImage = () => {
 
         // 여러 장을 한 번에 imageList에 추가
         setImageList((prev) => [...prev, ...newImagePaths]);
+        console.log('업로드된 이미지 경로:', newImagePaths);
         return newImagePaths;
     };
 
