@@ -15,6 +15,8 @@ export default function BoardListPage() {
   const [shadowRoot, setShadowRoot] = useState(null);
 
   const { tap } = useParams();
+  const params = new URLSearchParams(window.location.search);
+  const keyword = params.get('keyword');
   const [boards, setBoards] = useState([]);
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
@@ -54,24 +56,27 @@ export default function BoardListPage() {
       let query = supabase
         .from("boards")
         .select(`
-                  id, title, contents, create_date, category_id, main_img, cnt,
-                  user_id, users(name), categories(name)
-                `)
+          id, title, contents, create_date, category_id, main_img, cnt,
+          user_id, users(name), categories(name)
+        `)
         .order("create_date", { ascending: false });
-
       if (tap && tap !== "all") {
         const { data: cat } = await supabase
           .from("categories")
           .select("id")
           .eq("url", tap)
           .single();
-
         if (cat?.id) {
           query = query.eq("category_id", cat.id);
         } else {
           navigate("/life/all");
           return;
         }
+      }
+      if (keyword && keyword !== '') {
+        query = query.ilike("title", `%${keyword}%`);
+        //하단에 있는건 컨텐츠도 포함해서
+        //query = query.or(`title.ilike.%${keyword}%,contents.ilike.%${keyword}%`);
       }
 
       const { data: boardsData } = await query;
@@ -98,9 +103,8 @@ export default function BoardListPage() {
 
       setBoards(boardsWithCounts);
     }
-
     fetchBoards();
-  }, [tap, navigate]);
+  }, [tap, navigate, keyword]);
 
   const BoardListContent = () => {
     return (

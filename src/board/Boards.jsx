@@ -14,6 +14,7 @@ export default function Boards({ category, tap }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  console.log('ddd')
   // Shadow DOM 설정
   useEffect(() => {
     if (shadowHostRef.current && !shadowRoot) {

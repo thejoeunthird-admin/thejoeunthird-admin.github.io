@@ -188,8 +188,8 @@ export default function BoardDetailPage() {
         return (
             <>
                 {/* 본문 카드 영역 */}
-                <Container style={{ maxWidth: "1100px", margin: "30px auto" }}>
-                    <Card className="shadow rounded-4 border-0 p-4">
+                <Container style={{ margin: "30px auto" }}>
+                    {/* <Card className="shadow rounded-4 border-0 p-4"> */}
                         {/* 상단 버튼 */}
                         <div className="d-flex justify-content-end mb-3">
                             <Button
@@ -285,7 +285,7 @@ export default function BoardDetailPage() {
                                 </Button>
                             </div>
                         )}
-                    </Card>
+                    {/* </Card> */}
                 </Container>
             </>
         );
@@ -295,15 +295,8 @@ export default function BoardDetailPage() {
         <div>
             <div ref={shadowHostRef}></div>
             {shadowRoot && createPortal(<BoardDetailContent />, shadowRoot)}
-            
             {/* 댓글 영역 */}
-            {!loading && post && (
-                <Container style={{ maxWidth: "1100px", marginTop: 30, marginBottom: 60 }}>
-                    <Card className="shadow-sm border-0 rounded-4 p-4">
-                        <Comments productId={post.id} categoryId={post.category_id} />
-                    </Card>
-                </Container>
-            )}
+            {!loading && post && ( <Comments productId={post.id} categoryId={post.category_id} /> )}
         </div>
     );
 }
