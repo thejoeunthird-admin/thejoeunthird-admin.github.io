@@ -1,14 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../supabase/supabase";
 import { useImage } from "../hooks/useImage";
 import { useUserTable } from "../hooks/useUserTable";
-import { Form, Button, FloatingLabel, InputGroup, Spinner, Image } from "react-bootstrap";
+import '../css/usedupdate.css'
 
 export function UsedUpdate() {
-    const shadowHostRef = useRef(null);
-    const [shadowRoot, setShadowRoot] = useState(null);
 
     // TODO: 수정 시간 업데이트
     const now = new Date().toISOString();
@@ -17,13 +14,13 @@ export function UsedUpdate() {
     const { item } = useParams();
 
     // 제목, 내용, 가격
-    // const [title, setTitle] = useState("");
-    // const [content, setContent] = useState("");
-    // const [price, setPrice] = useState("");
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [price, setPrice] = useState("");
 
-    const titleRef = useRef();
-    const contentRef = useRef();
-    const priceRef = useRef();
+    const { images, setImages, getImages, initImage } = useImage();
+    const [fileCount, setFileCount] = useState(0);
+    const fileInputRef = useRef();
 
     const [location, setLocation] = useState("");
 
@@ -39,394 +36,244 @@ export function UsedUpdate() {
         6: "buy"  // 나눔
     };
 
-    // Shadow DOM 설정
-    useEffect(() => {
-        if (shadowHostRef.current && !shadowRoot) {
-            const shadow = shadowHostRef.current.attachShadow({ mode: 'open' });
-
-            // Bootstrap CSS를 Shadow DOM에 추가
-            const bootstrapLink = document.createElement('link');
-            bootstrapLink.rel = 'stylesheet';
-            bootstrapLink.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
-            shadow.appendChild(bootstrapLink);
-
-            // Bootstrap JavaScript를 Shadow DOM에 추가
-            const bootstrapScript = document.createElement('script');
-            bootstrapScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
-            bootstrapScript.async = true;
-            shadow.appendChild(bootstrapScript);
-
-            // 추가 스타일링
-            const style = document.createElement('style');
-            style.textContent = `
-                :host {
-                    --base-color-5: #dc3545;
-                }
-                .hover-shadow:hover {
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                    transition: box-shadow 0.2s ease;
-                }
-            `;
-            shadow.appendChild(style);
-
-            const mountPoint = document.createElement('div');
-            shadow.appendChild(mountPoint);
-
-            setShadowRoot(mountPoint);
-        }
-    }, [shadowRoot]);
 
     // 드림해요-> 가격 내용 비움(썼다가 중간에 바꾸면 내용이 남으므로 비워줌)
     useEffect(() => {
-        if (category === "5") {
-            if (priceRef.current) priceRef.current.value = "";
-        }
+        if (category === "5") setPrice("");
     }, [category]);
 
-    const UsedUpdateContent = ({ }) => {
-        const { images, setImages, getImages, initImage } = useImage();
-        const [fileCount, setFileCount] = useState(0);
-        const fileInputRef = useRef();
 
-        const [exPics, setExPics] = useState([]);
-        useEffect(() => {
-            const fetchForm = async () => {
-                const { data, error } = await supabase
-                    .from('trades')
-                    .select('*, categories(name)')
-                    .eq('id', item)
-                    .single();
-                if (error) {
-                    console.log("error: ", error);
-                    console.log("data: ", data);
-                }
-                if (data) {
-                    if (titleRef.current) titleRef.current.value = data.title;
-                    if (contentRef.current) contentRef.current.value = data.content;
-                    if (priceRef.current) priceRef.current.value = data.price;
-                    setCategory(String(data.category_id))
-                    setLocation(data.location)
-                    //기존 이미지들 배열로 만듦
-                    setExPics([
-                        data.main_img,
-                        data.detail_img1,
-                        data.detail_img2,
-                        data.detail_img3,
-                        data.detail_img4
-                    ].filter(Boolean)); //비어있는 건 뺌
-                }
-            }
-            fetchForm();
-        }, [item]);
 
-        const handleRemoveImage = () => {
-            initImage([]);
-            setFileCount(0);
-            if (fileInputRef.current) {
-                fileInputRef.current.value = "";   // input의 파일 선택 자체를 비움!
-            }
-        }
-
-        // fileCount: 사용자가 < input type = "file" multiple > 에서 고른 파일의 개수
-        // images.length: 실제로 서버에 업로드 끝난 이미지 개수(useImage 훅에서 관리)
-        // 이미지 업로드 개수 제한 함수
-        const handleFileChange = (e) => {
-            const files = Array.from(e.target.files);
-            console.log(files);
-            if (images.length + files.length > 5) {
-                alert("사진은 최대 5장까지만 업로드할 수 있습니다.");
-                fileInputRef.current.value = "";
-                return;
-            }
-            if (files.length > 0) {
-                // setExPics([]);
-                setImages(e).then(() => {
-                    // 기존이미지도 그냥 냅두는게 좋을 것 같음(미리보기)
-                    //setExPics([]);
-                    setFileCount(images.length + files.length);
-                });
-            }
-        }
-
-        // 이미지 수정했으면 기존 이미지는 빠지게
-        const finalPics = (images.length > 0 ? images : exPics).filter(Boolean);
-
-        const handleUpdate = async (e) => {
-            e.preventDefault();
-
-            if (!userInfo) {
-                alert("로그인해야 글수정이 가능합니다.");
-                navigate('/login');
-                return;
-            }
-
-            if (!category) {
-                alert("카테고리를 선택해주세요.");
-                return;
-            }
-            if (!titleRef.current.value || !contentRef.current.value) {
-                alert("제목과 내용을 모두 작성해주세요.");
-                return;
-            }
-            if (category !== "5" && !priceRef.current.value) { // '나눔' 아니면 가격 필요
-                alert("가격을 입력해주세요.");
-                return;
-            }
-            if (!confirm('게시글을 수정할까요?')) {
-                return;
-            }
-
+    const [exPics, setExPics] = useState([]);
+    useEffect(() => {
+        const fetchForm = async () => {
             const { data, error } = await supabase
                 .from('trades')
-                .update({
-                    title: titleRef.current.value,
-                    content: contentRef.current.value,
-                    price: category === "5" ? 0 : Number(priceRef.current.value),
-                    category_id: Number(category),
-                    location,
-                    main_img: finalPics[0],
-                    detail_img1: finalPics[1],
-                    detail_img2: finalPics[2],
-                    detail_img3: finalPics[3],
-                    detail_img4: finalPics[4],
-                    update_date: now
-                })
+                .select('*, categories(name)')
                 .eq('id', item)
-                .select()
                 .single();
             if (error) {
-                console.log('error', error);
-            } if (data) {
-                const categoryString = CATEGORY_MAP[category];
-                const newItem = data.id;
-                navigate(`/trade/${categoryString}/${newItem}`);
+                console.log("error: ", error);
+                console.log("data: ", data);
+            }
+            if (data) {
+                setTitle(data.title)
+                setContent(data.content)
+                setPrice(data.price)
+                setCategory(String(data.category_id))
+                setLocation(data.location)
+                //기존 이미지들 배열로 만듦
+                setExPics([
+                    data.main_img,
+                    data.detail_img1,
+                    data.detail_img2,
+                    data.detail_img3,
+                    data.detail_img4
+                ].filter(Boolean)); //비어있는 건 뺌
             }
         }
+        fetchForm();
+    }, [item]);
 
-        console.log(images)
-        return (
-            <div className="p-4 rounded-4 shadow-sm bg-white" style={{ maxWidth: 600, margin: "40px auto" }}>
-                <Form>
-                    <Form.Group className="mb-3" controlId="category">
-                        <Form.Label>글수정</Form.Label>
-                        <Form.Select value={category} onChange={e => {
-                            setCategory(e.target.value);
-                            console.log('카테고리: ', e.target.value)
-                        }} required>
-                            <option value="">카테고리 선택</option>
-                            <option value="4">벼룩해요</option>
-                            <option value="5">드림해요</option>
-                            <option value="6">구해요</option>
-                        </Form.Select>
-                    </Form.Group>
+    const handleRemoveImage = () => {
+        initImage([]);
+        setFileCount(0);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";   // input의 파일 선택 자체를 비움!
+        }
+    }
 
-                    <Form.Group className="mb-3" controlId="location">
-                        <Form.Label>지역</Form.Label>
-                        <Form.Control
-                            value={location}
-                            type="text"
-                            disabled
-                        />
-                        <div className="form-text mt-1 text-muted" style={{ fontSize: 14 }}>
-                            ※ 지역은 수정할 수 없습니다.
-                        </div>
-                    </Form.Group>
+    // fileCount: 사용자가 < input type = "file" multiple > 에서 고른 파일의 개수
+    // images.length: 실제로 서버에 업로드 끝난 이미지 개수(useImage 훅에서 관리)
+    // 이미지 업로드 개수 제한 함수
+    const handleFileChange = (e) => {
+        const files = Array.from(e.target.files);
+        console.log(files);
+        if (images.length + files.length > 5) {
+            alert("사진은 최대 5장까지만 업로드할 수 있습니다.");
+            fileInputRef.current.value = "";
+            return;
+        }
+        if (files.length > 0) {
+            // setExPics([]);
+            setImages(e).then(() => {
+                // 기존이미지도 그냥 냅두는게 좋을 것 같음(미리보기)
+                //setExPics([]);
+                setFileCount(images.length + files.length);
+            });
+        }
+    }
 
-                    <Form.Group className="mb-3" controlId="title">
-                        <FloatingLabel label="제목">
-                            <Form.Control
-                                type="text"
-                                //value={title}
-                                // onChange={e => setTitle(e.target.value)}
-                                ref={titleRef}
-                                placeholder="제목"
-                                required
-                            />
-                        </FloatingLabel>
-                    </Form.Group>
+    // 이미지 수정했으면 기존 이미지는 빠지게
+    const finalPics = (images.length > 0 ? images : exPics).filter(Boolean);
 
-                    <Form.Group className="mb-3" controlId="content">
-                        <FloatingLabel label="내용">
-                            <Form.Control
-                                as="textarea"
-                                style={{ minHeight: 120 }}
-                                // value={content}
-                                // onChange={e => setContent(e.target.value)}
-                                ref={contentRef}
-                                placeholder="내용"
-                                required
-                            />
-                        </FloatingLabel>
-                    </Form.Group>
+    const handleUpdate = async (e) => {
+        e.preventDefault();
 
-                    <Form.Group className="mb-3" controlId="price">
-                        <InputGroup>
-                            <Form.Control
-                                type="number"
-                                // value={category === "5" ? 0 : price}
-                                // onChange={e => setPrice(e.target.value)}
-                                ref={priceRef}
-                                placeholder={category === "5" ? "나눔" : "가격"}
-                                disabled={category === "5"}
-                                min={0}
-                                required={category !== "5"}
-                            />
-                            {category !== "5" && <InputGroup.Text>원</InputGroup.Text>}
-                        </InputGroup>
-                    </Form.Group>
+        if (!userInfo) {
+            alert("로그인해야 글수정이 가능합니다.");
+            navigate('/login');
+            return;
+        }
 
-                    {/* 기존 이미지 미리보기 */}
-                    <Form.Group className="mb-3">
-                        <Form.Label>기존 이미지</Form.Label>
-                        <div className="d-flex flex-wrap gap-2 mt-1">
-                            {exPics.length > 0 ? (
-                                exPics.map((img, i) => (
-                                    <Image
-                                        key={i}
-                                        src={getImages(img)}
-                                        alt={`기존 이미지 ${i + 1}`}
-                                        style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: 12, border: "1px solid #eee" }}
-                                        thumbnail
-                                    />
-                                ))
-                            ) : (
-                                <div className="text-muted">기존 이미지 없음</div>
-                            )}
-                        </div>
-                    </Form.Group>
+        if (!category) {
+            alert("카테고리를 선택해주세요.");
+            return;
+        }
+        if (!title || !content) {
+            alert("제목과 내용을 모두 작성해주세요.");
+            return;
+        }
+        if (category !== "5" && !price) { // '나눔' 아니면 가격 필요
+            alert("가격을 입력해주세요.");
+            return;
+        }
+        if (!confirm('게시글을 수정할까요?')) {
+            return;
+        }
 
-                    {/* 새 이미지 업로드 */}
-                    <Form.Group className="mb-3" controlId="images">
-                        <Form.Label>이미지 업로드</Form.Label>
-                        <Form.Control
-                            type="file"
-                            multiple
-                            accept="image/*"
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                        />
-                        <div className="form-text mt-1 text-muted" style={{ fontSize: 14 }}>
-                            ※ 이미지는 최대 5장까지 업로드할 수 있습니다.<br />
-                            <span className="text-secondary">가장 먼저 선택한 이미지가 대표이미지로 설정됩니다.</span>
-                        </div>
-                        {fileCount !== images.length && (
-                            <div className="mt-2 text-secondary d-flex align-items-center gap-2">
-                                <Spinner animation="border" size="sm" />
-                                이미지 업로드 중입니다...
-                            </div>
+        const { data, error } = await supabase
+            .from('trades')
+            .update({
+                title,
+                content,
+                price: category === "5" ? 0 : Number(price),
+                category_id: Number(category),
+                location,
+                main_img: finalPics[0],
+                detail_img1: finalPics[1],
+                detail_img2: finalPics[2],
+                detail_img3: finalPics[3],
+                detail_img4: finalPics[4],
+                update_date: now
+            })
+            .eq('id', item)
+            .select()
+            .single();
+        if (error) {
+            console.log('error', error);
+        } if (data) {
+            const categoryString = CATEGORY_MAP[category];
+            const newItem = data.id;
+            navigate(`/trade/${categoryString}/${newItem}`);
+        }
+    }
+
+    console.log(images)
+    return (
+        <div className="usededit-wrap">
+            <form className="usededit-form" onSubmit={handleUpdate} autoComplete="off">
+                <div className="form-title">글수정</div>
+                {/* 카테고리 */}
+                <div className="form-group">
+                    <select className="form-select" value={category} onChange={e => setCategory(e.target.value)} required>
+                        <option value="">카테고리 선택</option>
+                        <option value="4">벼룩해요</option>
+                        <option value="5">드림해요</option>
+                        <option value="6">구해요</option>
+                    </select>
+                </div>
+                {/* 지역 */}
+                <div className="form-group">
+                    <input className="form-input" value={location} type="text" disabled />
+                    <div className="form-desc">※ 지역은 수정할 수 없습니다.</div>
+                </div>
+                {/* 제목 */}
+                <div className="form-group">
+                    <input className="form-input" type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="제목" required />
+                </div>
+                {/* 내용 */}
+                <div className="form-group">
+                    <input className="form-input textarea" value={content} onChange={e => setContent(e.target.value)} placeholder="내용" rows={5} required />
+                </div>
+                {/* 가격 */}
+                <div className="form-group form-price-group">
+                    <input
+                        className="form-input"
+                        type="number"
+                        value={category === "5" ? "" : price}
+                        onChange={e => setPrice(e.target.value)}
+                        placeholder={category === "5" ? "나눔" : "가격"}
+                        disabled={category === "5"}
+                        min={0}
+                        required={category !== "5"}
+                    />
+                    <span className="form-price-unit">원</span>
+                </div>
+                {/* 기존 이미지 미리보기 */}
+                <div className="form-group">
+                    <div className="form-label">기존 이미지</div>
+                    <div className="img-preview-list">
+                        {exPics.length > 0 ? (
+                            exPics.map((img, i) => (
+                                <img
+                                    key={i}
+                                    src={getImages(img)}
+                                    alt={`기존 이미지 ${i + 1}`}
+                                    className="img-preview"
+                                />
+                            ))
+                        ) : (
+                            <div className="form-desc">기존 이미지 없음</div>
                         )}
-                        {/* <div className="d-flex flex-wrap gap-2 mt-3">
-                            {images.length > 0 && images.map((img, idx) => (
-                                <Image
-                                    key={idx}
+                    </div>
+                </div>
+                {/* 새 이미지 업로드 */}
+                <div className="form-group">
+                    <div className="form-label">이미지 업로드</div>
+                    <input
+                        className="form-input"
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                    />
+                    <div className="form-desc">
+                        ※ 이미지는 최대 5장까지 업로드할 수 있습니다.<br />
+                        가장 먼저 선택한 이미지가 대표이미지로 설정됩니다.
+                    </div>
+                    {/* 새 이미지 미리보기 */}
+                    <div className="img-preview-list">
+                        {images.length > 0 && images.map((img, idx) => (
+                            <div className="img-preview-box" key={idx}>
+                                {idx === 0 && <span className="img-badge">대표</span>}
+                                <button
+                                    type="button"
+                                    className="img-del"
+                                    onClick={() => {
+                                        initImage(prev => prev.filter((_, i) => i !== idx));
+                                        setFileCount(prev => prev - 1);
+                                    }}
+                                >×</button>
+                                <img
                                     src={getImages(img)}
                                     alt={`업로드 이미지${idx + 1}`}
-                                    style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: 12, border: "1px solid #eee" }}
-                                    thumbnail
+                                    className="img-preview"
+                                    onClick={() => {
+                                        if (idx === 0) return;
+                                        initImage(prev => {
+                                            const newArr = [...prev];
+                                            const [selected] = newArr.splice(idx, 1);
+                                            newArr.unshift(selected);
+                                            return newArr;
+                                        });
+                                    }}
+                                    title={idx === 0 ? "대표 이미지" : "대표로 지정"}
                                 />
-                            ))}
-                        </div> */}
-                        <div className="d-flex flex-wrap gap-2 mt-3">
-                            {images.length > 0 && images.map((img, idx) => (
-                                <div key={idx} style={{ position: 'relative', display: "inline-block" }}>
-                                    {/* 대표 뱃지 */}
-                                    {idx === 0 && (
-                                        <span style={{
-                                            position: 'absolute',
-                                            top: 5,
-                                            left: 5,
-                                            background: '#dc3545',
-                                            color: '#fff',
-                                            borderRadius: 8,
-                                            padding: '2px 7px',
-                                            fontSize: 12,
-                                            zIndex: 2
-                                        }}>
-                                            대표
-                                        </span>
-                                    )}
-                                    {/* X 버튼 */}
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            // 삭제 로직
-                                            initImage(prev => prev.filter((_, i) => i !== idx));
-                                            setFileCount(prev => prev - 1);
-                                        }}
-                                        style={{
-                                            position: 'absolute',
-                                            top: 5,
-                                            right: 5,
-                                            background: '#fff',
-                                            border: 'none',
-                                            borderRadius: '50%',
-                                            width: 24,
-                                            height: 24,
-                                            zIndex: 2,
-                                            color: '#dc3545',
-                                            fontWeight: 'bold',
-                                            cursor: 'pointer',
-                                        }}
-                                    >×</button>
-                                    {/* 이미지 클릭시 대표 지정 */}
-                                    <Image
-                                        src={getImages(img)}
-                                        alt={`이미지${idx + 1}`}
-                                        style={{
-                                            width: '100px', height: '100px',
-                                            objectFit: 'cover',
-                                            borderRadius: 12,
-                                            border: "1px solid #eee",
-                                            opacity: idx === 0 ? 1 : 0.8,
-                                            cursor: 'pointer'
-                                        }}
-                                        thumbnail
-                                        onClick={() => {
-                                            // 클릭한 이미지가 이미 대표라면 무시
-                                            if (idx === 0) return;
-                                            // 대표로 이동(맨 앞으로)
-                                            initImage(prev => {
-                                                const newArr = [...prev];
-                                                const [selected] = newArr.splice(idx, 1);
-                                                newArr.unshift(selected);
-                                                return newArr;
-                                            });
-                                        }}
-                                        title={idx === 0 ? "대표 이미지" : "대표로 지정"}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                        <Button className="mt-2"
-                            variant="outline-secondary"
-                            size="sm"
-                            onClick={handleRemoveImage}
-                        >
-                            전체 이미지 다시 선택
-                        </Button>
-                    </Form.Group>
-
-                    <div className="d-grid gap-2 mt-4">
-                        <Button
-                            style={{ background: "var(--base-color-5)", border: "none" }}
-                            size="lg"
-                            onClick={handleUpdate}
-                            disabled={images.length > 0 && fileCount !== images.length}
-                        >
-                            수정
-                        </Button>
+                            </div>
+                        ))}
                     </div>
-                </Form>
-            </div>
-        );
-    };
-    //    const [exPics, setExPics] = useState([]);
-
-    return (
-        <div>
-            <div ref={shadowHostRef}></div>
-            {/* {shadowRoot && createPortal(<UsedUpdateContent exPics={exPics} />, shadowRoot)} */}
-            {shadowRoot && createPortal(<UsedUpdateContent />, shadowRoot)}
+                    <button type="button" className="form-reset-img" onClick={handleRemoveImage}>
+                        전체 이미지 다시 선택
+                    </button>
+                </div>
+                {/* 수정 버튼 */}
+                <button className="form-btn" type="submit" disabled={images.length > 0 && fileCount !== images.length}>
+                    수정
+                </button>
+            </form>
         </div>
     );
-}
+
+};

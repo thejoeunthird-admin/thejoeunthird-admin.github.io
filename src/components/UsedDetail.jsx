@@ -435,7 +435,7 @@ export function UsedDetail() {
                                 <img
                                     className="detail-img"
                                     src={getImages(images[current])}
-                                    alt={`이미지 ${current + 1}`}
+                                    alt={`상세 이미지 ${current + 1}`}
                                 />
                                 {/* 좌/우 버튼 (이미지 2장 이상일 때만) */}
                                 {total > 1 && (
@@ -449,30 +449,31 @@ export function UsedDetail() {
                         )}
                     </div>
 
-                    {/* 오른쪽 정보 */}
-                    <div className="detail-info">
-                        <div>
-                            <h2 className="detail-title">{detail.title}</h2>
-                            <div className="detail-meta">
-                                {detail.categories?.name} · {detail.location} <span className="detail-time">{getDateDiff(baseTime)}{isEdited && ' (수정)'}</span>
-                            </div>
-                            <div className="detail-price">
-                                {detail.category_id === 5
-                                    ? <span className="detail-badge-share">나눔</span>
-                                    : <>{Number(detail.price).toLocaleString()}<span className="detail-won">원</span></>
-                                }
-                            </div>
-                            <div className="detail-content">{detail.content}</div>
-                            <div className="detail-stat">
-                                <span>좋아요 {likesCount}</span>
-                                <span className="stat-dot">·</span>
-                                <span>조회 {detail.cnt ?? 0}</span>
-                            </div>
-                            <div className="detail-writer">작성자: {detail.users?.name ?? '알 수 없음'}</div>
+
+                {/* 오른쪽 정보 */}
+                <div className="detail-info">
+                    <div>
+                        <h2 className="detail-title">{detail.title}</h2>
+                        <div className="detail-meta">
+                            {detail.categories?.name} · {detail.location} <span className="detail-time">{getDateDiff(baseTime)}{isEdited && ' (수정)'}</span>
                         </div>
-                        <div className="detail-buttons">{handleButtons()}</div>
+                        <div className="detail-price">
+                            {detail.category_id === 5
+                                ? <span className="detail-badge-share">나눔</span>
+                                : <>{Number(detail.price).toLocaleString()}<span className="detail-won">원</span></>
+                            }
+                        </div>
+                        <div className="detail-content">{detail.content}</div>
+                        <div className="detail-stat">
+                            <span>좋아요 {likesCount}</span>
+                            <span className="stat-dot">·</span>
+                            <span>조회 {detail.cnt ?? 0}</span>
+                        </div>
+                        <div className="detail-writer">작성자: {detail.users?.name ?? '알 수 없음'}</div>
                     </div>
+                    <div className="detail-buttons">{handleButtons()}</div>
                 </div>
+            </div>
             </div>
         );
     };
