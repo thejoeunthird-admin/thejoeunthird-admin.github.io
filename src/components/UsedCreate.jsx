@@ -229,7 +229,7 @@ export function UsedCreate() {
                             </div>
                         ))}
                     </div>
-                    <button type="button" className="form-reset-simg" onClick={handleRemoveImage}>
+                    <button type="button" className="form-reset-img" onClick={handleRemoveImage}>
                         전체 이미지 다시 선택
                     </button>
                 </div>
