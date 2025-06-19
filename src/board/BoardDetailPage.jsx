@@ -4,6 +4,7 @@ import { supabase } from "../supabase/supabase";
 import { useUserTable } from "../hooks/useUserTable";
 import { Comments } from "../components/Comments";
 import { useCategoriesTable } from '../hooks/useCategoriesTable';
+import { LoadingCircle } from '../components/LoadingCircle';
 
 const getImages = (path) =>
     `https://mkoiswzigibhylmtkzdh.supabase.co/storage/v1/object/public/images/${path}`;
@@ -35,7 +36,8 @@ export default function BoardDetailPage() {
 
     useEffect(() => {
         if(post !== null && keyword !== ''){
-            navigate(`/life/keyword=${keyword}`) 
+            console.log(keyword)
+            navigate(`/life?keyword=${keyword}`) 
         }
     },[keyword])
 
@@ -152,23 +154,9 @@ export default function BoardDetailPage() {
     };
 
     if (loading || !post) {
-        return (
-            <div style={{ textAlign: 'center', padding: '50px 20px' }}>
-                <div style={{
-                    border: '2px solid #f3f3f3',
-                    borderTop: '2px solid #3498db',
-                    borderRadius: '50%',
-                    width: '40px',
-                    height: '40px',
-                    animation: 'spin 1s linear infinite',
-                    margin: '0 auto'
-                }}>
-                </div>
-                <style>
-                    {`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}
-                </style>
-            </div>
-        );
+        return (<div>
+            <LoadingCircle />
+        </div>);
     }
 
     const detailImages = [
