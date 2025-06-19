@@ -13,6 +13,8 @@ export default function BoardListPage() {
   const { tap } = useParams();
   const [boards, setBoards] = useState([]);
   const [categories, setCategories] = useState([]);
+  const params = new URLSearchParams(window.location.search);
+  const keyword = params.get('keyword');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,6 +48,12 @@ export default function BoardListPage() {
         }
       }
 
+      if (keyword && keyword !== '') {
+        query = query.ilike("title", `%${keyword}%`);
+        //하단에 있는건 컨텐츠도 포함해서
+        //query = query.or(`title.ilike.%${keyword}%,contents.ilike.%${keyword}%`);
+      }
+
       const { data: boardsData } = await query;
 
       const boardsWithCounts = await Promise.all(
@@ -67,21 +75,19 @@ export default function BoardListPage() {
           };
         })
       );
-
       setBoards(boardsWithCounts);
     }
 
     fetchBoards();
-  }, [tap, navigate]);
-
+  }, [tap, navigate, keyword]);
+  
   return (
-    <div className="boardlist-wrapper" style={{ width: "80%", margin: "0 auto" }}>
-      <div className="boardlist-header">
+    <div className="boardlist-wrapper" style={{ width:'calc( 100% - 20px )', marginLeft:'10px', marginRight:'10px' }}>
+      {/* <div className="boardlist-header">
         <button className="detail-button" onClick={() => navigate("/life/write")}>
           글쓰기
         </button>
-      </div>
-
+      </div> */}
       <div className="board-card-list">
         {boards.filter(Boolean).map((board) => (
           <div
@@ -94,27 +100,29 @@ export default function BoardListPage() {
                 src={board.main_img ? getImages(board.main_img) : IcecreamImg}
                 onError={(e) => (e.currentTarget.src = IcecreamImg)}
                 alt="썸네일"
-                style={{ width: 80, height: 80, borderRadius: 10, objectFit: "cover" }}
+                style={{ borderRadius: 10, objectFit: "cover" }}
               />
             </div>
             <div className="board-card-content">
               <div className="board-card-name">
                 <div className="category">
                   {"생활 > "} {board.categories?.name || "-"}
+                  {/* <span className="author">{board.users?.name || "알수없음"}</span> */}
                 </div>
-              </div>
-              <div className="board-card-meta">
-                <span className="author">{board.users?.name || "알수없음"}</span>
-                <span className="date">
-                  {board.create_date ? new Date(board.create_date).toLocaleDateString() : ""}
-                </span>
+                <div className="board-card-meta" style={{ marginLeft:'auto' }}>
+                  <span className="author">{board.users?.name || "알수없음"}</span>
+                  -
+                  <span className="date">
+                    {board.create_date ? new Date(board.create_date).toLocaleDateString() : ""}
+                  </span>
+                </div>
               </div>
               <div className="board-card-title">{board.title}</div>
               <div className="board-card-preview">
                 {board.contents?.slice(0, 50)}
                 {board.contents?.length > 50 ? "..." : ""}
               </div>
-              <div className="board-card-footer">
+              <div className="board-card-footer" style={{ marginLeft:'auto' }}>
                 <span title="조회수">👁️ {typeof board.cnt === "number" ? board.cnt : 0}</span>
                 <span title="댓글수" style={{ marginLeft: 14 }}>
                   💬 {board.commentsCount}

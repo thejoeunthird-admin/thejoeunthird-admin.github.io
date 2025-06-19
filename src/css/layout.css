@@ -311,8 +311,9 @@
 
 .layout .breakpoints.main .div {
     margin: 0 0px 0 0px;
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    width: 100%;
+    grid-template-columns: max-content calc(100cqw - 200px); /* 컨테이너 너비 기준 */
 }
 
 /* 사이드 메뉴 */
@@ -326,9 +327,7 @@
     gap: 10px;
     font-size: 1.1em;
     font-weight: 600;
-    width: 200px;
     margin-top: 10px;
-    flex-shrink: 0;
 }
 
 .layout_menu_li,
@@ -607,8 +606,8 @@
 }
 
 .profile {
-    width: 48px;
-    height: 48px;
+    width: 45px;
+    height: 45px;
     margin-left: 5px;
     cursor: pointer;
     display: flex;
@@ -831,6 +830,10 @@
         display: flex;
         opacity: 0;
         transform: translateY(0px);
+    }
+    .layout .breakpoints.main .div {
+        display: flex;
+        flex-direction: row;
     }
 
     .layout .breakpoints.main .div .ul,

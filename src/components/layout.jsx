@@ -40,7 +40,6 @@ const SearchBar = forwardRef(({ }, ref) => {
     return (<>
         <form className="inputBox"
             onSubmit={(e) => {
-                console.log('ddd')
                 e.preventDefault();
                 const value = ref.current?.value.trim();
                 navigate(`?keyword=${encodeURIComponent(value)}`);
@@ -303,7 +302,7 @@ export function Layout({ children }) {
                         <LayoutMenu board={board} />
                         <main className="mainLayout">
                             {board[0].url !== 'my' && (<SearchBar ref={refInput} />)}
-                            <div>{children}</div>
+                            {children}
                         </main>
                     </div>
                 </div>
@@ -311,7 +310,7 @@ export function Layout({ children }) {
                 <div className="breakpoints main" >
                     <div className='div' style={{ marginBottom: '50px', }}>
                         <main className="mainLayout">
-                            <div>{children}</div>
+                            {children}
                         </main>
                     </div>
                 </div>
