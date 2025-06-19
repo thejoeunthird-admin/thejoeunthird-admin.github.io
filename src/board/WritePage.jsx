@@ -1,17 +1,14 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from '../supabase/supabase';
 import { useUserTable } from "../hooks/useUserTable";
 import { useImage } from "../hooks/useImage";
+import './WritePage.css'; // CSS 파일 import
 
 const getImages = (path) =>
     `https://mkoiswzigibhylmtkzdh.supabase.co/storage/v1/object/public/images/${path}`;
 
 export default function WritePage() {
-    const shadowHostRef = useRef(null);
-    const [shadowRoot, setShadowRoot] = useState(null);
-    
     const { id: editId } = useParams();
     const [title, setTitle] = useState("");
     const [contents, setContents] = useState("");
@@ -22,30 +19,6 @@ export default function WritePage() {
     const navigate = useNavigate();
     const user = useUserTable();
     const { images, setImages } = useImage();
-
-    // Shadow DOM 설정
-    useEffect(() => {
-        if (shadowHostRef.current && !shadowRoot) {
-            const shadow = shadowHostRef.current.attachShadow({ mode: 'open' });
-            
-            // Bootstrap CSS를 Shadow DOM에 추가
-            const bootstrapLink = document.createElement('link');
-            bootstrapLink.rel = 'stylesheet';
-            bootstrapLink.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
-            shadow.appendChild(bootstrapLink);
-
-            // Bootstrap JavaScript를 Shadow DOM에 추가
-            const bootstrapScript = document.createElement('script');
-            bootstrapScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
-            bootstrapScript.async = true;
-            shadow.appendChild(bootstrapScript);
-
-            const mountPoint = document.createElement('div');
-            shadow.appendChild(mountPoint);
-            
-            setShadowRoot(mountPoint);
-        }
-    }, [shadowRoot]);
 
     // 카테고리 로드
     useEffect(() => {
@@ -136,130 +109,116 @@ export default function WritePage() {
         }
     };
 
-    const WritePageContent = () => {
-        return (
-            <>
-                {/* 왼쪽 전체 카테고리 ul(ul.ul)만 BoardDetailPage에서 숨김 */}
-                <style>
-                    {`
-                  .ul {
+    return (
+        <div>
+            <style>{`
+                .inputBox{
                     display: none !important;
-                  }
-                `}
-                </style>
-                <div>
-                    <h2>{editId ? "게시글 수정" : "게시글 작성"}</h2>
-                    <form onSubmit={handleSubmit}>
-                        <span>
-                            <select value={categoryId} onChange={e => setCategoryId(e.target.value)}>
+                }
+            `}</style>
+            <div className="write-page-container">
+                <h2 className="write-page-title">
+                    {editId ? "게시글 수정" : "게시글 작성"}
+                </h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-header">
+                        <div>
+                            <select
+                                className="category-select"
+                                value={categoryId}
+                                onChange={e => setCategoryId(e.target.value)}
+                            >
                                 <option value="">카테고리 선택</option>
                                 {categories.map(cat => (
                                     <option key={cat.id} value={cat.id}>{cat.name}</option>
                                 ))}
                             </select>
-                        </span>
-                        <span>
-                            <input type="text"
+                        </div>
+                        <div className="form-header-title">
+                            <input
+                                className="title-input"
+                                type="text"
                                 placeholder="제목"
                                 value={title}
                                 onChange={e => setTitle(e.target.value)}
                             />
-                        </span>
-                        <div>
-                            <textarea
-                                placeholder="내용"
-                                value={contents}
-                                onChange={e => setContents(e.target.value)}
-                                rows={8}
-                                cols={40}
-                            />
                         </div>
+                    </div>
+                    <div className="content-container">
+                        <textarea
+                            className="content-textarea"
+                            placeholder="내용"
+                            value={contents}
+                            onChange={e => setContents(e.target.value)}
+                            rows={8}
+                        />
+                    </div>
 
-                        {/* 이미지 프리뷰 영역 */}
-                        <div style={{ margin: "16px 0", display: "flex", gap: 8, flexWrap: "wrap" }}>
-                            {/* 기존 이미지 */}
-                            {oldImages.map((img, idx) => (
-                                <div key={`old-${idx}`} style={{ position: "relative", cursor: "pointer" }}>
-                                    <img
-                                        src={getImages(img)}
-                                        alt={`기존이미지${idx + 1}`}
-                                        style={{
-                                            width: 80,
-                                            height: 80,
-                                            objectFit: "cover",
-                                            borderRadius: 5,
-                                            border: mainIndex === idx ? "3px solid #e14989" : "1px solid #eee",
-                                            boxSizing: "border-box"
-                                        }}
-                                        onClick={() => setMainIndex(idx)}
-                                    />
-                                    <button
-                                        type="button"
-                                        style={{
-                                            position: "absolute", top: 4, right: 4, background: "none", nborder: "none", 
-                                            color: "#d32f2f", fontSize: 22, fontWeight: "bold", cursor: "pointer", padding: 0, zIndex: 10
-                                        }}
-                                        onClick={() => handleRemoveOldImage(idx)}
-                                        aria-label="이미지 삭제"
-                                    > X </button>
+                    {/* 이미지 프리뷰 영역 */}
+                    <div className="image-preview-container">
+                        {/* 기존 이미지 */}
+                        {oldImages.map((img, idx) => (
+                            <div key={`old-${idx}`} className="image-item">
+                                <img
+                                    src={getImages(img)}
+                                    alt={`기존이미지${idx + 1}`}
+                                    className={`image-thumbnail ${mainIndex === idx ? 'selected' : ''}`}
+                                    onClick={() => setMainIndex(idx)}
+                                />
+                                <button
+                                    type="button"
+                                    className="image-delete-button"
+                                    onClick={() => handleRemoveOldImage(idx)}
+                                    aria-label="이미지 삭제"
+                                >
+                                    ×
+                                </button>
 
-                                    {mainIndex === idx && (
-                                        <span style={{
-                                            position: "absolute", top: 4, left: 4, background: "#e14989", color: "#fff",
-                                            padding: "1px 7px", fontSize: 11, borderRadius: 3, fontWeight: 700
-                                        }}>
-                                            대표
-                                        </span>
-                                    )}
-                                </div>
-                            ))}
-                            {/* 새 이미지 */}
-                            {images.filter(Boolean).map((img, idx) => (
-                                <div key={`new-${idx}`} style={{ position: "relative", cursor: "pointer" }}>
-                                    <img
-                                        src={getImages(img)}
-                                        alt={`업로드이미지${idx + 1}`}
-                                        style={{
-                                            width: 80,
-                                            height: 80,
-                                            objectFit: "cover",
-                                            borderRadius: 5,
-                                            border: mainIndex === (oldImages.length + idx) ? "3px solid #e14989" : "1px solid #eee",
-                                            boxSizing: "border-box"
-                                        }}
-                                        onClick={() => setMainIndex(oldImages.length + idx)}
-                                    />
-                                    {mainIndex === (oldImages.length + idx) && (
-                                        <span style={{
-                                            position: "absolute", top: 4, left: 4, background: "#e14989", color: "#fff",
-                                            padding: "1px 7px", fontSize: 11, borderRadius: 3, fontWeight: 700
-                                        }}> 대표 </span>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
+                                {mainIndex === idx && (
+                                    <span className="main-image-badge">
+                                        대표
+                                    </span>
+                                )}
+                            </div>
+                        ))}
 
-                        <div style={{ margin: "16px 0" }}>
+                        {/* 새 이미지 */}
+                        {images.filter(Boolean).map((img, idx) => (
+                            <div key={`new-${idx}`} className="image-item">
+                                <img
+                                    src={getImages(img)}
+                                    alt={`업로드이미지${idx + 1}`}
+                                    className={`image-thumbnail ${mainIndex === (oldImages.length + idx) ? 'selected' : ''}`}
+                                    onClick={() => setMainIndex(oldImages.length + idx)}
+                                />
+                                {mainIndex === (oldImages.length + idx) && (
+                                    <span className="main-image-badge">
+                                        대표
+                                    </span>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="form-footer">
+                        <div className="file-upload-section">
                             <input
+                                className="file-input"
                                 type="file"
                                 accept="image/*"
                                 multiple
                                 onChange={handleFileChange}
                             />
-                            <p style={{ color: "#888", fontSize: 13 }}>대표이미지로 지정할 이미지를 클릭하세요! (최대 5장)</p>
+                            <p className="file-input-description">
+                                대표이미지로 지정할 이미지를 클릭하세요! (최대 5장)
+                            </p>
                         </div>
-
-                        <button type="submit">{editId ? "수정" : "등록"}</button>
-                    </form>
-                </div>
-            </>
-        );
-    };
-
-    return (
-        <div>
-            <div ref={shadowHostRef}></div>
-            {shadowRoot && createPortal(<WritePageContent />, shadowRoot)}
+                        <button type="submit" className="submit-button">
+                            {editId ? "수정" : "등록"}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }

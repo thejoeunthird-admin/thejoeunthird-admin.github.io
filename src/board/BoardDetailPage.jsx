@@ -1,18 +1,14 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
-import { Container, Row, Col, Card, Button, Spinner, Badge, Image } from "react-bootstrap";
 import { supabase } from "../supabase/supabase";
 import { useUserTable } from "../hooks/useUserTable";
 import { Comments } from "../components/Comments";
+import { useCategoriesTable } from '../hooks/useCategoriesTable';
 
 const getImages = (path) =>
     `https://mkoiswzigibhylmtkzdh.supabase.co/storage/v1/object/public/images/${path}`;
 
 export default function BoardDetailPage() {
-    const shadowHostRef = useRef(null);
-    const [shadowRoot, setShadowRoot] = useState(null);
-    
     const { id } = useParams();
     const navigate = useNavigate();
     const user = useUserTable();
@@ -24,30 +20,10 @@ export default function BoardDetailPage() {
     const [likesCount, setLikesCount] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
+    const { findById } = useCategoriesTable();
 
-    // Shadow DOM 설정
-    useEffect(() => {
-        if (shadowHostRef.current && !shadowRoot) {
-            const shadow = shadowHostRef.current.attachShadow({ mode: 'open' });
-            
-            // Bootstrap CSS를 Shadow DOM에 추가
-            const bootstrapLink = document.createElement('link');
-            bootstrapLink.rel = 'stylesheet';
-            bootstrapLink.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
-            shadow.appendChild(bootstrapLink);
-
-            // Bootstrap JavaScript를 Shadow DOM에 추가
-            const bootstrapScript = document.createElement('script');
-            bootstrapScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
-            bootstrapScript.async = true;
-            shadow.appendChild(bootstrapScript);
-
-            const mountPoint = document.createElement('div');
-            shadow.appendChild(mountPoint);
-            
-            setShadowRoot(mountPoint);
-        }
-    }, [shadowRoot]);
+    const params = new URLSearchParams(window.location.search);
+    const keyword = params.get('keyword');
 
     useEffect(() => {
         async function getUser() {
@@ -56,6 +32,12 @@ export default function BoardDetailPage() {
         }
         getUser();
     }, []);
+
+    useEffect(() => {
+        if(post !== null && keyword !== ''){
+            navigate(`/life/keyword=${keyword}`) 
+        }
+    },[keyword])
 
     useEffect(() => {
         const fetchDetail = async () => {
@@ -169,134 +151,164 @@ export default function BoardDetailPage() {
             .padStart(2, "0")}:${plus9.getMinutes().toString().padStart(2, "0")}`;
     };
 
-    const BoardDetailContent = () => {
-        const detailImages = [
-            post?.detail_img1,
-            post?.detail_img2,
-            post?.detail_img3,
-            post?.detail_img4,
-        ].filter(Boolean);
-
-        if (loading || !post) {
-            return (
-                <Container className="text-center py-5">
-                    <Spinner animation="border" />
-                </Container>
-            );
-        }
-
+    if (loading || !post) {
         return (
-            <>
-                {/* 본문 카드 영역 */}
-                <Container style={{ margin: "30px auto" }}>
-                    {/* <Card className="shadow rounded-4 border-0 p-4"> */}
-                        {/* 상단 버튼 */}
-                        <div className="d-flex justify-content-end mb-3">
-                            <Button
-                                variant="outline-secondary"
-                                size="sm"
-                                onClick={() => navigate(-1)}
-                                style={{ borderRadius: 8 }}
-                            >
-                                목록
-                            </Button>
-                        </div>
-
-                        {/* 카테고리, 날짜, 조회수 */}
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                            <div>
-                                <Badge bg="light" text="dark" className="me-2">
-                                    {post.categories?.name || "-"}
-                                </Badge>
-                                <span style={{ color: "#888", fontSize: 13 }}>
-                                    {formatDate(post.create_date)} · 조회 {post.cnt}
-                                </span>
-                            </div>
-                            <div style={{ color: "#888", fontSize: 14 }}>
-                                {post.users?.name || "익명"}
-                            </div>
-                        </div>
-
-                        {/* 제목 */}
-                        <h2 className="fw-bold mb-3">{post.title}</h2>
-
-                        {/* 메인 이미지 */}
-                        {post.main_img && (
-                            <Image
-                                src={getImages(post.main_img)}
-                                alt="대표 이미지"
-                                rounded
-                                className="mb-3"
-                                style={{ width: "100%", maxHeight: 400, objectFit: "contain" }}
-                            />
-                        )}
-
-                        {/* 상세 이미지 */}
-                        {detailImages.map((img, i) => (
-                            <Image
-                                key={i}
-                                src={getImages(img)}
-                                alt={`상세 이미지 ${i + 1}`}
-                                rounded
-                                className="mb-3"
-                                style={{ width: "100%", maxHeight: 400, objectFit: "contain" }}
-                            />
-                        ))}
-
-                        {/* 내용 */}
-                        <div
-                            style={{
-                                fontSize: 15,
-                                whiteSpace: "pre-line",
-                                lineHeight: 1.8,
-                                color: "#333",
-                            }}
-                            className="mb-4"
-                        >
-                            {post.contents}
-                        </div>
-
-                        {/* 좋아요 */}
-                        <div className="mb-3">
-                            <Button
-                                variant={isLiked ? "danger" : "outline-danger"}
-                                size="sm"
-                                onClick={handleLikeToggle}
-                                disabled={isLiking}
-                            >
-                                {isLiked ? "❤️ 좋아요 취소" : "🤍 좋아요"}
-                            </Button>
-                            <span style={{ marginLeft: 12, color: "#888", fontSize: 14 }}>
-                                좋아요 {likesCount}개
-                            </span>
-                        </div>
-
-                        {/* 수정/삭제 */}
-                        {post.user_id === currentUserId && (
-                            <div className="d-flex justify-content-end gap-2">
-                                <Button
-                                    variant="outline-primary"
-                                    onClick={() => navigate(`/life/edit/${post.id}`)}
-                                >
-                                    수정
-                                </Button>
-                                <Button variant="outline-danger" onClick={handleDelete}>
-                                    삭제
-                                </Button>
-                            </div>
-                        )}
-                    {/* </Card> */}
-                </Container>
-            </>
+            <div style={{ textAlign: 'center', padding: '50px 20px' }}>
+                <div style={{
+                    border: '2px solid #f3f3f3',
+                    borderTop: '2px solid #3498db',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    animation: 'spin 1s linear infinite',
+                    margin: '0 auto'
+                }}>
+                </div>
+                <style>
+                    {`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}
+                </style>
+            </div>
         );
-    };
+    }
+
+    const detailImages = [
+        post?.detail_img1,
+        post?.detail_img2,
+        post?.detail_img3,
+        post?.detail_img4,
+    ].filter(Boolean);
 
     return (
         <div>
-            <div ref={shadowHostRef}></div>
-            {shadowRoot && createPortal(<BoardDetailContent />, shadowRoot)}
-            {/* 댓글 영역 */}
-            {!loading && post && ( <Comments productId={post.id} categoryId={post.category_id} /> )}
+            <div style={{ marginTop: '20px', maxWidth: "1200px", padding: "0 10px" }}>
+                {/* 카테고리, 날짜, 조회수 */}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
+                    <div>
+                        <span style={{
+                            backgroundColor: "#f8f9fa",
+                            color: "#212529",
+                            padding: "4px 8px",
+                            borderRadius: "4px",
+                            fontSize: "12px",
+                            marginRight: "10px"
+                        }}>
+                            {post.categories?.name || "-"}
+                        </span>
+                        <span style={{ color: "#888", fontSize: "13px" }}>
+                            {formatDate(post.create_date)} · 조회 {post.cnt}
+                        </span>
+                    </div>
+                    <div style={{ color: "#888", fontSize: "14px" }}>
+                        {post.users?.name || "익명"}
+                    </div>
+                </div>
+
+                {/* 제목 */}
+                <h2 style={{ fontWeight: "bold", marginBottom: "20px", fontSize: "24px", color: "#333" }}>
+                    {post.title}
+                </h2>
+
+                {/* 메인 이미지 */}
+                {post.main_img && (
+                    <img
+                        src={getImages(post.main_img)}
+                        alt="대표 이미지"
+                        style={{
+                            width: "100%",
+                            maxHeight: "400px",
+                            objectFit: "contain",
+                            borderRadius: "8px",
+                            marginBottom: "20px"
+                        }}
+                    />
+                )}
+
+                {/* 상세 이미지 */}
+                {detailImages.map((img, i) => (
+                    <img
+                        key={i}
+                        src={getImages(img)}
+                        alt={`상세 이미지 ${i + 1}`}
+                        style={{
+                            width: "100%",
+                            maxHeight: "400px",
+                            objectFit: "contain",
+                            borderRadius: "8px",
+                            marginBottom: "20px"
+                        }}
+                    />
+                ))}
+
+                {/* 내용 */}
+                <div
+                    style={{
+                        fontSize: "15px",
+                        whiteSpace: "pre-line",
+                        lineHeight: "1.8",
+                        color: "#333",
+                        marginBottom: "25px"
+                    }}
+                >
+                    {post.contents}
+                </div>
+
+                {/* 좋아요 */}
+                <div style={{ marginBottom: "20px" }}>
+                    <button
+                        onClick={handleLikeToggle}
+                        disabled={isLiking}
+                        style={{
+                            padding: "8px 16px",
+                            border: isLiked ? "1px solid #dc3545" : "1px solid #dc3545",
+                            backgroundColor: isLiked ? "#dc3545" : "transparent",
+                            color: isLiked ? "white" : "#dc3545",
+                            borderRadius: "4px",
+                            cursor: isLiking ? "not-allowed" : "pointer",
+                            fontSize: "14px"
+                        }}
+                    >
+                        {isLiked ? "❤️ 좋아요 취소" : "🤍 좋아요"}
+                    </button>
+                    <span style={{ marginLeft: "12px", color: "#888", fontSize: "14px" }}>
+                        좋아요 {likesCount}개
+                    </span>
+                </div>
+
+                {/* 수정/삭제 */}
+                {post.user_id === currentUserId && (
+                    <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+                        <button
+                            onClick={() => navigate(`/life/edit/${post.id}`)}
+                            style={{
+                                padding: "8px 16px",
+                                border: "1px solid #0d6efd",
+                                backgroundColor: "transparent",
+                                color: "#0d6efd",
+                                borderRadius: "4px",
+                                cursor: "pointer",
+                                fontSize: "14px"
+                            }}
+                        >
+                            수정
+                        </button>
+                        <button
+                            onClick={handleDelete}
+                            style={{
+                                padding: "8px 16px",
+                                border: "1px solid #dc3545",
+                                backgroundColor: "transparent",
+                                color: "#dc3545",
+                                borderRadius: "4px",
+                                cursor: "pointer",
+                                fontSize: "14px"
+                            }}
+                        >
+                            삭제
+                        </button>
+                    </div>
+                )}
+                <Comments productId={post.id} categoryId={post.category_id} />
+            </div>
         </div>
     );
 }

@@ -308,7 +308,7 @@ export function Layout({ children }) {
                 </div>
             ) : (
                 <div className="breakpoints main" >
-                    <div className='div' style={{ marginBottom: '50px', }}>
+                    <div className='div' style={{ marginBottom: '50px', display:'flex' }}>
                         <main className="mainLayout">
                             {children}
                         </main>
