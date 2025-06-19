@@ -4,15 +4,15 @@ import { BrowserRouter, Routes, Route, Navigate, } from 'react-router-dom';
 import { Provider as ReduxProvider } from "react-redux";
 import { redux } from "./store/redux";
 import './index.css';
-import { Layout } from './components/Layout';
+import { Layout } from './components/layout';
 import { Login } from './components/Login';
 import { LoginRedirect } from './components/Login.redirect'
 import { MyPage } from './components/Mypage';
 import { TestPage } from './components/testpage';
 import { Trade } from './components/Trade'
-import { UsedSell } from './components/UsedSell';
-import { UsedShare } from './components/UsedShare';
-import { UsedBuy } from './components/UsedBuy';
+// import { UsedSell } from './components/UsedSell';
+// import { UsedShare } from './components/UsedShare';
+// import { UsedBuy } from './components/UsedBuy';
 import { Main } from './components/Main';
 import { UsedCreate } from './components/UsedCreate';
 import { UsedDetail } from './components/UsedDetail';
@@ -21,7 +21,7 @@ import BoardListPages from './board/BoardListPages';
 import WritePage from './board/WritePage';
 import BoardDetailPage from './board/BoardDetailPage';
 import EditPage from './board/EditPage';
-
+import { UsedBoard } from './components/UsedBoard';
 
 function App() {
   return (
@@ -37,9 +37,7 @@ function App() {
             <Route path='/my/:tap' element={<MyPage />} />
             <Route path='/my/:tap/:item' element={<MyPage />} />
             {/* 강수아 작업 -- 중고거래, 나눔, 판매 */}
-            <Route path='/trade/sell' element={<UsedSell />} />
-            <Route path='/trade/share' element={<UsedShare />} />
-            <Route path='/trade/buy' element={<UsedBuy />} />
+            <Route path='/trade/:id' element={<UsedBoard />} />
             <Route path="/trade/:id/:item" element={<UsedDetail />} />
             <Route path='/trade/deal/register' element={<UsedCreate />} />
             <Route path='/trade/:id/:item/update' element={<UsedUpdate />} />

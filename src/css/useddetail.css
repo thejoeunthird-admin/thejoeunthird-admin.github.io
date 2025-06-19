@@ -1,0 +1,229 @@
+.detail-root {
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background: #fff;
+}
+
+.detail-card {
+    display: flex;
+    max-width: 1100px;
+    margin: 30px auto;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 2px 18px rgba(30, 30, 30, 0.07);
+    padding: 40px 35px;
+    gap: 36px;
+    align-items: flex-start;
+}
+
+.detail-img-wrap {
+    flex: 1 1 0;
+    background: #fafafa;
+    border-radius: 18px;
+    min-width: 380px;
+    max-width: 480px;
+    min-height: 380px;
+    max-height: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.detail-img {
+    width: 100%;
+    max-width: 440px;
+    max-height: 440px;
+    border-radius: 18px;
+    object-fit: contain;
+    background: #fff;
+}
+
+.detail-noimg {
+    width: 100%;
+    max-width: 440px;
+    max-height: 440px;
+    border-radius: 18px;
+    background: #fafafa;
+    /* 빈 공간 배경색 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* img에 object-fit: contain 주기 */
+.detail-noimg img.noimg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* 이미지 비율 유지하면서, 잘리지 않게, 안에 딱 맞게 */
+}
+
+
+.detail-info {
+    flex: 1.2 1 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 360px;
+    height: 100%;
+    min-height: 380px;
+    gap: 6px;
+}
+
+.detail-title {
+    font-size: 2.1rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.detail-meta {
+    color: #888;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+}
+
+.detail-time {
+    margin-left: 9px;
+}
+
+.detail-price {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e1e1e;
+    margin-bottom: 18px;
+}
+
+.detail-badge-share {
+    background: #46b369;
+    color: #fff;
+    font-size: 1.1rem;
+    padding: 3px 18px;
+    border-radius: 9px;
+    font-weight: 700;
+}
+
+.detail-won {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-left: 2px;
+}
+
+.detail-content {
+    font-size: 1.15rem;
+    color: #444;
+    min-height: 42px;
+    margin-bottom: 18px;
+    white-space: pre-line;
+}
+
+.detail-stat {
+    color: #888;
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.stat-dot {
+    margin: 0 6px;
+}
+
+.detail-writer {
+    color: #999;
+    font-size: 1rem;
+    margin-bottom: 16px;
+}
+
+.detail-buttons {
+    margin-top: 16px;
+    display: flex;
+    gap: 14px;
+}
+
+.detail-buttons button {
+    font-size: 1rem;
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: 1.5px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.14s;
+}
+
+.detail-buttons button:last-child {
+    border: 1.5px solid #e14d54;
+    background: #fff;
+    color: #e14d54;
+}
+
+.detail-buttons button:last-child:hover {
+    background: #ffeaea;
+}
+
+.detail-buttons button:first-child:hover {
+    background: #f5f5f5;
+}
+
+@media (max-width: 800px) {
+    .detail-card {
+        flex-direction: column;
+        padding: 18px 5vw;
+    }
+
+    .detail-img-wrap {
+        min-width: 220px;
+        max-width: 100%;
+        min-height: 220px;
+    }
+
+    .detail-info {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+.detail-carousel {
+    position: relative;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+    color: #222;
+    cursor: pointer;
+    z-index: 2;
+    transition: background 0.15s;
+    box-shadow: 0 2px 8px rgba(30, 30, 30, 0.07);
+}
+
+.carousel-btn.left {
+    left: 12px;
+}
+
+.carousel-btn.right {
+    right: 12px;
+}
+
+.carousel-btn:hover {
+    background: #ffeaea;
+}
+
+.carousel-indicator {
+    position: absolute;
+    bottom: 18px;
+    right: 22px;
+    background: rgba(0, 0, 0, 0.35);
+    color: #fff;
+    font-size: 1rem;
+    padding: 3px 13px;
+    border-radius: 14px;
+    font-weight: 500;
+}

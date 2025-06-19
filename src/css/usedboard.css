@@ -1,0 +1,117 @@
+.usedboard-container {
+    width: 100%;
+    padding: 30px 16px 90px 16px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    min-width: var(--breakpoint-min);
+    max-width: var(--breakpoint-max);
+}
+
+.usedboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개 */
+    gap: 24px;
+    width: 100%;
+}
+
+.usedboard-col {
+    width: 300px;
+    /* 고정 너비 */
+    min-width: 300px;
+    max-width: 300px;
+    min-height: 410px;
+    /* 고정 높이 */
+    height: 410px;
+    display: flex;
+    margin-bottom: 24px;
+
+}
+
+@media (max-width: 900px) {
+    .usedboard-col {
+        max-width: 48%;
+    }
+}
+
+@media (max-width: 600px) {
+    .usedboard-col {
+        max-width: 100%;
+    }
+}
+
+.usedboard-fab-zone {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.usedboard-fab {
+    width: 100px;
+    height: 50px;
+    border: none;
+    border-radius: 18px;
+    background: #dc3545;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    cursor: pointer;
+    transition: background 0.13s;
+}
+
+.usedboard-fab:hover {
+    background: #ad2130;
+}
+
+.usedboard-menu {
+    margin-top: 0;          /* 아래 여백 없애고 */
+    margin-bottom: 14px;    /* 위에 뜨게! */
+    /* 나머지 그대로 */
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
+    padding: 12px 8px;
+    width: 170px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    animation: fade-in 0.2s;
+}
+
+
+.usedboard-menu-btn {
+    width: 100%;
+    background: #dc3545;           /* 버튼 빨강 */
+    color: #fff;                   /* 글씨 흰색 */
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    margin-bottom: 4px;
+    transition: background 0.13s, color 0.13s;
+}
+
+.usedboard-menu-btn:hover {
+    background: #ad2130;           /* hover 더 진한 빨강 */
+    color: #fff;                   /* 글씨 계속 흰색 */
+}
+
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
