@@ -95,7 +95,7 @@ export function UsedCreate() {
             // 숫자->문자열로 변환
             const categoryString = CATEGORY_MAP[category];
             const newItem = data.id;
-            navigate(`/trade/${categoryString}/${newItem}`);
+            navigate(`/trade/${categoryString}/${newItem}?keyword=`);
         }
     }
 
