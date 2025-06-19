@@ -11,7 +11,7 @@ export function UsedUpdate() {
     const now = new Date().toISOString();
     const navigate = useNavigate();
     // url에서 가져옴
-    const { item } = useParams();
+    const { id, item } = useParams();
 
     // 제목, 내용, 가격
     const [title, setTitle] = useState("");
@@ -28,13 +28,6 @@ export function UsedUpdate() {
     const [category, setCategory] = useState("");
     // useUserTable 훅
     const { info: userInfo, loading, error } = useUserTable();
-
-    // 카테고리 숫자->문자열로 변환
-    const CATEGORY_MAP = {
-        4: "sell",    // 중고거래
-        5: "share",     // 구매
-        6: "buy"  // 나눔
-    };
 
 
     // 드림해요-> 가격 내용 비움(썼다가 중간에 바꾸면 내용이 남으므로 비워줌)
@@ -153,9 +146,8 @@ export function UsedUpdate() {
         if (error) {
             console.log('error', error);
         } if (data) {
-            const categoryString = CATEGORY_MAP[category];
             const newItem = data.id;
-            navigate(`/trade/${categoryString}/${newItem}`);
+            navigate(`/trade/${id}/${newItem}`);
         }
     }
 

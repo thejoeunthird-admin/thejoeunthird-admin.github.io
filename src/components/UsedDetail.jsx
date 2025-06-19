@@ -17,7 +17,7 @@ import '../css/useddetail.css'
 export function UsedDetail() {
     const { getImages } = useImage();
 
-    const { item } = useParams();
+    const { item, id } = useParams();
     const navigate = useNavigate();
     const now = new Date().toISOString();
     const [error, setError] = useState(null);
@@ -33,15 +33,6 @@ export function UsedDetail() {
     const [detail, setDetail] = useState(null);
     // 로그인한 사람의 정보
     const { info: userInfo } = useUserTable();
-
-    // 카테고리 숫자->문자열로 변환
-    const CATEGORY_MAP = {
-        4: "sell",    // 중고거래
-        5: "share",     // 구매
-        6: "buy"  // 나눔
-    };
-
-
 
 
     const handleToggleMenu = () => {
@@ -200,8 +191,7 @@ export function UsedDetail() {
         }
         if (data) {
             alert('게시글이 삭제되었습니다.');
-            const categoryString = CATEGORY_MAP[detail.category_id];
-            navigate(`/trade/${categoryString}`);
+            navigate(`/trade/${id}`);
         }
     }
 
@@ -403,17 +393,17 @@ export function UsedDetail() {
         return (
             <div className="detail-root">
                 {/* 플로팅 버튼 */}
-                <div className="usedsell-fab-zone">
+                <div className="usedboard-fab-zone">
                     {showRegisterMenu && (
-                        <div className="usedsell-menu up">
+                        <div className="usedboard-menu up">
                             <button
-                                className="usedsell-menu-btn"
+                                className="usedboard-menu-btn"
                                 onClick={() => handleRegisterNavigate('/trade/deal/register')}
                             >
                                 거래 등록
                             </button>
                             <button
-                                className="usedsell-menu-btn"
+                                className="usedboard-menu-btn"
                                 onClick={() => handleRegisterNavigate('/trade/gonggu/register')}
                             >
                                 공구 등록
@@ -421,7 +411,7 @@ export function UsedDetail() {
                         </div>
                     )}
                     <button
-                        className="usedsell-fab"
+                        className="usedboard-fab"
                         onClick={handleToggleMenu}
                     >
                         + 글쓰기

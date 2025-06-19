@@ -1,18 +1,22 @@
 import '../css/usedboard.css';
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { supabase } from "../supabase/supabase";
 import { UsedItem } from './UsedItem';
 import { LoadingCircle } from './LoadingCircle';
-import { useLocation } from 'react-router-dom';
 
-export function UsedBoard({categoryId}) {
+export function UsedBoard() {
     const [posts, setPosts] = useState([]);
     const [showRegisterMenu, setShowRegisterMenu] = useState(false);
     const navigate = useNavigate();
+    const { id } = useParams();
+    const CATEGORY_MAP = { sell: 4, share: 5, buy: 6 };
+    const categoryId = CATEGORY_MAP[id];
     const location = useLocation();
     const query = new URLSearchParams(location.search);
     const keyword = query.get('keyword') || '';
+
+
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -50,6 +54,9 @@ export function UsedBoard({categoryId}) {
 
     const UsedBoardContent = () => {
         if (!posts) return <div><LoadingCircle /></div>;
+        if (!categoryId) {
+            return <div>존재하지 않는 카테고리입니다.</div>
+        }
 
         return (
             <div className="usedboard-container">

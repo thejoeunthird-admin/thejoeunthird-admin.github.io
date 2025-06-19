@@ -33,10 +33,7 @@ function App() {
             <Route path='/my/:tap' element={<MyPage />} />
             <Route path='/my/:tap/:item' element={<MyPage />} />
             {/* 강수아 작업 -- 중고거래, 나눔, 판매 */}
-            <Route path='/trade/sell' element={<UsedBoard categoryId={4} />} />
-            <Route path='/trade/share' element={<UsedBoard categoryId={5} />} />
-            <Route path='/trade/buy' element={<UsedBoard categoryId={6} />} />
-
+            <Route path='/trade/:id' element={<UsedBoard />} />
             <Route path="/trade/:id/:item" element={<UsedDetail />} />
             <Route path='/trade/deal/register' element={<UsedCreate />} />
             <Route path='/trade/:id/:item/update' element={<UsedUpdate />} />
