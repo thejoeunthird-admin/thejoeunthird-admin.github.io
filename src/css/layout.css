@@ -313,7 +313,7 @@
     margin: 0 0px 0 0px;
     display: grid;
     width: 100%;
-    grid-template-columns: max-content calc(100cqw - 200px); /* 컨테이너 너비 기준 */
+    grid-template-columns: fit-content(200px) calc(100% - 200px);
 }
 
 /* 사이드 메뉴 */
