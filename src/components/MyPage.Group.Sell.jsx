@@ -3,16 +3,24 @@ import { supabase } from "../supabase/supabase";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
 import { formatDateTime } from "../utils/formatDateTime";
 import { useNavigate } from "react-router-dom";
+import { useImage } from "../hooks/useImage";
 
 export function MyPageGroupSell({ user }) {
     const { findById } = useCategoriesTable();
     const nav = useNavigate();
     const [sell, setSell] = useState([]);
+    const { getImages } =useImage();
 
     const fetchSellLog = useCallback(async () => {
         const { data, error } = await supabase.rpc('get_group_trade_orders', { uid: user.info.id });
         setSell(data);
     }, [])
+
+    const getFinalUrl = (img) => {
+        if (!img) return null;
+        return img.startsWith("http") ? img : getImages(img);
+    };
+
 
     useEffect(() => {
         fetchSellLog();
@@ -36,7 +44,7 @@ export function MyPageGroupSell({ user }) {
                         className={`likes-item`}
                     >
                         <section className="likes-card">
-                            <img alt="main" src={o.trade_main_img} className="likes-img" />
+                            <img alt="main" src={getFinalUrl(o.trade_main_img)} className="likes-img" />
                             <span className="likes-category">
                                 {`${parntCategorie.name} > ${categorie.name}`}
                                 <small>{['참여중', '거래중', '배송중', '거래완료'][o.state]}</small>

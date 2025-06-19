@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase/supabase'; // 경로는 실제 프로젝트 구조에 맞게 조정
 import { useCategoriesTable } from '../hooks/useCategoriesTable'; // 커스텀 훅
 import { formatDateTime } from '../utils/formatDateTime'; // 날짜 포매팅 함수
+import { useImage } from '../hooks/useImage';
 
 export function MyPageLike({ user }) {
     const { info } = user;
     const [likes, setLikes] = useState([])
+    const { getImages } = useImage();
     const { findById } = useCategoriesTable();
     const nav = useNavigate();
 
@@ -89,6 +91,11 @@ export function MyPageLike({ user }) {
 
     };
 
+    const getFinalUrl = (img) => {
+        if (!img) return null;
+        return img.startsWith("http") ? img : getImages(img);
+    };
+
     useEffect(() => {
         if (!info?.id) return;
         fetchLikesWithCategoryAndItem();
@@ -109,7 +116,7 @@ export function MyPageLike({ user }) {
                         }}
                     >
                         <section className="likes-card">
-                            <img alt="main" src={o.item.main_img} className="likes-img" />
+                            <img alt="main" src={getFinalUrl(o.item.main_img)} className="likes-img" />
                             <span className="likes-category">
                                 {`${findById(o.category.parent_id).name} > ${o.category.name}`}
                             </span>

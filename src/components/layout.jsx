@@ -35,13 +35,23 @@ const board_init = (categories) => {
 const SearchBar = forwardRef(({ }, ref) => {
     const navigate = useNavigate();
     const [isFocused, setIsFocused] = useState(false);
-    return (
+    const params = new URLSearchParams(window.location.search);
+    const keyword = params.get('keyword') || '';
+    return (<>
         <form className="inputBox"
             onSubmit={(e) => {
                 e.preventDefault();
                 const value = ref.current?.value.trim();
                 navigate(`?keyword=${encodeURIComponent(value)}`);
                 ref.current.value = '';
+            }} 
+            onClick={(e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    e.preventDefault();
+                    const value = ref.current?.value.trim();
+                    navigate(`?keyword=${encodeURIComponent(value)}`);
+                    ref.current.value = '';
+                }
             }}
         >
             <input
@@ -54,7 +64,10 @@ const SearchBar = forwardRef(({ }, ref) => {
                 {isFocused ? <FaArrowAltCircleRight /> : <FaSearch />}
             </button>
         </form>
-    );
+        {keyword !== '' && <div style={{ marginLeft: "15px", fontWeight: '700', fontSize: '0.8rem', color: 'rgb(0,0,0,0.5)', padding: '5px 0px' }}>
+            '{keyword}' 으로 검색된 결과입니다.
+        </div>}
+    </>);
 });
 
 export function Layout({ children }) {
@@ -268,12 +281,6 @@ export function Layout({ children }) {
                     style={{ display: 'flex', alignItems: 'flex-start', gap: '2px' }}
                 >
                     <div className='displayOn' style={{ width: 'calc( 100% - 64px )' }}>
-                        {/* <p
-                            className={`board-item ${location.pathname === '/' ? 'red' : ''}`}
-                            onClick={(e) => handleNavigate(e, `/`)}
-                        >
-                            홈
-                        </p> */}
                         {categories.filter((o) => o.id !== 16).map((o, k) => (
                             <React.Fragment key={k}>
                                 <p
@@ -290,20 +297,20 @@ export function Layout({ children }) {
                 )}
             </header>
             {board[0] !== undefined ? (
-                <div className="breakpoints main" style={{ height:'fit-content' }}>
+                <div className="breakpoints main" style={{ height: 'fit-content' }}>
                     <div className='div' style={{ marginBottom: '50px' }}>
                         <LayoutMenu board={board} />
                         <main className="mainLayout">
                             {board[0].url !== 'my' && (<SearchBar ref={refInput} />)}
-                            <div>{children}</div>
+                            {children}
                         </main>
                     </div>
                 </div>
             ) : (
                 <div className="breakpoints main" >
-                    <div className='div' style={{ marginBottom: '50px', }}>
+                    <div className='div' style={{ marginBottom: '50px', display:'flex' }}>
                         <main className="mainLayout">
-                            <div>{children}</div>
+                            {children}
                         </main>
                     </div>
                 </div>

@@ -10,11 +10,20 @@ import { formatDateTime } from '../utils/formatDateTime';
 import { useImage } from '../hooks/useImage';
 import { LoadingCircle } from './LoadingCircle';
 import { formatTime } from '../utils/fomatTime';
+import { useNavigate } from 'react-router-dom';
 
 function BestItems() {
+    const nav = useNavigate();
+    const { findById } =useCategoriesTable();
+    const { getImages } = useImage();
     const [gonggu, setGonggu] = useState([])
     const [items, setItems] = useState([]);
     const [error, setError] = useState(false);
+
+    const getFinalUrl = (img) => {
+        if (!img) return null;
+        return img.startsWith("http") ? img : getImages(img);
+    };
 
     useEffect(() => {
         const fetchBoards = async () => {
@@ -46,92 +55,123 @@ function BestItems() {
 
     }, [])
 
-    console.log(gonggu)
-    return (<>
-        <div className='bestItems'>
-            <ul className='row trade'>
-                <h2 className='row_title'>중고 거래</h2>
-                {items.map((o, k) =>
-                    <li key={k} className='contents'>
-                        <img src={o.main_img} className='contents-img' />
-                        <div className='contents-box'>
-                            <p className='start-string'>
-                                {o.location}
-                                <small
-                                    className='end-string'
-                                    style={{ fontSize: '0.9rem', fontWeight: '500' }}
-                                >
-                                    {formatDateTime(o.create_date)}
-                                </small>
-                            </p>
-                            <p className='contents-title'>
-                                {o.title}
-                            </p>
-                            <p className='contents-string'>
-                                {o.content}
-                            </p>
-                            <p
-                                className='start-string'
-                                style={{ marginTop: 'auto', marginBottom: '5px', color: 'black', fontSize: '1.2rem' }}
-                            >
-                                {(o.price).toLocaleString()} 원
-                                <small className='end-string'>
-                                    <MdChat />&nbsp;{o.comment_count}
-                                    &nbsp;
-                                    <FaHeart />&nbsp;{o.like_count}
-                                </small>
-                            </p>
-                        </div>
-                    </li>
-                )}
+    if (error) {
+        return (<>
+            <ul className="bestBoards">
+                에러메세지
             </ul>
-            <ul className='row trade'>
-                <h2 className='row_title'>공동 구매</h2>
-                {gonggu.map((o, k) =>
-                     <li key={k} className='contents'>
-                        <img src={o.main_img} className='contents-img' />
-                        <div className='contents-box'>
-                            <p className='start-string'>
-                                {o.location}
-                                <small
-                                    className='end-string'
-                                    style={{ fontSize: '0.9rem', fontWeight: '500' }}
-                                >
-                                    {formatDateTime(o.create_date)}
-                                </small>
-                            </p>
-                            <p className='contents-title'>
-                                {o.title}
-                            </p>
-                            <p className='contents-string'>
-                                {o.content}
-                            </p>
-                            <p
-                                className='start-string'
-                                style={{ marginTop: 'auto', marginBottom: '5px', color: 'black', fontSize: '1.2rem' }}
-                            >
-                                {(o.price).toLocaleString()} 원
-                                <small className='end-string'>
-                                    <MdChat />&nbsp;{o.comment_count}
-                                    &nbsp;
-                                    <FaHeart />&nbsp;{o.like_count}
-                                </small>
-                            </p>
-                        </div>
-                    </li>
-                )}
+        </>)
+    }
+    else if (gonggu.length === 0 || items.length === 0) {
+        return (<>
+            <ul className="bestBoards">
+                <LoadingCircle />
             </ul>
-        </div>
-    </>)
+        </>)
+    }
+    else {
+        return (<>
+            <div className='bestItems'>
+                <ul className='row trade'>
+                    <h2 className='row_title'>중고 거래</h2>
+                    {items.map((o, k) =>
+                        <li 
+                            key={k} 
+                            className='contents'
+                            onClick={(e)=>{
+                                e.preventDefault();
+                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}`)
+                            }}
+                        >
+                            <img src={getFinalUrl(o.main_img)} className='contents-img' />
+                            <div className='contents-box'>
+                                <p className='start-string'>
+                                    {o.location}
+                                    <small
+                                        className='end-string'
+                                        style={{ fontSize: '0.9rem', fontWeight: '500' }}
+                                    >
+                                        {formatDateTime(o.create_date)}
+                                    </small>
+                                </p>
+                                <p className='contents-title'>
+                                    {o.title}
+                                </p>
+                                <p className='contents-string'>
+                                    {o.content}
+                                </p>
+                                <p
+                                    className='start-string'
+                                    style={{ marginTop: 'auto', marginBottom: '5px', color: 'black', fontSize: '1.2rem' }}
+                                >
+                                    {(o.price).toLocaleString()} 원
+                                    <small className='end-string'>
+                                        <MdChat />&nbsp;{o.comment_count}
+                                        &nbsp;
+                                        <FaHeart />&nbsp;{o.like_count}
+                                    </small>
+                                </p>
+                            </div>
+                        </li>
+                    )}
+                </ul>
+                <ul className='row trade'>
+                    <h2 className='row_title'>공동 구매</h2>
+                    {gonggu.map((o, k) =>
+                        <li 
+                            key={k} 
+                            className='contents'
+                            onClick={(e)=>{
+                                e.preventDefault();
+                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}`)
+                            }}
+                        >
+                            <img src={getFinalUrl(o.main_img)} className='contents-img' />
+                            <div className='contents-box'>
+                                <p className='start-string'>
+                                    {o.location}
+                                    <small
+                                        className='end-string'
+                                        style={{ fontSize: '0.9rem', fontWeight: '500' }}
+                                    >
+                                        {formatDateTime(o.create_date)}
+                                    </small>
+                                </p>
+                                <p className='contents-title'>
+                                    {o.title}
+                                </p>
+                                <p className='contents-string'>
+                                    {o.content}
+                                </p>
+                                <p
+                                    className='start-string'
+                                    style={{ marginTop: 'auto', marginBottom: '5px', color: 'black', fontSize: '1.2rem' }}
+                                >
+                                    {(o.price).toLocaleString()} 원
+                                    <small className='end-string'>
+                                        <MdChat />&nbsp;{o.comment_count}
+                                        &nbsp;
+                                        <FaHeart />&nbsp;{o.like_count}
+                                    </small>
+                                </p>
+                            </div>
+                        </li>
+                    )}
+                </ul>
+            </div>
+        </>)
+    }
 }
 
 
 function BestBoards() {
+    const nav = useNavigate();
     const { findById } = useCategoriesTable();
     const { getImages } = useImage();
     const [boardsTop3, setBoardsTop3] = useState([]);
     const [boards, setBoards] = useState([]);
     const [error, setError] = useState(false);
+    
     useEffect(() => {
         const fetchBoards = async () => {
             const { data, error: dataError } = await supabase.rpc('get_top_liked_boards');
@@ -164,7 +204,14 @@ function BestBoards() {
         return (<>
             <ul className="bestBoards">
                 {boardsTop3.map((o, k) =>
-                    <li key={k} className='contents'>
+                    <li 
+                        key={k} 
+                        className='contents'
+                        onClick={(e)=>{
+                            e.preventDefault();
+                            nav(`/life/detail/${o.id}`)
+                        }}
+                    >
                         <p className='contents_title'>
                             {o.title}
                         </p>
@@ -191,7 +238,14 @@ function BestBoards() {
                 )}
                 <li className='contents-span'>
                     {boards.map((o, k) =>
-                        <a key={k} className='line'>
+                        <a 
+                            key={k} 
+                            className='line'
+                            onClick={(e)=>{
+                                e.preventDefault();
+                                nav(`/life/detail/${o.id}`)
+                            }}
+                        >
                             <strong className='contents_tag'>{findById(o.category_id).name}</strong>
                             <small className='contents_title'>{o.title}</small>
                             <div style={{ display: 'flex', flexDirection: 'row', flex: '1' }}>
