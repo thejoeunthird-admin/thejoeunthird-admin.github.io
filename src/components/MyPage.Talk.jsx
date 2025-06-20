@@ -61,7 +61,7 @@ export function MyPageTalk({ user }) {
                                 >
                                     <strong className={`mytalk-name ${read ? '' : 'read'}`}>
                                         {isUser ? o.sender.name : o.receiver.name}
-                                        <small>{new Date(o.create_date).toISOString().slice(0, 10)}</small>
+                                        <small>{new Date(o.create_date).toLocaleDateString('ko-KR')}</small>
                                     </strong>
                                     <span className="mytalk-preview">
                                         <p>{o.chat}</p>
