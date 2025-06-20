@@ -86,8 +86,11 @@ export function UsedForm({ mode }) {
             fileInputRef.current.value = "";
             return;
         }
+        // setExPics([]); // 기존 이미지 초기화
         setFileCount(images.length + files.length);
-        setImages(e);
+        if (files.length > 0) {
+            setImages(e); // 기존대로
+        }
     }
 
     // 이미지 삭제
@@ -96,9 +99,6 @@ export function UsedForm({ mode }) {
         setFileCount(0);
         if (fileInputRef.current) fileInputRef.current.value = "";
     }
-
-    // 이미지 최종 배열
-    const finalPics = (images.length > 0 ? images : exPics).filter(Boolean);
 
     //등록/수정
     const handleSubmit = async (e) => {
@@ -135,11 +135,11 @@ export function UsedForm({ mode }) {
                     price: category === "5" ? 0 : Number(price),
                     category_id: Number(category),
                     location,
-                    main_img: finalPics[0],
-                    detail_img1: finalPics[1],
-                    detail_img2: finalPics[2],
-                    detail_img3: finalPics[3],
-                    detail_img4: finalPics[4],
+                    main_img: images[0] ? images[0] : null,
+                    detail_img1: images[1] ? images[1] : null,
+                    detail_img2: images[2] ? images[2] : null,
+                    detail_img3: images[3] ? images[3] : null,
+                    detail_img4: images[4] ? images[4] : null,
                     update_date: now
                 })
                 .eq('id', item)
