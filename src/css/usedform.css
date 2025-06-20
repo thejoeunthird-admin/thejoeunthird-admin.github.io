@@ -1,35 +1,41 @@
 .usededit-wrap {
-    max-width: 600px;
-    margin: 40px auto;
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-    padding: 36px 28px 36px 28px;
+    padding: 32px 0;
+    background: transparent;
 }
 
+
 .usededit-form {
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 32px 28px 22px 28px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 18px 0 rgba(120, 100, 120, 0.07);
     display: flex;
     flex-direction: column;
     gap: 18px;
+    /* <-- gap 18px 정도로 넉넉하게 */
 }
 
 .form-title {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     color: #333;
 }
 
 .form-group {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
 }
 
 .form-label {
-    font-weight: 600;
-    margin-bottom: 6px;
+    font-weight: 500;
+    margin-bottom: 7px;
     color: #333;
+    font-size: 1.1rem;
+
 }
 
 
@@ -37,18 +43,18 @@
 .form-input,
 .form-input.textarea {
     border: 1.5px solid #e5e5e5;
-    border-radius: 8px;
-    padding: 10px 12px;
+    border-radius: 5px;
+    padding: 10px 11px;
     font-size: 1rem;
     outline: none;
-    transition: border 0.12s;
+    transition: border 0.15s;
     background: #fafbfd;
     margin-bottom: 0;
 }
 
 .form-select:focus,
 .form-input:focus {
-    border-color: #ff6393;
+    border-color: #a3a3a3;
 }
 
 .form-input.textarea {
@@ -57,15 +63,17 @@
 }
 
 .form-desc {
-    font-size: 0.95em;
+    font-size: 0.9rem;
     color: #888;
+    line-height: 1.35;
     margin-top: 3px;
 }
 
 .form-price-group {
     display: flex;
-    align-items: center;
-    gap: 6px;
+    position: relative;
+    flex-direction: column; /* 추가! */
+    align-items: stretch;   /* stretch로 하면 100%로 꽉 채움 */
 }
 
 .form-price-unit {
@@ -78,8 +86,8 @@
 .img-preview-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 6px;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 .img-preview-box {
@@ -126,7 +134,7 @@
     font-weight: bold;
     cursor: pointer;
     font-size: 18px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .form-reset-img {

@@ -343,7 +343,8 @@ export function UsedDetail() {
                         <div>
                             <h2 className="detail-title">{detail.title}</h2>
                             <div className="detail-meta">
-                                {detail.categories?.name} · {detail.location} <span className="detail-time">{getDateDiff(baseTime)}{isEdited && ' (수정)'}</span>
+                                <span>{detail.categories?.name} · {detail.location},&nbsp;
+                                {getDateDiff(baseTime)}{isEdited && ' (수정)'}</span>
                             </div>
                             <div className="detail-price">
                                 {detail.category_id === 5

@@ -147,6 +147,7 @@ export function UsedCreate() {
                 <div className="create-form-title">글등록</div>
                 {/* 카테고리 */}
                 <div className="create-form-group">
+                    <label className="create-form-label">카테고리</label>
                     <select className="create-form-select" value={category} onChange={e => setCategory(e.target.value)}>
                         <option value="">카테고리 선택</option>
                         <option value="4">벼룩해요</option>
@@ -196,7 +197,7 @@ export function UsedCreate() {
                     />
                     <div className="create-form-desc">
                         ※ 이미지는 최대 5장까지 업로드할 수 있습니다.<br />
-                        가장 먼저 선택한 이미지가 대표이미지로 설정됩니다.
+                        이미지를 클릭하여 대표이미지를 설정해주세요.
                     </div>
                     {/* 이미지 미리보기 */}
                     <div className="create-img-preview-list">
