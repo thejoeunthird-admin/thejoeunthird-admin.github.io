@@ -35,11 +35,11 @@ export default function BoardDetailPage() {
     }, []);
 
     useEffect(() => {
-        if(post !== null && keyword !== ''){
+        if (post !== null && keyword !== '') {
             console.log(keyword)
-            navigate(`/life?keyword=${keyword}`) 
+            navigate(`/life?keyword=${keyword}`)
         }
-    },[keyword])
+    }, [keyword])
 
     useEffect(() => {
         const fetchDetail = async () => {
@@ -169,7 +169,7 @@ export default function BoardDetailPage() {
     return (
         <div>
             <div style={{ marginTop: '20px', maxWidth: "1200px", padding: "0 10px" }}>
-                {/* 카테고리, 날짜, 조회수 */}
+                {/* 카테고리 */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
                     <div>
                         <span style={{
@@ -182,19 +182,28 @@ export default function BoardDetailPage() {
                         }}>
                             {post.categories?.name || "-"}
                         </span>
-                        <span style={{ color: "#888", fontSize: "13px" }}>
-                            {formatDate(post.create_date)} · 조회 {post.cnt}
-                        </span>
+
                     </div>
-                    <div style={{ color: "#888", fontSize: "14px" }}>
-                        {post.users?.name || "익명"}
-                    </div>
+
                 </div>
 
                 {/* 제목 */}
-                <h2 style={{ fontWeight: "bold", marginBottom: "20px", fontSize: "24px", color: "#333" }}>
+                <h1 style={{ fontWeight: "bold", marginBottom: "20px", fontSize: "24px", color: "#333" }}>
                     {post.title}
-                </h2>
+                </h1>
+                {/* 작성자, 날짜, 조회수 한 줄에 정렬 */}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                    {/* 왼쪽: 날짜 + 조회수 */}
+                    <span style={{ color: "#888", fontSize: "13px" }}>
+                        {formatDate(post.create_date)} · 조회 {post.cnt}
+                    </span>
+
+                    {/* 오른쪽: 작성자 */}
+                    <span style={{ color: "#888", fontSize: "14px" }}>
+                        {post.users?.name || "익명"}
+                    </span>
+                </div>
+
 
                 {/* 메인 이미지 */}
                 {post.main_img && (

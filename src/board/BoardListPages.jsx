@@ -4,7 +4,6 @@ import { supabase } from "../supabase/supabase";
 import Loadingfail from '../public/Loadingfail.png'
 import { LoadingCircle } from '../components/LoadingCircle'; // 기존 로딩 컴포넌트 import
 import "./BoardListPage.css";
-import noImage from '../public/noImages.png'
 
 // public/logo.png 경로로 접근
 const IcecreamImg = "/logo.png";
@@ -94,7 +93,7 @@ export default function BoardListPage() {
     <div className="boardlist-wrapper" style={{ width:'calc( 100% - 20px )', marginLeft:'10px', marginRight:'10px' }}>
       {loading ? (
         <div style={{ marginTop:'10px' }}>
-          <LoadingCircle/>
+          {/* <LoadingCircle/> */}
         </div>
       ) : boards.length !== 0 ? (
         <div className="board-card-list">
@@ -106,8 +105,8 @@ export default function BoardListPage() {
             >
               <div className="board-card-thumb">
                 <img
-                  src={board.main_img ? getImages(board.main_img) : noImage}
-                  onError={(e) => (e.currentTarget.src = noImage)}
+                  src={board.main_img ? getImages(board.main_img) : IcecreamImg}
+                  onError={(e) => (e.currentTarget.src = IcecreamImg)}
                   alt="썸네일"
                   style={{ borderRadius: 10, objectFit: "cover" }}
                 />

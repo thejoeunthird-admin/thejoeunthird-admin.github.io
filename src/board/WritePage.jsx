@@ -79,23 +79,35 @@ export default function WritePage() {
             return;
         }
 
-        const payload = {
-            title,
-            contents,
-            category_id: Number(categoryId),
-            user_id: user.info.id,
-            main_img,
-            detail_img1,
-            detail_img2,
-            detail_img3,
-            detail_img4
-        };
-
         let error;
         let newId = editId;
         if (editId) {
-            ({ error } = await supabase.from("boards").update(payload).eq("id", editId));
+            // RPC 함수 호출로 수정
+            const { error: rpcError } = await supabase.rpc("update_board", {
+                p_id: Number(editId),
+                p_title: title,
+                p_contents: contents,
+                p_update_date: new Date().toISOString(),
+                p_category_id: Number(categoryId),
+                p_main_img: main_img,
+                p_detail_img1: detail_img1,
+                p_detail_img2: detail_img2,
+                p_detail_img3: detail_img3,
+                p_detail_img4: detail_img4
+            });
+            error = rpcError;
         } else {
+            const payload = {
+                title,
+                contents,
+                category_id: Number(categoryId),
+                user_id: user.info.id,
+                main_img,
+                detail_img1,
+                detail_img2,
+                detail_img3,
+                detail_img4
+            };
             const { data, error: insertError } = await supabase.from("boards").insert([payload]).select();
             error = insertError;
             if (data && data[0]?.id) newId = data[0].id;
