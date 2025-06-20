@@ -54,19 +54,16 @@ export function UsedBoard() {
 
     const UsedBoardContent = () => {
         if (!posts) return <div><LoadingCircle /></div>;
-        // if (!categoryId) {
-        //     return <div>존재하지 않는 카테고리입니다.</div>
-        // }
 
         return (
             <div className="usedboard-container">
-                <div className="usedboard-grid">
+                <>
                     {posts.map((used) => (
                         <div className="usedboard-col" key={used.id}>
                             <UsedItem used={used} />
                         </div>
                     ))}
-                </div>
+                </>
                 {/* 글쓰기 플로팅 버튼 */}
                 <div className="usedboard-fab-zone">
                     <button

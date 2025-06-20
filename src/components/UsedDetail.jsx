@@ -47,21 +47,7 @@ export function UsedDetail() {
         const fetchDetails = async () => {
             if (!item) return;
             try {
-                // 기존 조회수
-                const { data: preData, error: preError } = await supabase
-                    .from('trades')
-                    .select('cnt')
-                    .eq('id', item)
-                    .single();
-                if (preError) {
-                    console.log('increaseView error: ', preError);
-                    return;
-                }
-                // +1
-                await supabase
-                    .from('trades')
-                    .update({ cnt: preData.cnt + 1 })
-                    .eq('id', item);
+                await supabase.rpc('increase_cnt', { trade_id: parseInt(item) });
 
                 // 게시물 불러오기
                 const { data: detailData, error } = await supabase
@@ -85,92 +71,92 @@ export function UsedDetail() {
         fetchDetails();
     }, [item]);
 
-    // 좋아요(detail, userInfo)
-    // useEffect(() => {
-    //     const fetchLikes = async () => {
-    //         if (!detail) return;
+    //좋아요(detail, userInfo)
+    useEffect(() => {
+        const fetchLikes = async () => {
+            if (!detail) return;
 
-    //         // 좋아요 수
-    //         const { count, error: likeCountError } = await supabase
-    //             .from('likes')
-    //             .select('*', { count: 'exact', head: true })
-    //             .eq('category_id', detail.category_id)
-    //             .eq('table_id', detail.id);
-    //         if (!likeCountError) setLikesCount(count);
+            // 좋아요 수
+            const { count, error: likeCountError } = await supabase
+                .from('likes')
+                .select('*', { count: 'exact', head: true })
+                .eq('category_id', detail.category_id)
+                .eq('table_id', detail.id);
+            if (!likeCountError) setLikesCount(count);
 
-    //         // 좋아요 상태
-    //         if (userInfo) {
-    //             const { data: likedData } = await supabase
-    //                 .from('likes')
-    //                 .select('id')
-    //                 .eq('category_id', detail.category_id)
-    //                 .eq('table_id', detail.id)
-    //                 .eq('user_id', userInfo.id);
-    //             setIsLiked(likedData?.length > 0);
-    //         } else {
-    //             setIsLiked(false);
-    //         }
-    //     };
-    //     fetchLikes();
-    // }, [detail, userInfo]);
+            // 좋아요 상태
+            if (userInfo) {
+                const { data: likedData } = await supabase
+                    .from('likes')
+                    .select('id')
+                    .eq('category_id', detail.category_id)
+                    .eq('table_id', detail.id)
+                    .eq('user_id', userInfo.id);
+                setIsLiked(likedData?.length > 0);
+            } else {
+                setIsLiked(false);
+            }
+        };
+        fetchLikes();
+    }, [detail, userInfo]);
 
-    // // 좋아요 수 갱신 함수
-    // const updateLikeCount = async () => {
-    //     try {
-    //         const { count, error: likeCountError } = await supabase
-    //             .from('likes')
-    //             .select('*', { count: 'exact', head: true })
-    //             .eq('category_id', detail.category_id)
-    //             .eq('table_id', detail.id);
+    // 좋아요 수 갱신 함수
+    const updateLikeCount = async () => {
+        try {
+            const { count, error: likeCountError } = await supabase
+                .from('likes')
+                .select('*', { count: 'exact', head: true })
+                .eq('category_id', detail.category_id)
+                .eq('table_id', detail.id);
 
-    //         if (!likeCountError) {
-    //             setLikesCount(count);  // 좋아요 수 갱신
-    //         } else {
-    //             console.error('좋아요 수 불러오기 실패', likeCountError);
-    //         }
-    //     } catch (error) {
-    //         console.error('좋아요 수 갱신 실패:', error);
-    //     }
-    // };
+            if (!likeCountError) {
+                setLikesCount(count);  // 좋아요 수 갱신
+            } else {
+                console.error('좋아요 수 불러오기 실패', likeCountError);
+            }
+        } catch (error) {
+            console.error('좋아요 수 갱신 실패:', error);
+        }
+    };
 
-    // const handleLikeToggle = async () => {
-    //     if (!detail) return;
-    //     setIsLiking(true);
+    const handleLikeToggle = async () => {
+        if (!detail) return;
+        setIsLiking(true);
 
-    //     try {
-    //         if (isLiked) {
-    //             // 좋아요 취소
-    //             await supabase
-    //                 .from('likes')
-    //                 .delete()
-    //                 .eq('category_id', detail.category_id)
-    //                 .eq('table_id', detail.id)
-    //                 .eq('user_id', userInfo.id);
+        try {
+            if (isLiked) {
+                // 좋아요 취소
+                await supabase
+                    .from('likes')
+                    .delete()
+                    .eq('category_id', detail.category_id)
+                    .eq('table_id', detail.id)
+                    .eq('user_id', userInfo.id);
 
-    //             setIsLiked(false);
-    //         } else {
-    //             // 좋아요 추가
-    //             await supabase
-    //                 .from('likes')
-    //                 .insert({
-    //                     category_id: detail.category_id,
-    //                     table_id: detail.id,
-    //                     user_id: userInfo.id
-    //                 });
+                setIsLiked(false);
+            } else {
+                // 좋아요 추가
+                await supabase
+                    .from('likes')
+                    .insert({
+                        category_id: detail.category_id,
+                        table_id: detail.id,
+                        user_id: userInfo.id
+                    });
 
-    //             setIsLiked(true);
-    //         }
+                setIsLiked(true);
+            }
 
-    //         // 좋아요 상태 변경 후 좋아요 수 갱신
-    //         await updateLikeCount();
+            // 좋아요 상태 변경 후 좋아요 수 갱신
+            await updateLikeCount();
 
-    //     } catch (error) {
-    //         console.error('좋아요 처리 실패:', error);
-    //         alert('좋아요 처리 중 오류가 발생했습니다.');
-    //     } finally {
-    //         setIsLiking(false);
-    //     }
-    // };
+        } catch (error) {
+            console.error('좋아요 처리 실패:', error);
+            alert('좋아요 처리 중 오류가 발생했습니다.');
+        } finally {
+            setIsLiking(false);
+        }
+    };
 
     // 글 삭제(안할수도.............)
     const deleteDetails = async () => {
@@ -195,12 +181,16 @@ export function UsedDetail() {
     // 구매하기/나눔받기/팔기 -> 판매자 채팅으로
     const makeChats = async () => {
         if (!confirm('거래 요청 메시지를 보낼까요?')) return;
+        
         const { data, error } = await supabase
             .from('chats')
             .insert([{
                 sender_id: detail?.user_id, // 게시물 작성자(detail.user_id)
                 receiver_id: userInfo?.id, // 로그인한 사람 id(userInfo.id)
-                chat: '거래해요!',
+                chat:
+                    detail.category_id === 4 ? '벼룩해요!' :
+                    detail.category_id === 5 ? '나눔받을래요!' :
+                    detail.category_id === 6 ? '사고싶어요!' : '',
                 create_date: now,
                 read: false,
                 trades_id: detail.id,
@@ -230,15 +220,15 @@ export function UsedDetail() {
             // 좋아요 버튼 + 기타 버튼
             return (
                 <div>
-                    {/* <Button
+                    <button onClick={makeChats}>✉️ 쪽지</button>
+                    <Button
                         variant={isLiked ? "danger" : "outline-danger"}
                         onClick={handleLikeToggle}
                         disabled={isLiking}
                     >
                         {isLiked ? "❤️" : "🤍"}
                         {isLiked ? " 좋아요 취소" : " 좋아요"}
-                    </Button> */}
-                    <Button variant="outline-primary" onClick={makeChats}>✉️ 쪽지</Button>
+                    </Button>
                 </div>
             );
         }
@@ -361,46 +351,7 @@ export function UsedDetail() {
                             </div>
                             <div className="detail-content">{detail.content}</div>
                             <div className="detail-stat">
-                                {/* <span>좋아요 {likesCount}</span> */}
-                                {/* 좋아요 부분 */}
-                                <LikesController
-                                    categoryId={detail.category_id}
-                                    tableId={detail.id}
-                                    userInfo={userInfo}
-                                >
-                                    {({ likesCount, isLiked, isLiking, handleLikeToggle }) => (
-                                        <Row className="mb-3">
-                                            <Col xs={6}>
-
-
-                                                <p className="mb-1">
-                                                    <i className="bi bi-heart-fill text-danger"></i> 좋아요
-                                                </p>
-                                                <p className="fw-semibold">{likesCount}</p>
-                                            </Col>
-
-                                            <Col xs={6}>
-
-                                                {/* 내 글이면 */}
-                                                {userInfo && userInfo.id === detail.user_id ? (
-                                                    <>
-                                                    </>
-                                                ) : (
-                                                    <Button
-                                                        variant={isLiked ? "danger" : "outline-danger"}
-                                                        size="sm"
-                                                        onClick={handleLikeToggle}
-                                                        disabled={isLiking}
-                                                        className="mt-2"
-                                                    >
-                                                        {isLiked ? "❤️ 좋아요 취소" : "🤍 좋아요"}
-                                                    </Button>
-                                                )}
-                                            
-                                            </Col>
-                                        </Row>
-                                    )}
-                                </LikesController>
+                                <span>좋아요 {likesCount}</span>                               
                                 <span className="stat-dot">·</span>
                                 <span>조회 {detail.cnt ?? 0}</span>
                             </div>

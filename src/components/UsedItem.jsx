@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../supabase/supabase";
 import { useEffect, useState } from "react";
 import { useImage } from "../hooks/useImage";
+import noImg from '../public/noImg.png';
 import '../css/useditem.css'
 
 export function UsedItem({ used }) {
@@ -66,17 +67,7 @@ export function UsedItem({ used }) {
             onClick={handleDetail}
         >
             <div className="used-img-wrap">
-                {used.main_img ? (
-                    <img
-                        src={getImages(used.main_img)}
-                        className="used-img"
-                        alt="썸네일"
-                    />
-                ) : (
-                    <div className="used-noimg">
-                        이미지가 없습니다.
-                    </div>
-                )}
+                <img src={used.main_img ? getImages(used.main_img) : noImg } alt='썸네일' className="used-img" />
             </div>
             <div className="used-body">
                 <div>
