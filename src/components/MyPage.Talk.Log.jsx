@@ -158,17 +158,18 @@ export function MyPageTalkLog({ user }) {
                                             <strong className={`talkLog-username`}>
                                                 {o.receiver.name}
                                             </strong>
-                                            <span 
-                                                className={`talkLog-message ${o.receiver.id === user.info.id ? 'is-read' : ''}`}
-                                                onClick={(e)=>{
-                                                    e.preventDefault();
-                                                    nav(`/trade/${findById(o.trades.category_id).url}/${o.trades.id}?keyword=`)
-                                                }}
-                                            >
+                                            <span className={`talkLog-message ${o.receiver.id === user.info.id ? 'is-read' : ''}`}>
                                                 <p style={{ padding: '2.5px 0px' }}>{o.chat}</p>
                                                 <div style={{ display: 'flex', height: '100%', flexDirection: 'row', marginTop: '5px' }}>
                                                     {o.receiver.id !== user.info.id && (
-                                                        <img src={`${getFinalUrl(o.trades.main_img)}`} style={{ width: '100px', height: '100px' }} />
+                                                        <img
+                                                            src={`${getFinalUrl(o.trades.main_img)}`}
+                                                            style={{ width: '100px', height: '100px' }}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                nav(`/trade/${findById(o.trades.category_id).url}/${o.trades.id}?keyword=`)
+                                                            }}
+                                                        />
                                                     )}
                                                     <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px', marginRight: "10px", height: '100%', }}>
                                                         <p style={{ fontSize: '1.1rem', fontWeight: '700', padding: '5px 0px', }}>{o.trades.title}</p>
@@ -200,16 +201,17 @@ export function MyPageTalkLog({ user }) {
                                             <strong className={`talkLog-username`}>
                                                 {o.receiver.name}
                                             </strong>
-                                            <span 
-                                                className={`talkLog-message ${o.receiver.id === user.info.id ? 'is-read' : ''}`}
-                                                onClick={(e)=>{
-                                                    e.preventDefault();
-                                                    nav(`/trade/${findById(o.trades.category_id).url}/${o.trades.id}?keyword=`)
-                                                }}
-                                            >
+                                            <span className={`talkLog-message ${o.receiver.id === user.info.id ? 'is-read' : ''}`}>
                                                 <div style={{ display: 'flex', height: '100%', flexDirection: 'row', marginTop: '5px' }}>
                                                     {o.receiver.id !== user.info.id && (
-                                                        <img src={`${getFinalUrl(o.trades.main_img)}`} style={{ width: '100px', height: '100px' }} />
+                                                        <img
+                                                            src={`${getFinalUrl(o.trades.main_img)}`}
+                                                            style={{ width: '100px', height: '100px' }}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                nav(`/trade/${findById(o.trades.category_id).url}/${o.trades.id}?keyword=`)
+                                                            }}
+                                                        />
                                                     )}
                                                     <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px', marginRight: "10px", height: '100%', }}>
                                                         <p style={{ fontSize: '1.1rem', fontWeight: '700', padding: '5px 0px', }}>{o.trades.title}</p>
