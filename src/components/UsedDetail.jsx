@@ -270,6 +270,8 @@ export function UsedDetail() {
 
         const goPrev = () => setCurrent(prev => (prev === 0 ? total - 1 : prev - 1));
         const goNext = () => setCurrent(prev => (prev === total - 1 ? 0 : prev + 1));
+
+
         const params = new URLSearchParams(window.location.search);
         const keyword = params.get('keyword');
 

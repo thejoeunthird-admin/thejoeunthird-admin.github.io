@@ -7,35 +7,9 @@ import '../css/useditem.css'
 
 export function UsedItem({ used }) {
     const navigate = useNavigate();
-    const { item } = useParams();
-    //const [likesCount, setLikesCount] = useState(0);    // 좋아요 수
 
-    // const getFinalUrl = (img) => {
-    //     if (!img) return null;
-    //     return img.startsWith("http") ? getImages(img) : img;
-    // };
 
     const { images, setImages, getImages, initImage } = useImage();
-
-    // useEffect(() => {
-    //     const fetchLikes = async () => {
-    //         const { count, error: likeCountError } = await supabase
-    //             .from('likes')
-    //             .select('*', { count: 'exact', head: true })
-    //             .eq('category_id', used.category_id)
-    //             .eq('table_id', used.id);
-
-    //         if (!likeCountError) {
-    //             setLikesCount(count);
-    //         } else {
-    //             console.error('좋아요 수 불러오기 실패', likeCountError);
-    //         }
-
-    //         await supabase.rpc('increment_view_count', { trade_id: parseInt(item) });
-    //     }
-    //     fetchLikes();
-    // }, [item]);
-
 
     const getDateDiff = (date) => {
         const created = new Date(date);
@@ -70,7 +44,6 @@ export function UsedItem({ used }) {
             <img
                 src={used.main_img ? getImages(used.main_img) : noImg}
                 alt="썸네일"
-                onError={e => (e.currentTarget.src = noImg)}
             />
         </div>
         <div className="used-list-content">
