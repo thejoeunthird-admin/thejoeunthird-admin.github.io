@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useSyncExternalStore } from 'react';
+import React, { useState, useEffect, useSyncExternalStore, } from 'react';
 import { supabase } from '../supabase/supabase';
 import { useUserTable } from "../hooks/useUserTable";
 import { FaRegUserCircle, FaEllipsisV, FaCommentAlt, FaRegThumbsUp } from "react-icons/fa";
@@ -55,8 +55,9 @@ export function Comments({ productId, categoryId }) {
         }
 
         try {
+            // 1. 댓글 insert
             // supabase에 insert
-            const { data, error } = await supabase
+            const { data: commentData, error:commentError } = await supabase
                 .from('comments')
                 .insert([
                     {
@@ -67,9 +68,67 @@ export function Comments({ productId, categoryId }) {
                         // parent_id: parentId // 대댓글인 경우 parentId 값 전달
                         parent_id: replyTo ? replyTo.id : null,
                     }
-                ]);
-            if (error) throw error;
+                ])
+                .select() // insert 후 데이터 받아오기
+                .single(); // 하나만 insert 했으니 single() 사용
 
+            if (commentError) throw error;
+
+            // 2. category 테이블에서 type 조회
+            const { data: categoryData, error: categoryError } = await supabase
+                .from('categories')
+                .select('type')
+                .eq('id', categoryId)
+                .single();
+
+            if (categoryError || !categoryData) throw categoryError;
+
+            const categoryType = categoryData.type; // ex) 'board', 'trade'
+
+            // 3. 해당 테이블에서 게시물 작성자 조회
+            let postAuthorId = null;
+            let postTitle = null;
+
+            if (categoryType === 'boards') {
+                const { data, error } = await supabase
+                    .from('boards')
+                    .select('user_id, title')
+                    .eq('id', productId)
+                    .single();
+
+                if (error) throw error;
+                postAuthorId = data.user_id;
+
+            } else if (categoryType === 'trades') {
+                const { data, error } = await supabase
+                    .from('trades')
+                    .select('user_id, title')
+                    .eq('id', productId)
+                    .single();
+                if (error) throw error;
+                postAuthorId = data.user_id;
+                postTitle = data.title;
+            }
+
+            // 4. 알림 등록( 자기 자신 제외)
+            if (postAuthorId && postAuthorId !== userInfo.id) {       
+                const message = `${postTitle} 게시물에 댓글이 달렸습니다.`;
+
+                const { error: notifError } = await supabase
+                    .from('notifications')
+                    .insert([
+                        {
+                            receiver_id: postAuthorId,
+                            sender_id: userInfo.id,
+                            type: 'comment',
+                            table_type: categoryType,
+                            table_id: productId, // 게시글 id
+                            related_id: commentData.id, // 댓글 id
+                            message,
+                        },
+                    ]);
+                if (notifError) console.error('알림 등록 실패: ', notifError);
+            }
             setNewComment('');
             setReplyTo(null); // 대댓글 작성 후, replyTo 초기화
             fetchComments();
@@ -240,7 +299,6 @@ export function Comments({ productId, categoryId }) {
             console.error('댓글 삭제 실패:', error);
         }
     };
-
 
     return (
         <div id="comments-section" >
