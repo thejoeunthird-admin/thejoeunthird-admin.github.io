@@ -5,6 +5,7 @@ import Loadingfail from '../public/Loadingfail.png'
 import { LoadingCircle } from '../components/LoadingCircle'; // 기존 로딩 컴포넌트 import
 import "./BoardListPage.css";
 import { useUserTable } from "../hooks/useUserTable";
+import { useCategoriesTable } from "../hooks/useCategoriesTable";
 
 // public/logo.png 경로로 접근
 const IcecreamImg = "/logo.png";
@@ -22,6 +23,7 @@ export default function BoardListPage() {
   const params = new URLSearchParams(window.location.search);
   const keyword = params.get('keyword');
   const navigate = useNavigate();
+  const { findById } = useCategoriesTable();
 
   useEffect(() => {
     supabase.from("categories").select("*").then(({ data }) => {
@@ -116,7 +118,10 @@ export default function BoardListPage() {
             <div
               key={board.id}
               className="board-card"
-              onClick={() => navigate(`/life/detail/${board.id}?keyword=`)}
+              onClick={() =>{ 
+                console.log(findById(board.category_id).url)
+                navigate(`/life/${findById(board.category_id).url}/${board.id}?keyword=`)
+              }}
             >
               <div className="board-card-thumb">
                 <img

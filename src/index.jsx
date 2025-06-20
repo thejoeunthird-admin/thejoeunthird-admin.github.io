@@ -61,7 +61,7 @@ function App() {
               <Route path="/life/:tap" element={<BoardListPages />} />
               <Route path="/life/write" element={<WritePage />} />
               <Route path="/life/edit/:id" element={<EditPage />} />
-              <Route path="/life/detail/:id" element={<BoardDetailPage />} />
+              <Route path="/life/:tap/:id" element={<BoardDetailPage />} />
             </Routes>
           </Layout>
         </NotificationProvider>

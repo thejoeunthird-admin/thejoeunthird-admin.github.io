@@ -128,7 +128,7 @@ export function MyPageLike({ user }) {
                                     className="likes-link-btn"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        nav(`/${findById(o.category.parent_id).url}/${o.category.url}/${o.id}`);
+                                        nav(`/${findById(o.category.parent_id).url}/${o.category.url}/${o.table_id}?keyword=`);
                                     }}
                                 >
                                     Link
