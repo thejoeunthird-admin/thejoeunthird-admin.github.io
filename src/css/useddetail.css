@@ -87,7 +87,7 @@
     font-weight: 700;
     margin-bottom: 10px;
     line-height: 1.24;
-    color: #222;
+    color: #333;
 }
 
 .detail-meta {
@@ -100,8 +100,8 @@
 .detail-price {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #222;
-    margin-bottom: 22px;
+    color: #333;
+    margin-bottom: 30px;
 }
 
 .detail-badge-share {
@@ -118,7 +118,7 @@
     font-size: 1.2rem;
     color: #444;
     min-height: 50px;
-    margin-bottom: 22px;
+    margin-bottom: 30px;
     white-space: pre-line;
     line-height: 1.6;
 }

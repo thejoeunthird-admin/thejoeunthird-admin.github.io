@@ -142,12 +142,12 @@ export function UsedCreate() {
     // const fileInputRef = useRef();
 
     return (
-        <div className="usedcreate-wrap">
-            <form className="usedcreate-form" onSubmit={handleCreate} autoComplete="off">
-                <div className="form-title">글등록</div>
+        <div className="create-usedcreate-wrap">
+            <form className="create-usedcreate-form" onSubmit={handleCreate} autoComplete="off">
+                <div className="create-form-title">글등록</div>
                 {/* 카테고리 */}
-                <div className="form-group">
-                    <select className="form-select" value={category} onChange={e => setCategory(e.target.value)} required>
+                <div className="create-form-group">
+                    <select className="create-form-select" value={category} onChange={e => setCategory(e.target.value)}>
                         <option value="">카테고리 선택</option>
                         <option value="4">벼룩해요</option>
                         <option value="5">드림해요</option>
@@ -155,57 +155,57 @@ export function UsedCreate() {
                     </select>
                 </div>
                 {/* 지역 */}
-                <div className="form-group">
-                    <select className="form-select" value={location} disabled>
+                <div className="create-form-group">
+                    <label className="create-form-label">지역</label>
+                    <select className="create-form-select" value={location} disabled>
                         <option value="">{location}</option>
                     </select>
-                    <div className="form-desc">※ 상단메뉴에서 선택해주세요.</div>
+                    <div className="create-form-desc">※ 상단메뉴에서 선택해주세요.</div>
                 </div>
                 {/* 제목 */}
-                <div className="form-group">
-                    <input className="form-input" type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="제목" required />
+                <div className="create-form-group">
+                    <input className="create-form-input" type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="제목" />
                 </div>
                 {/* 내용 */}
-                <div className="form-group">
-                    <input className="form-input textarea" value={content} onChange={e => setContent(e.target.value)} placeholder="내용" rows={5} required />
+                <div className="create-form-group">
+                    <textarea className="create-form-input textarea" value={content} onChange={e => setContent(e.target.value)} placeholder="내용" rows={5} />
                 </div>
                 {/* 가격 */}
-                <div className="form-group form-price-group">
+                <div className="create-form-group form-price-group">
                     <input
-                        className="form-input"
+                        className="create-form-input"
                         type="number"
                         value={category === "5" ? "" : price}
                         onChange={e => setPrice(e.target.value)}
                         placeholder={category === "5" ? "나눔" : "가격"}
                         disabled={category === "5"}
                         min={0}
-                        required={category !== "5"}
                     />
-                    <span className="form-price-unit">원</span>
+                    {/* <span className="create-form-price-unit">원</span> */}
                 </div>
                 {/* 이미지 업로드 */}
-                <div className="form-group">
-                    <div className="form-label">이미지 업로드</div>
+                <div className="create-form-group">
+                    <div className="create-form-label">이미지 업로드</div>
                     <input
-                        className="form-input"
+                        className="create-form-input"
                         type="file"
                         multiple
                         accept="image/*"
                         ref={fileInputRef}
                         onChange={handleFileChange}
                     />
-                    <div className="form-desc">
+                    <div className="create-form-desc">
                         ※ 이미지는 최대 5장까지 업로드할 수 있습니다.<br />
                         가장 먼저 선택한 이미지가 대표이미지로 설정됩니다.
                     </div>
                     {/* 이미지 미리보기 */}
-                    <div className="img-preview-list">
+                    <div className="create-img-preview-list">
                         {images.length > 0 && images.map((img, idx) => (
-                            <div className="img-preview-box" key={idx}>
-                                {idx === 0 && <span className="img-badge">대표</span>}
+                            <div className="create-img-preview-box" key={idx}>
+                                {idx === 0 && <span className="create-img-badge">대표</span>}
                                 <button
                                     type="button"
-                                    className="img-del"
+                                    className="create-img-del"
                                     onClick={() => {
                                         initImage(prev => prev.filter((_, i) => i !== idx));
                                         setFileCount(prev => prev - 1);
@@ -214,7 +214,7 @@ export function UsedCreate() {
                                 <img
                                     src={getImages(img)}
                                     alt={`미리보기${idx + 1}`}
-                                    className="img-preview"
+                                    className="create-img-preview"
                                     onClick={() => {
                                         if (idx === 0) return;
                                         initImage(prev => {
@@ -229,13 +229,13 @@ export function UsedCreate() {
                             </div>
                         ))}
                     </div>
-                    <button type="button" className="form-reset-img" onClick={handleRemoveImage}>
+                    <button type='button' className="create-form-reset-img" onClick={handleRemoveImage}>
                         전체 이미지 다시 선택
                     </button>
                 </div>
                 {/* 등록 버튼 */}
-                <button className="form-btn" type="submit" disabled={images.length > 0 && fileCount !== images.length}>등록</button>
-            </form>
-        </div>
+                <button className="create-form-btn" type="submit" disabled={images.length > 0 && fileCount !== images.length}>등록</button>
+            </form >
+        </div >
     );
 };

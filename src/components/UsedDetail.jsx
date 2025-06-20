@@ -181,7 +181,7 @@ export function UsedDetail() {
     // 구매하기/나눔받기/팔기 -> 판매자 채팅으로
     const makeChats = async () => {
         if (!confirm('거래 요청 메시지를 보낼까요?')) return;
-        
+
         const { data, error } = await supabase
             .from('chats')
             .insert([{
@@ -189,8 +189,8 @@ export function UsedDetail() {
                 receiver_id: userInfo?.id, // 로그인한 사람 id(userInfo.id)
                 chat:
                     detail.category_id === 4 ? '벼룩해요!' :
-                    detail.category_id === 5 ? '나눔받을래요!' :
-                    detail.category_id === 6 ? '사고싶어요!' : '',
+                        detail.category_id === 5 ? '나눔받을래요!' :
+                            detail.category_id === 6 ? '사고싶어요!' : '',
                 create_date: now,
                 read: false,
                 trades_id: detail.id,
@@ -291,7 +291,7 @@ export function UsedDetail() {
                         <div className="usedboard-menu up">
                             <button
                                 className="usedboard-menu-btn"
-                                onClick={() => handleRegisterNavigate('/trade/deal/register')}
+                                onClick={() => handleRegisterNavigate('/trade/deal/register?keyword=')}
                             >
                                 거래 등록
                             </button>
@@ -353,7 +353,7 @@ export function UsedDetail() {
                             </div>
                             <div className="detail-content">{detail.content}</div>
                             <div className="detail-stat">
-                                <span>좋아요 {likesCount}</span>                               
+                                <span>좋아요 {likesCount}</span>
                                 <span className="stat-dot"> · </span>
                                 <span>조회수 {detail.cnt ?? 0}</span>
                             </div>
@@ -362,6 +362,8 @@ export function UsedDetail() {
                         <div className="detail-buttons">{handleButtons()}</div>
                     </div>
                 </div>
+                <Comments productId={detail?.id} categoryId={detail?.category_id} />
+
             </div>
         );
     };
@@ -369,7 +371,7 @@ export function UsedDetail() {
     return (
         <div>
             <UsedDetailContent />
-            <Comments productId={detail?.id} categoryId={detail?.category_id} />
+            {/* <Comments productId={detail?.id} categoryId={detail?.category_id} /> */}
         </div>
     );
 }

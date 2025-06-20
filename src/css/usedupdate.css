@@ -131,10 +131,10 @@
 
 .form-reset-img {
     margin-top: 6px;
-    background: #fafbfd;
-    border: 1.5px solid #ff6393;
+    background: #f7f7f8;
+    color: #a3a3a3;
+    border: 1.2px solid #dadada;
     border-radius: 8px;
-    color: #ff6393;
     padding: 6px 15px;
     font-size: 0.97rem;
     font-weight: 600;
@@ -142,10 +142,10 @@
     transition: background 0.12s, color 0.12s;
 }
 
-.form-reset-img:hover {
-    background: #ffe5f1;
-    color: #c4235d;
-}
+/* .form-reset-img:hover {
+    background: #f7f7f8;
+    color: #a3a3a3;
+} */
 
 .form-btn {
     width: 100%;
