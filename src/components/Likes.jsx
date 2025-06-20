@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { supabase } from "../supabase/supabase";
-import { useImage } from "../hooks/useImage";
 
-export function Likes({ categoryId, tableId, userInfo }) {
+export function Likes({ categoryId, tableId, userInfo, detailCnt }) {
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수
     const [isLiked, setIsLiked] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
-    
+
     // 좋아요 수 및 상태 불러오기
     const fetchLikes = async () => {
         try {
@@ -81,19 +80,52 @@ export function Likes({ categoryId, tableId, userInfo }) {
         }
     };
 
+    // return (
+    //     <div>
+    //         <p className="mb-1">
+    //             <i className="bi bi-heart-fill text-danger"></i> 좋아요
+    //         </p>
+    //         <p className="fw-semibold">{likesCount}</p>
+    //         {userInfo &&
+    //             <Button
+    //                 variant={isLiked ? 'danger' : 'outline-danger'}
+    //                 size="sm"
+    //                 onClick={handleLikeToggle}
+    //                 disabled={isLiking}
+    //                 className="mt-2"
+    //             >
+    //                 {isLiked ? '❤️ 좋아요 취소' : '🤍 좋아요'}
+    //             </Button>
+    //         }
+    //         {productCnt && (
+    //             <div>
+    //                 <div>
+    //                     <p className="mb-1">
+    //                         <i className="bi bi-eye-fill text-secondary"></i> 조회수
+    //                     </p>
+    //                     <p className="fw-semibold">{productCnt}</p>
+    //                 </div>
+    //             </div>
+    //         )}
+    //     </div>
+    // );
+
     return (
         <div>
-            <p className="mb-1"><i className="bi bi-heart-fill text-danger"></i> 좋아요</p>
-            <p className="fw-semibold">{likesCount}</p>
-            <Button
-                variant={isLiked ? 'danger' : 'outline-danger'}
-                size="sm"
-                onClick={handleLikeToggle}
-                disabled={isLiking}
-                className="mt-2"
-            >
-                {isLiked ? '❤️ 좋아요 취소' : '🤍 좋아요'}
-            </Button>
+            {userInfo &&
+                <Button
+                    variant={isLiked ? 'danger' : 'outline-danger'}
+                    size="sm"
+                    onClick={handleLikeToggle}
+                    disabled={isLiking}
+                    className="mt-2"
+                    style={{ marginBottom:'10px' }}
+                >
+                    {isLiked ? '❤️ 좋아요 취소' : '🤍 좋아요'}
+                </Button>
+            }
+            <p className="mb-1">❤️ 좋아요 {likesCount} | 👁 조회수 {detailCnt}</p>
+
         </div>
     );
 }

@@ -1,1 +1,334 @@
-@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css');
+/* ✅ 기본 컨테이너 */
+.product-form-container {
+    max-width: 960px;
+    margin: 3rem auto;
+    padding: 1rem;
+}
+
+.product-form-card {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.form-title {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+/* ✅ 에러 */
+.error-alert {
+    background: #ffe0e0;
+    color: #a00;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* ✅ Form 입력영역 */
+.product-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.product-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-form .form-group label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.product-form .form-group input,
+.product-form .form-group select,
+.product-form .form-group textarea {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.product-form .form-group textarea {
+    resize: vertical;
+}
+
+.product-form .location-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* ✅ 이미지 미리보기 */
+.image-preview {
+    margin-top: 1rem;
+}
+
+.img-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 0.5rem;
+}
+
+.img-wrapper img {
+    max-height: 120px;
+    border-radius: 0.5rem;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.img-wrapper img.selected {
+    border-color: #007bff;
+}
+
+.img-remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: crimson;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    width: 22px;
+    height: 22px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+/* ✅ 제출 버튼 */
+.submit-btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 2rem;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.submit-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* ✅ 로딩 스피너 */
+.spinner,
+.loading-circle {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(0, 123, 255, 0.3);
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-top: 0.5rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ✅ 게시판 카드 공통 */
+.page-container {
+    padding: 1rem;
+}
+
+.custom-card {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.custom-card:hover {
+    transform: translateY(-3px);
+}
+
+.card-body {
+    display: flex;
+    gap: 1rem;
+}
+
+.card-thumbnail {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    background-color: #f8f9fa;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0.25rem 0;
+}
+
+.card-desc {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.card-badges .badge {
+    background-color: #e9ecef;
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.6rem;
+    color: #333;
+}
+
+.card-badges .deadline {
+    background-color: #ffe0e0;
+    color: #c00;
+}
+
+.card-actions {
+    margin-top: 0.5rem;
+}
+
+.btn-join {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-join:hover {
+    background-color: #218838;
+}
+
+/* ✅ 진행률 바 */
+.progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background-color: #f1f3f5;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+}
+
+.progress-bar-inner {
+    height: 100%;
+    background-color: #0d6efd;
+    color: white;
+    font-size: 0.75rem;
+    text-align: center;
+    line-height: 20px;
+}
+
+/* ✅ 플로팅 글쓰기 버튼 */
+/* 글쓰기 플로팅 버튼 위치 */
+.floating-button-container {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 1050;
+}
+
+/* 메인 + 글쓰기 버튼 스타일 */
+.write-button {
+    width: 100px;
+    height: 50px;
+    background-color: #dc3545;
+    /* Bootstrap danger 색 */
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.write-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+/* 글쓰기 메뉴 컨테이너 */
+.write-menu {
+    position: absolute;
+    bottom: 70px;
+    left: 0;
+    width: 200px;
+    padding: 12px;
+    background-color: #dc3545;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: fadeInUp 0.2s ease-out;
+    user-select: none;
+}
+
+/* 드롭다운 안의 항목 버튼 */
+.write-menu-item {
+    width: 100%;
+    background-color: white;
+    color: #dc3545;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.write-menu-item:hover {
+    background-color: #f8d7da;
+    /* Bootstrap의 light danger 배경 */
+}
+
+.text-muted.small strong,
+.text-secondary.small strong {
+    display: inline-block;
+    font-weight: bold;
+    padding: 5px 0px;
+}
+
+/* 드롭다운 등장 애니메이션 */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ✅ 유틸 */
+.text-center {
+    text-align: center;
+}

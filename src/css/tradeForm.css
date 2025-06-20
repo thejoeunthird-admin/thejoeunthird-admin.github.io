@@ -1,0 +1,168 @@
+/* 전체 폼 컨테이너 */
+.product-form-container {
+    max-width: 960px;
+    margin: 3rem auto;
+    padding: 1rem;
+}
+
+/* 카드 스타일 */
+.product-form-card {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+/* 제목 */
+.form-title {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+/* 에러 메시지 */
+.error-alert {
+    background: #ffe0e0;
+    color: #a00;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* 그리드 레이아웃 */
+.product-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+
+/* 각 form-group */
+.product-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* label */
+.product-form .form-group label {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* input/select/textarea 기본 스타일 */
+.product-form .form-group input,
+.product-form .form-group select,
+.product-form .form-group textarea {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* textarea 조절 가능 */
+.product-form .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* location-group 스타일 */
+.product-form .location-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* 한 줄 꽉 채우는 그리드용 */
+.product-form .form-group.full-width {
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+/* 이미지 프리뷰 */
+.image-preview {
+    grid-column: 1 / -1;
+    margin-top: 1rem;
+}
+
+/* 이미지 박스 */
+.img-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 0.5rem;
+}
+
+.img-wrapper img {
+    max-height: 120px;
+    border-radius: 0.5rem;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.img-wrapper img.selected {
+    border-color: #007bff;
+}
+
+/* 이미지 제거 버튼 */
+.img-remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: crimson;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    width: 22px;
+    height: 22px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+/* 제출 버튼 */
+.submit-btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 2rem;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.submit-btn:hover:enabled {
+    background-color: #0056b3;
+}
+
+.submit-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* 정렬용 */
+.text-center {
+    text-align: center;
+}
+
+/* ✅ 로딩 스피너 */
+.spinner,
+.loading-circle {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(0, 123, 255, 0.3);
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-top: 0.5rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,515 @@
+/* 컨테이너 전체 레이아웃 */
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 16px;
+}
+/* 공구 진행률 바 */
+.progress-bar-container {
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 20px;
+}
+.progress-bar-fill {
+    background: #0d6efd;
+    height: 100%;
+    color: #fff;
+    text-align: center;
+    font-weight: 600;
+    line-height: 20px;
+}
+/* 메인 영역 좌우 배치 */
+.detail-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+.detail-left,
+.detail-right {
+    flex: 1;
+    height: 100%;
+}
+/* 작성자 정보 */
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.author-avatar {
+    width: 40px;
+    height: 40px;
+    background: #0d6efd;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-weight: 600;
+}
+.author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.author-name {
+    font-weight: 600;
+    color: #0d6efd;
+}
+/* 상품 정보 */
+.detail-right .title {
+    margin: 0 0 12px;
+}
+.detail-right .meta {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 16px;
+}
+/* 가격, 거래 장소 */
+.price-location {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+.price-location .price {
+    color: #198754;
+    font-size: 20px;
+    margin-top: 4px;
+}
+/* 공구 정보 */
+.gonggu-status {
+    margin-bottom: 16px;
+}
+.gonggu-status label {
+    font-weight: 600;
+}
+/* 버튼 영역 */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 999px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+/* 버튼 스타일 */
+.btn.outline-primary {
+    background: #fff;
+    color: #0d6efd;
+    border: 2px solid #0d6efd;
+}
+.btn.outline-primary:hover {
+    background: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+.btn.outline-danger {
+    background: #fff;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+}
+.btn.outline-danger:hover {
+    background: #dc3545;
+    color: #fff;
+}
+.btn.outline-success {
+    background: #fff;
+    color: #198754;
+    border: 2px solid #198754;
+}
+.btn.outline-success:hover {
+    background: #198754;
+    color: #fff;
+}
+.btn.outline-secondary {
+    background: #fff;
+    color: #6c757d;
+    border: 2px solid #6c757d;
+}
+.btn.outline-secondary:hover {
+    background: #6c757d;
+    color: #fff;
+}
+.btn.secondary {
+    background: #6c757d;
+    color: #fff;
+}
+.btn.secondary:hover {
+    background: #5a6268;
+}
+.btn.danger {
+    background: #dc3545;
+    color: #fff;
+}
+.btn.danger:hover {
+    background: #c82333;
+}
+/* 버튼 비활성화 */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 상세 설명 */
+.detail-description h5 {
+    margin-bottom: 12px;
+}
+.description-box {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+/* 전체 wrapper - 좌우 패딩 */
+.detail-wrapper {
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+/* 카드 전체 - 최대 너비 제한 & 중앙 정렬 */
+.detail-card {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 상단 콘텐츠 영역 - flex 구성 */
+.detail-content {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    /* flex-wrap: wrap; */
+}
+
+/* 왼쪽 이미지 섹션 */
+.detail-left {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* 오른쪽 상세 정보 섹션 */
+.detail-right {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* justify-content: space-between; */
+}
+
+/* 작성자 프로필 */
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+.author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    overflow: hidden;
+}
+
+.author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.author-name {
+    font-weight: 600;
+    color: #333;
+}
+
+/* 가격 + 위치 */
+.price-location {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin: 1rem 0;
+}
+
+/* 공구 상태 */
+.gonggu-status {
+    margin-bottom: 1rem;
+}
+
+.progress-bar-container {
+    height: 20px;
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: #198754;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    line-height: 20px;
+}
+/* 공구 마감 전 진행률 */
+.progress-bar-fill.active {
+    background-color: #0d6efd;
+}
+/* 공구 마감 */
+.progress-bar-fill.closed {
+    background-color: #adb5bd;
+}
+/* 버튼 그룹 */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: auto;
+}
+
+.btn {
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn.outline-primary {
+    border: 2px solid #0d6efd;
+    background: transparent;
+    color: #0d6efd;
+}
+
+.btn.outline-primary:hover {
+    background: #0d6efd;
+    color: white;
+}
+
+.btn.outline-danger {
+    border: 2px solid #dc3545;
+    background: transparent;
+    color: #dc3545;
+}
+
+.btn.outline-danger:hover {
+    background: #dc3545;
+    color: white;
+}
+
+.btn.secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn.danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn.outline-secondary {
+    border: 2px solid #6c757d;
+    background: transparent;
+    color: #6c757d;
+}
+
+.btn.outline-secondary:hover {
+    background: #6c757d;
+    color: white;
+}
+
+/* 설명 영역 */
+.detail-description {
+    margin-top: 2rem;
+}
+
+.description-box {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+
+/* 반응형 - 모바일 대응 */
+@media (max-width: 768px) {
+    .detail-content {
+        flex-direction: column;
+    }
+    .detail-card {
+        padding: 1rem;
+    }
+    .detail-content {
+        flex-direction: column;
+    }
+    .detail-left,
+    .detail-right {
+        flex: 1 1 100%;
+    }
+    .button-group {
+        flex-direction: column;
+    }
+    .btn {
+        width: 100%;
+    }
+}
+
+/* 공통 wrapper */
+.loading-wrapper,
+.error-wrapper,
+.warning-wrapper {
+    margin-top: 5rem;
+    text-align: center;
+}
+/* 알림 스타일 */
+.alert {
+    display: inline-block;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+/* 에러 알림 */
+.error-alert {
+    background-color: #ffe5e5;
+    color: #d8000c;
+    border: 1px solid #d8000c;
+}
+/* 경고 알림 */
+.warning-alert {
+    background-color: #fff8db;
+    color: #9f6000;
+    border: 1px solid #9f6000;
+}
+
+/* carousel */
+/* 캐러셀 전체 컨테이너 */
+.custom-carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    position: relative;
+    /* ✅ 짤림 방지 */
+    overflow: visible;
+    /* ✅ 하단 여백 확보 */
+    padding-bottom: 3rem;
+}
+/* 이미지 영역 */
+.image-carousel {
+    width: 100%;
+    /* max-height 삭제 또는 증가 */
+    /* max-height: 300px; 삭제 */
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.carousel-image-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* 정사각형 비율 확보 */
+    position: relative;
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* cover -> contain */
+}
+
+/* 좌우 네비게이션 버튼 공통 */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  z-index: 1;
+}
+.prev-btn {
+  left: 0.5rem; /* 왼쪽 정렬 */
+}
+.next-btn {
+  right: 0.5rem; /* 오른쪽 정렬 */
+}
+.nav-btn:hover {
+    background: #f1f1f1;
+}
+/* 인디케이터 (하단 점) */
+.carousel-indicators {
+    margin-top: 1rem;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+/* 점 모양 */
+.indicator-dot {
+    width: 12px;
+    height: 12px;
+    background-color: #bbb;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.indicator-dot.active {
+    background-color: #333;
+}
+/* ✅ 반응형 대응 */
+@media (max-width: 768px) {
+    .custom-carousel {
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .nav-btn {
+        font-size: 1.5rem;
+        padding: 0.5rem;
+    }
+    .carousel-image {
+        border-radius: 6px;
+    }
+    .indicator-dot {
+        width: 10px;
+        height: 10px;
+    }
+}
+@media (max-width: 480px) {
+    .nav-btn {
+        font-size: 1.2rem;
+    }
+    .carousel-indicators {
+        gap: 6px;
+        margin-top: 0.5rem;
+    }
+}
