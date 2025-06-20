@@ -108,9 +108,10 @@
     background: #46b369;
     color: #fff;
     font-size: 1.15rem;
-    padding: 4px 18px;
+    padding: 9px 18px;
     border-radius: 10px;
-    font-weight: 700;
+    display: block;
+    width: fit-content;
 }
 
 .detail-content {
@@ -131,7 +132,7 @@
 
 .detail-writer {
     color: #b4b4b4;
-    font-size: 1.02rem;
+    font-size: 1;
     margin-bottom: 16px;
 }
 

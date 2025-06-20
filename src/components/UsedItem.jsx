@@ -48,19 +48,19 @@ export function UsedItem({ used }) {
         </div>
         <div className="used-list-content">
             <div className="used-list-header">
-                <div className="used-list-category">
+                <span className="used-list-category">
                     거래&gt;{used.categories?.name}
-                </div>
+                </span>
                 <div className="used-list-location">
                     {used.location} · {getDateDiff(baseTime)}{isEdited && ' (수정)'}
                 </div>
             </div>
-            <div className="used-list-title">{used.title}</div>
-            <div className="used-list-body">{used.content}</div>
-            <div className="used-list-footer">
+            <span className="used-list-title">{used.title}</span>
+            <span className="used-list-body">{used.content}</span>
+            <span className="used-list-footer">
                 <div className={`used-list-price${used.category_id === 5 ? " used-list-share" : ""}`}>
                     {used.category_id === 5
-                        ? <div className="used-list-badge-share">나눔</div>
+                        ? <span className="used-list-badge-share">나눔</span>
                         : `${Number(used.price).toLocaleString()}원`
                     }
                 </div>
@@ -69,7 +69,7 @@ export function UsedItem({ used }) {
                     <span style={{ marginLeft: 12 }}>❤️ {used.likesCount}</span>
                     <span style={{ marginLeft: 12 }}>💬 {used.commentsCount}</span>
                 </div>
-            </div>
+            </span>
         </div>
     </div>
 );

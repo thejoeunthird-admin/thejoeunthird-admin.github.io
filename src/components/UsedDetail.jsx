@@ -354,8 +354,8 @@ export function UsedDetail() {
                             <div className="detail-content">{detail.content}</div>
                             <div className="detail-stat">
                                 <span>좋아요 {likesCount}</span>                               
-                                <span className="stat-dot">·</span>
-                                <span>조회 {detail.cnt ?? 0}</span>
+                                <span className="stat-dot"> · </span>
+                                <span>조회수 {detail.cnt ?? 0}</span>
                             </div>
                             <div className="detail-writer">작성자: {detail.users?.name ?? '알 수 없음'}</div>
                         </div>

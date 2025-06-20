@@ -34,7 +34,7 @@ export function UsedBoard() {
 
             const { data: postsData, error } = await supa;
 
-            // 여기 확인좀해줘
+            
             const postsWithCounts = await Promise.all(
                 (postsData || []).map(async (post) => {
                     const { count: commentsCount } = await supabase
