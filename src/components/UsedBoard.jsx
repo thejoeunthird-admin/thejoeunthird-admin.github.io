@@ -32,12 +32,31 @@ export function UsedBoard() {
                 );
             }
 
-            const { data, error } = await supa;
+            const { data: postsData, error } = await supa;
+
+            // 여기 확인좀해줘
+            const postsWithCounts = await Promise.all(
+                (postsData || []).map(async (post) => {
+                    const { count: commentsCount } = await supabase
+                        .from("comments")
+                        .select("*", { count: "exact", head: true })
+                        .eq("table_id", post.id);
+
+                    const { count: likesCount } = await supabase
+                        .from("likes")
+                        .select("*", { count: "exact", head: true })
+                        .eq("table_id", post.id);
+
+                    return {
+                        ...post,
+                        commentsCount: commentsCount || 0,
+                        likesCount: likesCount || 0,
+                    };
+                })
+            );
+            setPosts(postsWithCounts);
             if (error) {
                 console.log("error: ", error);
-            }
-            if (data) {
-                setPosts(data);
             }
         }
         fetchPosts();
@@ -60,7 +79,9 @@ export function UsedBoard() {
                 <>
                     {posts.map((used) => (
                         <div className="usedboard-col" key={used.id}>
-                            <UsedItem used={used} />
+                            <UsedItem used={used}
+                            likesCount={used.likesCount}
+                            commentsCount={used.commentsCount} />
                         </div>
                     ))}
                 </>

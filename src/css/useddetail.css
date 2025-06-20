@@ -11,7 +11,6 @@
     margin: 30px auto;
     border-radius: 24px;
     background: #fff;
-    box-shadow: 0 2px 18px rgba(30, 30, 30, 0.07);
     padding: 40px 35px;
     gap: 36px;
     align-items: flex-start;
@@ -66,74 +65,65 @@
     flex: 1.2 1 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-width: 360px;
-    height: 100%;
+    justify-content: flex-start;   /* 중요! 텍스트 위부터 정렬 */
+    min-width: 340px;
     min-height: 380px;
-    gap: 6px;
+    gap: 18px;                     /* 각 블럭 사이 간격 넉넉히 */
 }
 
 .detail-title {
-    font-size: 2.1rem;
-    font-weight: bold;
-    margin-bottom: 12px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.24;
+    color: #222;
 }
 
 .detail-meta {
-    color: #888;
-    font-size: 1.05rem;
-    margin-bottom: 6px;
-}
-
-.detail-time {
-    margin-left: 9px;
+    color: #aaa;
+    font-size: 1;
+    margin-bottom: 5px;
+    font-weight: 400;
 }
 
 .detail-price {
     font-size: 1.5rem;
-    font-weight: 800;
-    color: #1e1e1e;
-    margin-bottom: 18px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 22px;
 }
 
 .detail-badge-share {
     background: #46b369;
     color: #fff;
-    font-size: 1.1rem;
-    padding: 3px 18px;
-    border-radius: 9px;
+    font-size: 1.15rem;
+    padding: 4px 18px;
+    border-radius: 10px;
     font-weight: 700;
 }
 
-.detail-won {
-    font-size: 1.1rem;
-    font-weight: 400;
-    margin-left: 2px;
-}
-
 .detail-content {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     color: #444;
-    min-height: 42px;
-    margin-bottom: 18px;
+    min-height: 50px;
+    margin-bottom: 22px;
     white-space: pre-line;
+    line-height: 1.6;
 }
 
 .detail-stat {
-    color: #888;
-    font-size: 1rem;
-    margin-bottom: 2px;
-}
-
-.stat-dot {
-    margin: 0 6px;
+    color: #aaa;
+    font-size: 1.02rem;
+    margin-bottom: 5px;
+    font-weight: 400;
 }
 
 .detail-writer {
-    color: #999;
-    font-size: 1rem;
+    color: #b4b4b4;
+    font-size: 1.02rem;
     margin-bottom: 16px;
 }
+
 
 .detail-buttons {
     margin-top: 16px;

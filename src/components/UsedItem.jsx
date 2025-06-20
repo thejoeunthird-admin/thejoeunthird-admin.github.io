@@ -8,7 +8,7 @@ import '../css/useditem.css'
 export function UsedItem({ used }) {
     const navigate = useNavigate();
     const { item } = useParams();
-    const [likesCount, setLikesCount] = useState(0);    // 좋아요 수
+    //const [likesCount, setLikesCount] = useState(0);    // 좋아요 수
 
     // const getFinalUrl = (img) => {
     //     if (!img) return null;
@@ -17,24 +17,24 @@ export function UsedItem({ used }) {
 
     const { images, setImages, getImages, initImage } = useImage();
 
-    useEffect(() => {
-        const fetchLikes = async () => {
-            const { count, error: likeCountError } = await supabase
-                .from('likes')
-                .select('*', { count: 'exact', head: true })
-                .eq('category_id', used.category_id)
-                .eq('table_id', used.id);
+    // useEffect(() => {
+    //     const fetchLikes = async () => {
+    //         const { count, error: likeCountError } = await supabase
+    //             .from('likes')
+    //             .select('*', { count: 'exact', head: true })
+    //             .eq('category_id', used.category_id)
+    //             .eq('table_id', used.id);
 
-            if (!likeCountError) {
-                setLikesCount(count);
-            } else {
-                console.error('좋아요 수 불러오기 실패', likeCountError);
-            }
+    //         if (!likeCountError) {
+    //             setLikesCount(count);
+    //         } else {
+    //             console.error('좋아요 수 불러오기 실패', likeCountError);
+    //         }
 
-            await supabase.rpc('increment_view_count', { trade_id: parseInt(item) });
-        }
-        fetchLikes();
-    }, [item]);
+    //         await supabase.rpc('increment_view_count', { trade_id: parseInt(item) });
+    //     }
+    //     fetchLikes();
+    // }, [item]);
 
 
     const getDateDiff = (date) => {
@@ -62,35 +62,44 @@ export function UsedItem({ used }) {
 
 
     return (
-        <div
-            className="used-card"
-            onClick={handleDetail}
-        >
-            <div className="used-img-wrap">
-                <img src={used.main_img ? getImages(used.main_img) : noImg } alt='썸네일' className="used-img" />
-            </div>
-            <div className="used-body">
-                <div>
-                    <div className="used-meta">
-                        <span className="used-category">거래&gt;{used.categories?.name}</span>
-                        <span className="used-count">조회수 {used.cnt} ❤️ {likesCount}</span>
-                    </div>
-                    <div className="used-title">{used.title}</div>
-                    <div className="used-content">{used.content}</div>
+    <div
+        className="used-list-card"
+        onClick={handleDetail}
+    >
+        <div className="used-list-thumb">
+            <img
+                src={used.main_img ? getImages(used.main_img) : noImg}
+                alt="썸네일"
+                onError={e => (e.currentTarget.src = noImg)}
+            />
+        </div>
+        <div className="used-list-content">
+            <div className="used-list-header">
+                <div className="used-list-category">
+                    거래&gt;{used.categories?.name}
                 </div>
-                <div className="used-bottom">
-                    <span className={`used-price${used.category_id === 5 ? " used-share" : ""}`}>
-                        {used.category_id === 5
-                            ? <span className="used-badge-share">나눔</span>
-                            : `${Number(used.price).toLocaleString()}원`
-                        }
-                    </span>
-                    <span className="used-location">
-                        {used.location} · {getDateDiff(baseTime)}{isEdited && ' (수정)'}
-                    </span>
+                <div className="used-list-location">
+                    {used.location} · {getDateDiff(baseTime)}{isEdited && ' (수정)'}
+                </div>
+            </div>
+            <div className="used-list-title">{used.title}</div>
+            <div className="used-list-body">{used.content}</div>
+            <div className="used-list-footer">
+                <div className={`used-list-price${used.category_id === 5 ? " used-list-share" : ""}`}>
+                    {used.category_id === 5
+                        ? <div className="used-list-badge-share">나눔</div>
+                        : `${Number(used.price).toLocaleString()}원`
+                    }
+                </div>
+                <div className="used-list-meta">
+                    <span>조회수 {used.cnt}</span>
+                    <span style={{ marginLeft: 12 }}>❤️ {used.likesCount}</span>
+                    <span style={{ marginLeft: 12 }}>💬 {used.commentsCount}</span>
                 </div>
             </div>
         </div>
-    );
+    </div>
+);
+
 
 }
