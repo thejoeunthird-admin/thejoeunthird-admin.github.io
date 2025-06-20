@@ -123,7 +123,7 @@ function BestItems() {
                             className='contents'
                             onClick={(e)=>{
                                 e.preventDefault();
-                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}`)
+                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}?keyword=`)
                             }}
                         >
                             <img src={getFinalUrl(o.main_img)} className='contents-img' />
