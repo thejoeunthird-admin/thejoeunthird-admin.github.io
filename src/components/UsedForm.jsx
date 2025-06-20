@@ -264,6 +264,9 @@ export function UsedForm({ mode }) {
                         ※ 이미지는 최대 5장까지 업로드할 수 있습니다.<br />
                         이미지를 클릭하여 대표이미지를 설정해주세요.
                     </div>
+                    {fileCount !== images.length && (
+                            <div className="form-desc">이미지 업로드 중입니다...</div>
+                        )}
                     {/* 새 이미지 미리보기 */}
                     <div className="img-preview-list">
                         {images.length > 0 && images.map((img, idx) => (

@@ -15,11 +15,13 @@ export function UsedBoard() {
     const location = useLocation();
     const query = new URLSearchParams(location.search);
     const keyword = query.get('keyword') || '';
+    const [loading, setLoading] = useState(true);
 
 
 
     useEffect(() => {
         const fetchPosts = async () => {
+            setLoading(true);
             let supa = supabase
                 .from('trades')
                 .select('*,categories(name), users(name)')
@@ -33,7 +35,6 @@ export function UsedBoard() {
             }
 
             const { data: postsData, error } = await supa;
-
 
             const postsWithCounts = await Promise.all(
                 (postsData || []).map(async (post) => {
@@ -55,8 +56,12 @@ export function UsedBoard() {
                 })
             );
             setPosts(postsWithCounts);
+            setLoading(false);
             if (error) {
                 console.log("error: ", error);
+            }
+            if(loading){
+                <div>로딩중..</div>
             }
         }
         fetchPosts();

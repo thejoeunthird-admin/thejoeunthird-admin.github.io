@@ -46,6 +46,7 @@ export function UsedDetail() {
     useEffect(() => {
         const fetchDetails = async () => {
             if (!item) return;
+            setLoading(true);
             try {
                 await supabase.rpc('increase_cnt', { trade_id: parseInt(item) });
 

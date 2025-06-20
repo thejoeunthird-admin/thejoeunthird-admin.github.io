@@ -24,15 +24,29 @@
 }
 
 
+/* 태블릿: 2개 */
 @media (max-width: 900px) {
+    .usedboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
     .usedboard-col {
-        max-width: 48%;
+        max-width: 100%;
     }
 }
 
-@media (max-width: 600px) {
+/* 모바일: 1개 */
+@media (max-width: 580px) {
+    .usedboard-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
     .usedboard-col {
         max-width: 100%;
+    }
+    .usedboard-container {
+        padding: 20px 4px 70px 4px;
+        gap: 12px;
     }
 }
 
@@ -110,5 +124,23 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@media (max-width: 600px) {
+    .usedboard-fab-zone {
+        left: 10px;
+        bottom: 14px;
+    }
+    .usedboard-fab {
+        width: 90px;
+        height: 44px;
+        font-size: 15px;
+        border-radius: 13px;
+    }
+    .usedboard-menu {
+        width: 96vw;
+        max-width: 370px;
+        padding: 10px 4px;
     }
 }
