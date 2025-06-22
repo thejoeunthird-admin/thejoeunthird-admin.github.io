@@ -27,7 +27,6 @@ export function UsedForm({ mode }) {
     const region = useRegion && useRegion();
     const CATEGORY_MAP = { 4: "sell", 5: "share", 6: "buy" };
 
-    const [exPics, setExPics] = useState([]);
 
     useEffect(() => {
         const checkLogin = async () => {
@@ -55,13 +54,15 @@ export function UsedForm({ mode }) {
                         setPrice(data.price);
                         setCategory(String(data.category_id));
                         setLocation(data.location);
-                        setExPics([
+                        const oldImgs=[
                             data.main_img,
                             data.detail_img1,
                             data.detail_img2,
                             data.detail_img3,
                             data.detail_img4
-                        ].filter(Boolean));
+                        ].filter(Boolean);
+                        initImage(oldImgs);
+                        setFileCount(oldImgs.length);
                     }
                 });
         }
@@ -86,7 +87,6 @@ export function UsedForm({ mode }) {
             fileInputRef.current.value = "";
             return;
         }
-        // setExPics([]); // 기존 이미지 초기화
         setFileCount(images.length + files.length);
         if (files.length > 0) {
             setImages(e); // 기존대로
@@ -229,26 +229,6 @@ export function UsedForm({ mode }) {
                     />
                     {/* <span className="form-price-unit">원</span> */}
                 </div>
-                {/* 기존 이미지 미리보기 (수정) */}
-                {mode === "edit" && (
-                    <div className="form-group">
-                        <div className="form-label">기존 이미지</div>
-                        <div className="img-preview-list">
-                            {exPics.length > 0 ? (
-                                exPics.map((img, i) => (
-                                    <img
-                                        key={i}
-                                        src={getImages(img)}
-                                        alt={`기존 이미지 ${i + 1}`}
-                                        className="img-preview"
-                                    />
-                                ))
-                            ) : (
-                                <div className="form-desc">기존 이미지 없음</div>
-                            )}
-                        </div>
-                    </div>
-                )}
                 {/* 새 이미지 업로드 */}
                 <div className="form-group">
                     <div className="form-label">이미지 업로드</div>
