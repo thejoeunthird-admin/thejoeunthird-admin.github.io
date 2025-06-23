@@ -17,7 +17,7 @@ export function TradeDetail() {
   const { getImages } = useImage();
   const userInfo = useUserTable();
   const currentUserId = userInfo?.info?.id ?? null;
-  const { id } = useParams();
+  const { item } = useParams();
 
   const [detail, setDetail] = useState(null);
   const [detailUser, setDetailUser] = useState(null);
@@ -39,19 +39,19 @@ export function TradeDetail() {
   useEffect(() => {
     if (keyword !== null && keyword !== 'null') {
       console.log('keyword = [' + keyword + ']');
-      navigate(`/trade/${getCategoryUrl(detail.category_id, categoriesAll)}?keyword=${keyword}`);
+      // navigate(`/trade/${getCategoryUrl(detail.category_id, categoriesAll)}?keyword=${keyword}`);
     }
   }, [keyword, detail?.category_id, categoriesAll]);
 
   // 상품 정보, 판매자 정보, 좋아요 수, 현재 유저 좋아요/공동구매 상태 조회
   useEffect(() => {
     const fetchDetailData = async () => {
-      if (!id) return;
+      if (!item) return;
       setLoading(true);
       setError(null);
       try {
         const { data, error } = await supabase.rpc('get_trade_detail', {
-          input_table_id: parseInt(id, 10),
+          input_table_id: parseInt(item, 10),
           input_user_id: userInfo?.info?.id ?? null,
         }).single();
 
@@ -83,7 +83,7 @@ export function TradeDetail() {
 
         // 조회수 증가 처리
         await supabase.rpc('increment_view_count', {
-          trade_id: parseInt(id, 10)
+          trade_id: parseInt(item, 10)
         });
 
       } catch (err) {
@@ -95,7 +95,7 @@ export function TradeDetail() {
     };
 
     fetchDetailData();
-  }, [id]);
+  }, [item]);
 
   // 글 삭제
   const handleDeleteDetails = async () => {
@@ -436,7 +436,7 @@ export function TradeDetail() {
                       className="btn outline-primary"
                       onClick={() =>
                         navigate(
-                          `/trade/${getCategoryUrl(detail.category_id, categoriesAll)}/form/${detail.id}`
+                          `/trade/${getCategoryUrl(detail.category_id, categoriesAll)}/update/${detail.id}`
                         )
                       }
                     >
@@ -516,7 +516,7 @@ export function TradeDetail() {
         </div>
       </div>
 
-      <Comments productId={id} categoryId={detail.category_id} />
+      <Comments productId={item} categoryId={detail.category_id} />
     </div>
 
   );

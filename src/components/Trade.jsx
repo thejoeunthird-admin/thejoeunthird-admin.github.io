@@ -10,7 +10,7 @@ import { useRegion } from "../hooks/useRegion";
 import { timeAgo, timeAgoOrClosed, getCategoryFullName, getCategoryFullNameTag, getCategoryUrl } from '../utils/utils';
 import '../css/trade.css'
 
-export function Trade() {
+export function Trade({ tap }) {
   const user = useUserTable();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ export function Trade() {
   const [orderBy, setOrderBy] = useState('create_date');
 
   const categoriesAll = useSelector(state => state.categories.all);
-  const { tap } = useParams();
+  // const { tap } = useParams();
   const normalizedTap = tap === 'all' ? null : tap;
   const { info: categories, findByUrl, loading: categoriesLoading } = useCategoriesTable();
   const [showRegisterMenu, setShowRegisterMenu] = useState(false);
@@ -89,8 +89,8 @@ export function Trade() {
                     // `/trade/${tap}/form` - 하위카테고리 위치에서 등록버튼 처리
                     // `/trade/deal/form` - 전체페이지 위치에서 등록버튼 처리
                     const path = label === '거래 등록'
-                      ? tap ? `/trade/${tap}/form` : `/trade/deal/register`
-                      : tap ? `/trade/${tap}/form` : `/trade/gonggu/form`
+                      ? tap ? `/trade/all/creative` : `/trade/all/creative`
+                      : tap ? `/trade/${tap}/creative` : `/trade/gonggu/creative`
                     return (
                       <button
                         key={idx}
@@ -115,7 +115,7 @@ export function Trade() {
               <div
                 key={trade.id}
                 className="custom-card"
-                onClick={() => navigate(`/trade/${getCategoryUrl(trade.category_id, categoriesAll)}/${trade.id}`)}
+                onClick={() => navigate(`/trade/${getCategoryUrl(trade.category_id, categoriesAll)}/${trade.id}?keyword=`)}
                 style={trade.category_id == 7 ? { border: '1px solid var(--base-color-5) !important' } : {}}
               >
                 {trade.category_id === 7 && (

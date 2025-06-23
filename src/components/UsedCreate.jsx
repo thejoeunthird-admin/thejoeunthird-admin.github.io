@@ -142,6 +142,12 @@ export function UsedCreate() {
     // const fileInputRef = useRef();
 
     return (
+        <>
+                    <style>{`
+                .inputBox{
+                    display: none !important;
+                }
+            `}</style>
         <div className="usedcreate-wrap">
             <form className="usedcreate-form" onSubmit={handleCreate} autoComplete="off">
                 <div className="form-title">글등록</div>
@@ -237,5 +243,5 @@ export function UsedCreate() {
                 <button className="form-btn" type="submit" disabled={images.length > 0 && fileCount !== images.length}>등록</button>
             </form>
         </div>
-    );
+    </>);
 };

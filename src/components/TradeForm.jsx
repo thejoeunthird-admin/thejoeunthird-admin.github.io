@@ -8,10 +8,9 @@ import { useRegion } from "../hooks/useRegion";
 import { LoadingCircle } from "./LoadingCircle";
 import '../css/TradeForm.css';
 
-export function TradeForm() {
+export function TradeForm({ tap = 'gonggu', id }) {
   const navigate = useNavigate();
   //const { tap } = useParams(); // e.g. /trade/electronics/register
-  const { tap, id } = useParams();  // /trade/electronics/edit/123
   const isGonggu = tap === 'gonggu';
   const isEditMode = Boolean(id);
 
@@ -56,6 +55,7 @@ export function TradeForm() {
 
   // 초기 카테고리 선택 (tap 기준)
   useEffect(() => {
+    console.log(tap)
     if (!tap || !categories) return;
     const tapChange = tap == 'deal' ? 'sell' : tap;
     const current = findByUrl(tapChange);
@@ -218,7 +218,10 @@ export function TradeForm() {
     setIsDetailImgsUploading(false);
   };
 
-  return (
+  return (<>
+    <style>{`.inputBox{
+      display: none !important;
+    }`}</style>
     <div className="product-form-container">
       {loading && <div className="text-center"><span className="loading-circle" /></div>}
       <div className="product-form-card">
@@ -369,8 +372,8 @@ export function TradeForm() {
           </div>
 
           <div className="form-group full-width">
-            <button type="submit" 
-              className="submit-btn" 
+            <button type="submit"
+              className="submit-btn"
               style={{ background: "var(--base-color-5)", border: "none" }}
               disabled={loading}
             >
@@ -380,5 +383,5 @@ export function TradeForm() {
         </form>
       </div >
     </div >
-  );
+  </>);
 }

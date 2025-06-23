@@ -9,10 +9,8 @@ import { Comments } from "./Comments";
 import { useImage } from "../hooks/useImage";
 import { LoadingCircle } from './LoadingCircle';
 import noImg from '../public/noImg.png'
+import { LikesController } from './LikesController';
 import '../css/useddetail.css'
-// const location = useLocation();
-// const query = new URLSearchParams(location.search);
-// const keyword = query.get('keyword') || '';
 
 export function UsedDetail() {
     const { getImages } = useImage();
@@ -25,6 +23,7 @@ export function UsedDetail() {
     const [isLiked, setIsLiked] = useState(false);      // 내가 눌렀는지
     const [isLiking, setIsLiking] = useState(false);    // 처리중
     const [loading, setLoading] = useState(true);
+    const user = useUserTable();
 
     // 글쓰기 메뉴
     const [showRegisterMenu, setShowRegisterMenu] = useState(false);
@@ -38,7 +37,6 @@ export function UsedDetail() {
     const handleToggleMenu = () => {
         setShowRegisterMenu(prev => !prev);
     };
-
     const handleRegisterNavigate = (path) => {
         console.log('Navigate to', path);
         setShowRegisterMenu(false);
@@ -49,22 +47,9 @@ export function UsedDetail() {
     useEffect(() => {
         const fetchDetails = async () => {
             if (!item) return;
+            setLoading(true);
             try {
-                // 기존 조회수
-                const { data: preData, error: preError } = await supabase
-                    .from('trades')
-                    .select('cnt')
-                    .eq('id', item)
-                    .single();
-                if (preError) {
-                    console.log('increaseView error: ', preError);
-                    return;
-                }
-                // +1
-                await supabase
-                    .from('trades')
-                    .update({ cnt: preData.cnt + 1 })
-                    .eq('id', item);
+                await supabase.rpc('increase_cnt', { trade_id: parseInt(item) });
 
                 // 게시물 불러오기
                 const { data: detailData, error } = await supabase
@@ -88,7 +73,7 @@ export function UsedDetail() {
         fetchDetails();
     }, [item]);
 
-    // 좋아요(detail, userInfo)
+    //좋아요(detail, userInfo)
     useEffect(() => {
         const fetchLikes = async () => {
             if (!detail) return;
@@ -198,12 +183,16 @@ export function UsedDetail() {
     // 구매하기/나눔받기/팔기 -> 판매자 채팅으로
     const makeChats = async () => {
         if (!confirm('거래 요청 메시지를 보낼까요?')) return;
+
         const { data, error } = await supabase
             .from('chats')
             .insert([{
                 sender_id: detail?.user_id, // 게시물 작성자(detail.user_id)
                 receiver_id: userInfo?.id, // 로그인한 사람 id(userInfo.id)
-                chat: '거래해요!',
+                chat:
+                    detail.category_id === 4 ? '벼룩해요!' :
+                        detail.category_id === 5 ? '나눔받을래요!' :
+                            detail.category_id === 6 ? '사고싶어요!' : '',
                 create_date: now,
                 read: false,
                 trades_id: detail.id,
@@ -233,6 +222,7 @@ export function UsedDetail() {
             // 좋아요 버튼 + 기타 버튼
             return (
                 <div>
+                    <button onClick={makeChats}>✉️ 쪽지</button>
                     <Button
                         variant={isLiked ? "danger" : "outline-danger"}
                         onClick={handleLikeToggle}
@@ -241,7 +231,6 @@ export function UsedDetail() {
                         {isLiked ? "❤️" : "🤍"}
                         {isLiked ? " 좋아요 취소" : " 좋아요"}
                     </Button>
-                    <Button variant="outline-primary" onClick={makeChats}>✉️ 쪽지</Button>
                 </div>
             );
         }
@@ -249,7 +238,7 @@ export function UsedDetail() {
 
     // 글 수정 버튼
     const handleUpdate = () => {
-        navigate('update');
+        navigate(`/trade/${id}/update/${item}`);
     }
 
     // 날짜 계산
@@ -284,6 +273,7 @@ export function UsedDetail() {
         const goPrev = () => setCurrent(prev => (prev === 0 ? total - 1 : prev - 1));
         const goNext = () => setCurrent(prev => (prev === total - 1 ? 0 : prev + 1));
 
+
         const params = new URLSearchParams(window.location.search);
         const keyword = params.get('keyword');
 
@@ -291,144 +281,41 @@ export function UsedDetail() {
         useEffect(() => {
             if (keyword !== '') {
                 // 전체로 검색
-                navigate(`/trade/keyword=${keyword}`)
+                navigate(`/trade?keyword=${keyword}`)
             }
         }, [keyword])
 
-        // return (
-        //     <>
-        //         <div
-        //             className="position-fixed bottom-0 start-0 m-4"
-        //             style={{ zIndex: 1050 }}
-        //         >
-        //             <Button
-        //                 variant="danger"
-        //                 className="d-flex justify-content-center align-items-center shadow rounded-3"
-        //                 style={{ width: '100px', height: '50px', whiteSpace: 'nowrap' }}
-        //                 onClick={handleToggleMenu}
-        //             >
-        //                 + 글쓰기
-        //             </Button>
-
-        //             {showRegisterMenu && (
-        //                 <div
-        //                     className="bg-danger rounded-3 shadow p-2 mt-3 position-absolute start-0"
-        //                     style={{
-        //                         bottom: '70px',
-        //                         width: '200px',
-        //                         userSelect: 'none',
-        //                         boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-        //                     }}
-        //                 >
-        //                     {['거래 등록', '공구 등록'].map((label, idx) => {
-        //                         const path = label === '거래 등록'
-        //                             ? '/trade/deal/register'
-        //                             : '/trade/gonggu/register';
-
-        //                         return (
-        //                             <Button
-        //                                 key={idx}
-        //                                 variant="danger"
-        //                                 className="w-100 text-start mb-2 rounded-2"
-        //                                 onClick={() => handleRegisterNavigate(path)}
-        //                             >
-        //                                 {label}
-        //                             </Button>
-        //                         );
-        //                     })}
-        //                 </div>
-        //             )}
-        //         </div>
-
-        //         <Card className="border-0" style={{ maxWidth: 1100, margin: "30px auto", borderRadius: 18 }}>
-        //             <Row className="g-0">
-        //                 {/* 왼쪽: 이미지 */}
-        //                 <Col md={6} xs={12}>
-        //                     <div style={{ background: "#fafafa", borderRadius: "18px 0 0 18px", height: "100%", minHeight: 400 }}>
-        //                         <Carousel indicators={images.length > 1}>
-        //                             {images.length === 0 ? (
-        //                                 <Carousel.Item>
-        //                                     <div className="text-center text-muted p-5">이미지가 없습니다.</div>
-        //                                 </Carousel.Item>
-        //                             ) : (
-        //                                 images.map((img, idx) => (
-        //                                     <Carousel.Item key={idx}>
-        //                                         <img
-        //                                             src={getImages(img)}
-        //                                             alt={`상세 이미지 ${idx + 1}`}
-        //                                             style={{
-        //                                                 width: "100%",
-        //                                                 height: 500,
-        //                                                 objectFit: "cover",
-        //                                                 borderRadius: "18px 0 0 18px"
-        //                                             }}
-        //                                         />
-        //                                     </Carousel.Item>
-        //                                 ))
-        //                             )}
-        //                         </Carousel>
-        //                     </div>
-        //                 </Col>
-        //                 {/* 오른쪽: 정보 */}
-        //                 <Col md={6} xs={12} className="p-5 d-flex flex-column justify-content-between">
-        //                     <div>
-        //                         <h4 className="fw-bold">{detail.title}</h4>
-        //                         <div className="text-secondary mb-2">
-        //                             {detail.categories?.name} · {detail.location}
-        //                             <span className="ms-3">{getDateDiff(baseTime)}{isEdited && (' (수정)')}</span>
-        //                         </div>
-        //                         <div className="mb-3 fs-4 fw-bold" style={{ color: "#333" }}>
-        //                             {detail.category_id === 5
-        //                                 ? <Badge bg="success" className="fs-6">나눔</Badge>
-        //                                 : `${Number(detail.price).toLocaleString()}원`
-        //                             }
-        //                         </div>
-        //                         <div className="mb-4" style={{ whiteSpace: "pre-line" }}>{detail.content}</div>
-        //                         <div className="mb-2 text-muted d-flex align-items-center gap-2" style={{ fontSize: 14 }}>
-        //                             <span>좋아요 {likesCount}</span>
-        //                             <span>· 조회 {detail.cnt ?? 0}</span>
-        //                         </div>
-
-        //                         <div className="mb-4 text-muted" style={{ fontSize: 14 }}>
-        //                             작성자: {detail.users?.name ?? '알 수 없음'}
-        //                         </div>
-        //                         <div className="d-flex gap-2">
-        //                             {handleButtons()}
-        //                         </div>
-        //                     </div>
-        //                 </Col>
-        //             </Row>
-        //         </Card>
-        //     </>
-        // );
         return (
             <div className="detail-root">
                 {/* 플로팅 버튼 */}
-                <div className="usedboard-fab-zone">
-                    {showRegisterMenu && (
-                        <div className="usedboard-menu up">
-                            <button
-                                className="usedboard-menu-btn"
-                                onClick={() => handleRegisterNavigate('/trade/deal/register')}
-                            >
-                                거래 등록
-                            </button>
-                            <button
-                                className="usedboard-menu-btn"
-                                onClick={() => handleRegisterNavigate('/trade/gonggu/register')}
-                            >
-                                공구 등록
-                            </button>
-                        </div>
-                    )}
-                    <button
-                        className="usedboard-fab"
-                        onClick={handleToggleMenu}
-                    >
-                        + 글쓰기
-                    </button>
-                </div>
+                {user?.info?.id && (
+                    <div className="floating-button-container">
+                        <button className="write-button" onClick={() => setShowRegisterMenu(prev => !prev)}>
+                            + 글쓰기
+                        </button>
 
+                        {showRegisterMenu && (
+                            <div className="write-menu">
+                                {['거래 등록', '공구 등록'].map((label, idx) => {
+                                    // `/trade/${tap}/form` - 하위카테고리 위치에서 등록버튼 처리
+                                    // `/trade/deal/form` - 전체페이지 위치에서 등록버튼 처리
+                                    const path = label === '거래 등록'
+                                        ? item ? `/trade/${id}/creative` : `/trade/${id}/creative`
+                                        : item ? `/trade/gonggu/creative` : `/trade/gonggu/creative`
+                                    return (
+                                        <button
+                                            key={idx}
+                                            className="write-menu-item"
+                                            onClick={() => navigate(path)}
+                                        >
+                                            {label}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+                )}
                 <div className="detail-card">
                     {/* 캐러셀 이미지 */}
                     <div className="detail-img-wrap detail-carousel">
@@ -461,7 +348,8 @@ export function UsedDetail() {
                         <div>
                             <h2 className="detail-title">{detail.title}</h2>
                             <div className="detail-meta">
-                                {detail.categories?.name} · {detail.location} <span className="detail-time">{getDateDiff(baseTime)}{isEdited && ' (수정)'}</span>
+                                <span>{detail.categories?.name} · {detail.location},&nbsp;
+                                {getDateDiff(baseTime)}{isEdited && ' (수정)'}</span>
                             </div>
                             <div className="detail-price">
                                 {detail.category_id === 5
@@ -472,14 +360,16 @@ export function UsedDetail() {
                             <div className="detail-content">{detail.content}</div>
                             <div className="detail-stat">
                                 <span>좋아요 {likesCount}</span>
-                                <span className="stat-dot">·</span>
-                                <span>조회 {detail.cnt ?? 0}</span>
+                                <span className="stat-dot"> · </span>
+                                <span>조회수 {detail.cnt ?? 0}</span>
                             </div>
                             <div className="detail-writer">작성자: {detail.users?.name ?? '알 수 없음'}</div>
                         </div>
                         <div className="detail-buttons">{handleButtons()}</div>
                     </div>
                 </div>
+                <Comments productId={detail?.id} categoryId={detail?.category_id} />
+
             </div>
         );
     };
@@ -487,12 +377,7 @@ export function UsedDetail() {
     return (
         <div>
             <UsedDetailContent />
-            <Comments productId={detail?.id} categoryId={detail?.category_id} />
+            {/* <Comments productId={detail?.id} categoryId={detail?.category_id} /> */}
         </div>
     );
 }
-
-// const getFinalUrl = (img) => {
-//     if (!img) return null;
-//     return img.startsWith("http") ? img : getImages(img);
-// };
