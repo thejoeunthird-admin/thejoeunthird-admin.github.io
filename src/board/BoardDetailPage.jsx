@@ -10,7 +10,7 @@ const getImages = (path) =>
     `https://mkoiswzigibhylmtkzdh.supabase.co/storage/v1/object/public/images/${path}`;
 
 export default function BoardDetailPage() {
-    const { id } = useParams();
+    const { id, tap } = useParams();
     const navigate = useNavigate();
     const user = useUserTable();
 
@@ -21,7 +21,6 @@ export default function BoardDetailPage() {
     const [likesCount, setLikesCount] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
-    const { findById } = useCategoriesTable();
 
     const params = new URLSearchParams(window.location.search);
     const keyword = params.get('keyword');
@@ -36,8 +35,7 @@ export default function BoardDetailPage() {
 
     useEffect(() => {
         if (post !== null && keyword !== '') {
-            console.log(keyword)
-            navigate(`/life?keyword=${keyword}`)
+            navigate(`/life/${tap}?keyword=${keyword}`)
         }
     }, [keyword])
 

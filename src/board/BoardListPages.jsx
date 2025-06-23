@@ -110,7 +110,7 @@ export default function BoardListPage() {
     <div className="boardlist-wrapper" style={{ width: 'calc( 100% - 20px )', marginLeft: '10px', marginRight: '10px' }}>
       {loading ? (
         <div style={{ marginTop: '10px' }}>
-          {/* <LoadingCircle/> */}
+          <LoadingCircle/>
         </div>
       ) : boards.length !== 0 ? (
         <div className="board-card-list">
