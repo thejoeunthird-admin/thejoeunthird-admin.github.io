@@ -36,7 +36,6 @@ export const useRegion = () => {
             const script = document.createElement('script');
             script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=bc7544842f15980d1e228d96a24008e5&libraries=services&autoload=false`;
             script.async = true;
-
             script.onload = loadKakaoMap;
             script.onerror = () => {
                 console.warn('카카오맵 스크립트 로드에 실패했습니다.');

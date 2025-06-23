@@ -103,10 +103,10 @@ export function MyPageTalkLog({ user }) {
         if (item.trades.category_id === 7) {
             alert('미 완성입니다.')
         }
-        else { // 일반 구매
+        else {
             const { error } = await supabase.rpc('create_order_and_update_chat', {
                 p_trades_id: item.trades_id,
-                p_user_id: item.sender.id,
+                p_user_id: item.receiver.id,
                 p_price: item.trades.price,
                 p_quantity: item.trades_quantity
             });
