@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabase/supabase';
 import { useUserTable } from '../hooks/useUserTable';
 import { Spinner, Alert, ListGroup, Badge } from 'react-bootstrap';
-import { FaToggleOn, FaToggleOff, FaBell, FaTrash } from 'react-icons/fa';
+import { FaToggleOn, FaToggleOff, FaBell, FaRegTrashAlt, FaRegHeart } from 'react-icons/fa';
 import '../css/notifications.css';
 import { useNavigate } from 'react-router-dom';
 import { useImage } from "../hooks/useImage";
+import { MdOutlineComment } from 'react-icons/md';
+import { IoLogoWechat } from 'react-icons/io5';
+import { TbMessageChatbot } from 'react-icons/tb';
 
 
 
@@ -14,18 +17,29 @@ export function Notifications() {
     const { info: userInfo, loading: userLoading } = useUserTable();
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [isToggled, setIsToggled] = useState(true);
-    const [newNotificationCount, setNewNotoficationCount] = useState(0);
-    const [showAlert, setShowAlert] = useState(false); // 알림 표시 상태
-    const [alertMessage, setAlertMessage] = useState(""); // 알림 메세지
+    const [isToggled, setIsToggled] = useState(true); // toggle on/ogg
     const [seletedIds, setSelectedIds] = useState([]);
     const navigate = useNavigate(); // 댓글 이동
     const { images, setImages, getImages, initImage } = useImage(); // 이미지 
     const [allSelected, setAllSelected] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    // const [newNotificationCount, setNewNotificationCount] = useState(0);
+
 
     // on/off 토글 함수
-    const handleToggle = () => {
+    const handleToggle = async() => {
+        // const newToggle = !isToggled;
+
         setIsToggled(prev => !prev);
+
+        // const {error} = await supabase
+        //     .from('users')
+        //     .update({noti_enabled: newToggle})
+        //     .eq('id', userInfo.id)
+        //     .select();
+
+        // if (error) console.error("알림 설정 저장 실패", error);
+
     };
 
     // 체크박스 토글 핸들러
@@ -49,7 +63,7 @@ export function Notifications() {
             setAlertMessage("알림 삭제 중 오류발생");
             setShowAlert(true);
         } else {
-            setNotifications(prev => prev.filter(n => !setSelectedIds.includes(n.id)));
+            setNotifications(prev => prev.filter(n => !seletedIds.includes(n.id)));
             setSelectedIds([]); // 체크박스 초기화
         }
     }
@@ -69,8 +83,8 @@ export function Notifications() {
         }
 
         setNotifications(prevNotifications =>
-            prevNotifications.map(Notification =>
-                notifications.id === noti.id ? { ...notifications, is_read: true } : no
+            prevNotifications.map(notification =>
+                notification.id === noti.id ? { ...notification, is_read: true } : notification
             )
         );
 
@@ -82,6 +96,7 @@ export function Notifications() {
         }
     };
 
+    // checkBox 전체선택
     const handleAllCheck = () => {
         if (allSelected) {
             setSelectedIds([]); // 모두 해제
@@ -92,11 +107,41 @@ export function Notifications() {
         setAllSelected(prev => !prev);
     }
 
+    // type마다 아이콘 렌더링
+    const getTypeIcon = (type) => {
+        switch (type) {
+            case 'comment':
+                return <MdOutlineComment className='noti-type-icon' />
+            case 'chats':
+                return <TbMessageChatbot className='noti-type-icon' />
+            case 'likes':
+                return <FaRegHeart className='noti-type-icon' />
+        }
+    }
+
+    // useEffect
     useEffect(() => {
         if (!userInfo) {
             console.log('로그인 된 사용자 없음');
+            // setShowAlert(true);
             return;
         }
+        // user noti_enabled 가져오기
+        // const fetchToggleSetting = async () => {
+        //     const { data, error } = await supabase
+        //         .from('users')
+        //         .select('noti_enabled')
+        //         .eq('id', userInfo.id)
+        //         .single();
+
+        //     if (!error && data) {
+        //         setIsToggled(data.noti_enabled);
+        //     };
+
+        //     fetchToggleSetting(); // 호출
+        // }
+
+
         const fetchNotification = async () => {
             setLoading(true);
 
@@ -129,11 +174,11 @@ export function Notifications() {
                         } else {
                             detailContent = commentData.comment;
                         }
-                    } else if (noti.type === 'chats') {
+                    } else if (noti.type === 'chats') { // 채팅내용 가져오기
                         const { data: chatData, error: chatsError } = await supabase
                             .from('chats')
                             .select('chat')
-                            .eq('id', noti.related_id)
+                            .eq('id', noti.related_id !== null ? noti.related_id : noti.table_id)
                             .single();
 
                         if (chatsError) {
@@ -150,14 +195,19 @@ export function Notifications() {
 
                     // 게시물 이미지 가져오기
                     if (noti.table_type && noti.table_id) {
-                        const { data: postData, error: postError } = await supabase
-                            .from(noti.table_type)
-                            .select('main_img')
-                            .eq('id', noti.table_id)
-                            .single();
+                        const tablesWithImage = ['trades', 'boards'];
 
-                        if (!postError && postData) {
-                            mainImg = postData.main_img;
+                        if (tablesWithImage.includes(noti.table_type)) {
+                            const { data: postData, error: postError } = await supabase
+                                .from(noti.table_type)
+                                .select('main_img')
+                                .eq('id', noti.table_id)
+                                .single();
+
+                            if (!postError && postData) {
+                                mainImg = postData.main_img;
+                            }
+
                         }
                     }
 
@@ -168,8 +218,8 @@ export function Notifications() {
                 // setNewNotoficationCount(notificationsWithComment.filter(noti => !noti.is_read).length);
 
                 // 새로 읽지 않은 알림 수를 업데이트
-                const unreadNotifications = notificationsWithDetails.filter(noti => !noti.is_read);
-                setNewNotoficationCount(unreadNotifications.length);
+                // const unreadNotifications = notificationsWithDetails.filter(noti => !noti.is_read);
+                // setNewNotificationCount(unreadNotifications.length);
 
             }
 
@@ -228,10 +278,11 @@ export function Notifications() {
                     </div>
                     <div className='header-right'>
                         <button className='header-allCheck' onClick={handleAllCheck}>
-                            {allSelected ? '전체해제' : '전체선택'}
+                            {/* {allSelected ? '전체해제' : '전체선택'} */}
+                            전체선택
                         </button>
                         <button className='header-icon' onClick={handleDelete}>
-                            <FaTrash />
+                            <FaRegTrashAlt />
                         </button>
                         <button onClick={handleToggle} className='header-icon'>
                             {isToggled ? (<FaToggleOn />) : (<FaToggleOff />)}
@@ -258,10 +309,13 @@ export function Notifications() {
                                     checked={seletedIds.includes(noti.id)}
                                     onChange={() => handleCheckboxChange(noti.id)}
                                 />
-
+                            </div>
+                            <div className='noti-type'>
+                                {getTypeIcon(noti.type)}
                             </div>
                             <div className='noti-content'>
                                 {!noti.is_read && <Badge bg="danger" className='badge'>New</Badge>}
+
                                 <div className='noti-message'>{noti.message}</div>
                                 <div className='noti-detail'>{noti.detailContent} </div>
                                 {/* <small className="text-muted">{new Date(noti.created_at).toLocaleString()}</small> */}

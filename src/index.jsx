@@ -38,7 +38,9 @@ function App() {
         <NotificationProvider>
           <Layout>
             <Routes>
+              {/* 박희뭔 작업 -- 알람 */}
               <Route path='/notification' element={<Notifications />}/>
+              {/* 백종욱 작업 -- 메인 */}
               <Route path='/' element={<Main />} />
               <Route path='/login' element={<Login />} />
               <Route path='/login/redirect' element={<LoginRedirect />} />

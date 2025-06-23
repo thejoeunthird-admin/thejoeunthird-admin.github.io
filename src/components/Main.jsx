@@ -272,7 +272,7 @@ function BestBoards() {
 export function Main() {
 
     return (<>
-        <div className="container">
+        <div className="container" style={{ marginTop:0 }}>
             <span className='boardsHeader'>🔥 꿀팁</span>
             <BestBoards />
             <span className='boardsHeader'>🍯 꿀템</span>

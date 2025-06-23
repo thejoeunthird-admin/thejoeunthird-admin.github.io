@@ -1,8 +1,10 @@
 #notification-alert {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    transition: opacity 0.5s ease, transform 0.5s ease;
     position: fixed;
     top: 20px;
     left: 50%;
-    transform: translateX(-50%);
     width: 90%;
     /* 기본값: 화면 폭의 90% */
     max-width: 1440px;
@@ -17,7 +19,7 @@
 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(4px);
-/* 
+    /* 
     border: 1.5px solid rgba(150, 150, 150, 0.6); 연한 회색 테두리 */
 
 
@@ -33,6 +35,12 @@
     cursor: pointer;
     /* 클릭 가능하게 스타일링 */
 
+}
+
+/* 사라질 때 (위로 올라가며 fade-out) */
+#notification-alert.fade-out {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-50px);
 }
 
 /* 태블릿: 화면 너비가 768px 이상일 때 */

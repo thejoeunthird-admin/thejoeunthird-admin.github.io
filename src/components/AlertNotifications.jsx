@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Alert } from 'react-bootstrap';
 import { FaBell, FaTimes } from 'react-icons/fa';
 import { supabase } from '../supabase/supabase';
-import { useNavigate } from 'react-router-dom';
+import { useFetcher, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useUserTable } from '../hooks/useUserTable';
 import '../css/AlertNotifications.css';
@@ -55,6 +55,25 @@ export const NotificationProvider = ({ children }) => {
     const [message, setMessage] = useState(''); // 알림메세지
     const [notifications, setNotifications] = useState([]); // 이건 임시..
     const { info: userInfo, loading: userLoading } = useUserTable(); // 현재 사용자
+    const [currentNotification, setCurrentNotification] = useState(null);
+    // const [isToggled, setIsToggled] = useState(true);
+
+    // user noti_enabled 가져오기
+    // const fetchToggleSetting = async () => {
+    //     const { data, error } = await supabase
+    //         .from('users')
+    //         .select('noti_enabled')
+    //         .eq('id', userInfo.id)
+    //         .single();
+
+    //     if (!error && data) {
+    //         setIsToggled(data.noti_enabled);
+    //     };
+
+    //     fetchToggleSetting();
+    // }
+
+
 
     const showAlert = (msg) => {
         setMessage(msg); // 알림 내용 설정
@@ -70,76 +89,158 @@ export const NotificationProvider = ({ children }) => {
             return;
         }
 
+                // // user noti_enabled 가져오기
+                // const fetchToggleSetting = async () => {
+                //     const { data, error } = await supabase
+                //         .from('users')
+                //         .select('noti_enabled')
+                //         .eq('id', userInfo.id)
+                //         .single();
+        
+                //     if (!error && data) {
+                //         setIsToggled(data.noti_enabled);
+                //     };
+        
+                //     fetchToggleSetting(); // 호출
+                // }
+        
+
         const fetchNotifications = async () => {
             const { data, error } = await supabase
                 .from('notifications')
                 .select('*')
                 .eq('receiver_id', userInfo.id)
                 .eq('is_read', false)
-            // .order('created_at', { ascending: false });
+                .order('created_at', { ascending: false }); // 최신순
 
             if (error) {
                 console.error('알림 불러오기 실패', error);
             } else {
+                // setNotifications(data);
+                // if (data.length > 0) {
+                //     showAlert(data[0].message, data[0].created_at); //첫 번째 알림 하나만 사용자에게 보여주는 효과
+                // }
                 setNotifications(data);
                 if (data.length > 0) {
-                    showAlert(data[0].message, data[0].created_at); //첫 번째 알림 하나만 사용자에게 보여주는 효과
+                    setCurrentNotification(data[0]);
                 }
             }
         };
         fetchNotifications();
     }, [userInfo]);
 
+    useEffect(() => {
+        if (notifications.length > 0) {
+            setCurrentNotification(notifications[0]);
+        } else {
+            setCurrentNotification(null);
+        }
+    }, [notifications]);
+
+    const handleCloseCurrent = () => {
+        const newQueue = [...notifications];
+        newQueue.shift(); // 현재 알림제거
+        setNotifications(newQueue);
+        setCurrentNotification(newQueue[0] || null);
+    }
 
     return (
-        <NotificationContext.Provider value={{ showAlert, hideAlert }}>
+        <NotificationContext.Provider value={{ showAlert, hideAlert}}>
+            {/* {children}
+            <AlertNotifications message={message}  create_at={notifications?.created_at} onClose={hideAlert}
+            />  알림 표시 컴포넌트 */}
+
             {children}
-            <AlertNotifications message={message}  create_at={notifications[0]?.created_at} onClose={hideAlert}
-            />  {/* 알림 표시 컴포넌트 */}
+            {currentNotification && (
+                <AlertNotifications
+                    notification={currentNotification}
+                    onClose={handleCloseCurrent}
+                    onAllClose={() => {
+                        setNotifications([]);
+                        setCurrentNotification(null);
+                    }}
+                />
+            )}
         </NotificationContext.Provider>
     );
 };
 
 // ALertNotification 컴포넌트
-export function AlertNotifications({ message, create_at, onClose }) {
+export function AlertNotifications({ notification, onClose, onAllClose }) {
     const navigate = useNavigate();
+    const [fadeOut, setFadeOut] = useState(false);
+    // const { isToggled} = useNofitication(); // isToggled 를 받음
+
+    // if (!isToggled) return null;
+
+    useEffect(() => {
+        setFadeOut(false);
+    }, [notification]);
 
     const handleMessageClick = () => {
+        setFadeOut(true);
         console.log("Navigating to /notification");  // 로그 추가
-        onClose();
-        navigate('/notification');
+        // onAllClose();
+        // navigate('/notification');
+        setTimeout(() => {
+            onAllClose();
+            navigate('/notification');
+        }, 500); // fade-out 시간과 일치
     }
 
     // close 버튼
     const handleCloseClick = (e) => {
         e.stopPropagation(); // 클릭 이벤트가 상위로 전파되는거 막음.
-        onClose();
+        // onClose();
+        setFadeOut(true);
+        setTimeout(() => {
+            onClose();
+        }, 500); // fade-out 시간과 일치
     }
 
 
     useEffect(() => {
+        // const timer = setTimeout(() => {
+        //     onClose();
+        // }, 5000); // 5초 후 사라짐
         const timer = setTimeout(() => {
-            onClose();
-        }, 10000); // 10초 후 사라짐
+            setFadeOut(true);
+            setTimeout(() => {
+                onClose();
+            }, 500);
+        }, 5000);
 
         return () => clearTimeout(timer);
-    }, [message, create_at, onClose]);
 
+    }, [notification, onClose]);
+
+    // return ReactDOM.createPortal(
+    //     message ? (
+    //         <div id='notification-alert'
+    //             onClick={handleMessageClick} // 메시지 클릭 시 페이지로 이동
+    //         >
+    //             <span className='alert-left'><FaBell /> {message}</span> <br />
+    //             <span className='alert-date'>{formatRelativeTime(create_at)}</span>
+
+    //             <button className='alert-delete'
+    //                 onClick={handleCloseClick} // X 버튼 클릭 시 알림 숨기기
+    //             >
+    //                 <FaTimes />
+    //             </button>
+    //         </div>
+    //     ) : null,
+    //     document.body
+    // );
     return ReactDOM.createPortal(
-        message ? (
-            <div id='notification-alert'
-                onClick={handleMessageClick} // 메시지 클릭 시 페이지로 이동
-            >
-                <span className='alert-left'><FaBell /> {message}</span> <br />
-                <span className='alert-date'>{formatRelativeTime(create_at)}</span>
-
-                <button className='alert-delete'
-                    onClick={handleCloseClick} // X 버튼 클릭 시 알림 숨기기
-                >
-                    <FaTimes />
-                </button>
-            </div>
-        ) : null,
+        <div id='notification-alert' onClick={handleMessageClick} className={fadeOut ? 'fade-out' : ''}>
+            <span className='alert-left'>
+                <FaBell /> {notification.message}
+            </span><br />
+            <span className='alert-date'>{formatRelativeTime(notification.created_at)}</span>
+            <button className='alert-delete' onClick={handleCloseClick}>
+                <FaTimes />
+            </button>
+        </div>,
         document.body
     );
 }
