@@ -285,7 +285,7 @@ export function UsedDetail() {
             }
         }, [keyword])
 
-        return (
+        return (<>
             <div className="detail-root">
                 {/* 플로팅 버튼 */}
                 {user?.info?.id && (
@@ -316,36 +316,36 @@ export function UsedDetail() {
                         )}
                     </div>
                 )}
-                <div className="detail-card">
+                <div className="details-card">
                     {/* 캐러셀 이미지 */}
+                    <div className='caps'>
                     <div className="detail-img-wrap detail-carousel">
-                        {total === 0 ? (
-                            <div className="detail-noimg">
-                                <img src={noImg} alt="이미지 없음" className="noimg" />
-                            </div>
-                        ) : (
-                            <>
-                                <img
-                                    className="detail-img"
-                                    src={getImages(images[current])}
-                                    alt={`상세 이미지 ${current + 1}`}
-                                />
-                                {/* 좌/우 버튼 (이미지 2장 이상일 때만) */}
-                                {total > 1 && (
-                                    <>
-                                        <button className="carousel-btn left" onClick={goPrev}>{'<'}</button>
-                                        <button className="carousel-btn right" onClick={goNext}>{'>'}</button>
-                                        <div className="carousel-indicator">{current + 1} / {total}</div>
-                                    </>
-                                )}
-                            </>
-                        )}
+                            {total === 0 ? (
+                                <div className="detail-noimg">
+                                    <img src={noImg} alt="이미지 없음" className="noimg" />
+                                </div>
+                            ) : (
+                                <>
+                                    <img
+                                        className="detail-img"
+                                        src={getImages(images[current])}
+                                        alt={`상세 이미지 ${current + 1}`}
+                                    />
+                                    {/* 좌/우 버튼 (이미지 2장 이상일 때만) */}
+                                    {total > 1 && (
+                                        <>
+                                            <button className="carousel-btn left" onClick={goPrev}>{'<'}</button>
+                                            <button className="carousel-btn right" onClick={goNext}>{'>'}</button>
+                                            <div className="carousel-indicator">{current + 1} / {total}</div>
+                                        </>
+                                    )}
+                                </>
+                            )}
+                        </div>
                     </div>
-
-
                     {/* 오른쪽 정보 */}
                     <div className="detail-info">
-                        <div>
+                        {/* <div> */}
                             <h2 className="detail-title">{detail.title}</h2>
                             <div className="detail-meta">
                                 <span>{detail.categories?.name} · {detail.location},&nbsp;
@@ -364,14 +364,15 @@ export function UsedDetail() {
                                 <span>조회수 {detail.cnt ?? 0}</span>
                             </div>
                             <div className="detail-writer">작성자: {detail.users?.name ?? '알 수 없음'}</div>
-                        </div>
+                        {/* </div> */}
                         <div className="detail-buttons">{handleButtons()}</div>
                     </div>
                 </div>
-                <Comments productId={detail?.id} categoryId={detail?.category_id} />
-
+                <div style={{ width:`calc(100% - 20px )`, marginLeft:'10px' }}>
+                    <Comments productId={detail?.id} categoryId={detail?.category_id} />
+                </div>
             </div>
-        );
+        </>);
     };
 
     return (

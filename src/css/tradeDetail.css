@@ -176,7 +176,7 @@
 /* 전체 wrapper - 좌우 패딩 */
 .detail-wrapper {
     width: 100%;
-    padding: 2rem;
+    padding: 10px;
     box-sizing: border-box;
 }
 /* 카드 전체 - 최대 너비 제한 & 중앙 정렬 */
@@ -202,13 +202,13 @@
 /* 왼쪽 이미지 섹션 */
 .detail-left {
     flex: 1;
-    min-width: 300px;
+    /* min-width: 300px; */
 }
 
 /* 오른쪽 상세 정보 섹션 */
 .detail-right {
     flex: 1;
-    min-width: 300px;
+    /* min-width: 300px; */
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -356,13 +356,15 @@
     white-space: pre-wrap;
 }
 
+
 /* 반응형 - 모바일 대응 */
 @media (max-width: 768px) {
     .detail-content {
         flex-direction: column;
     }
     .detail-card {
-        padding: 1rem;
+        /* margin: 1rem; */
+        
     }
     .detail-content {
         flex-direction: column;
@@ -488,7 +490,7 @@
 /* ✅ 반응형 대응 */
 @media (max-width: 768px) {
     .custom-carousel {
-        max-width: 100%;
+        max-width: calc(100% - 1rem);
         padding-left: 1rem;
         padding-right: 1rem;
     }

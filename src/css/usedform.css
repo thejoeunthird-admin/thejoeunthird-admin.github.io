@@ -176,10 +176,10 @@
 
 @media (max-width: 720px) {
     .usededit-wrap {
-        padding: 12px 0;
+        margin: 12px 5px;
     }
     .usededit-form {
-        max-width: 98vw;
+        /* max-width: 98vw; */
         margin: 18px auto;
         padding: 16px 6vw 16px 6vw;
         border-radius: 13px;
