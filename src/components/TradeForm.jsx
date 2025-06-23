@@ -32,6 +32,7 @@ export function TradeForm({ tap = 'gonggu', id }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [price, setPrice] = useState('');
+  const now = new Date();
   const [sales_begin, setSalesBegin] = useState('');
   const [sales_end, setSalesEnd] = useState('');
   const [limit, setLimit] = useState('');
@@ -93,8 +94,12 @@ export function TradeForm({ tap = 'gonggu', id }) {
       setTitle(data.title);
       setContent(data.content);
       setPrice(data.price);
-      setSalesBegin(data.sales_begin);
-      setSalesEnd(data.sales_end);
+      setSalesBegin(isEditMode && data.sales_begin
+        ? new Date(data.sales_begin).toISOString().slice(0, 16)
+        : now.toISOString().slice(0, 16));
+      setSalesEnd(isEditMode && data.sales_end
+        ? new Date(data.sales_end).toISOString().slice(0, 16)
+        : now.toISOString().slice(0, 16));
       setLimit(data.limit);
       setLimitType(data.limit_type);
       setMainImg(data.main_img);
@@ -105,6 +110,8 @@ export function TradeForm({ tap = 'gonggu', id }) {
         data.detail_img4 || '',
       ]);
     };
+
+
 
     fetchData();
   }, [isEditMode, id]);
@@ -128,21 +135,29 @@ export function TradeForm({ tap = 'gonggu', id }) {
       alert("가격을 입력해주세요.");
       return;
     }
+    if (subCategory == 7) {
+      const begin = new Date(sales_begin);
+      const end = new Date(sales_end);
+      if (begin == end) {
+        setError('시작 시간과 종료 시간은 같을 수 없습니다.');
+        window.scrollTo(0, 0);
+        setLoading(false);
+        return;
+      }
+      if (begin >= end) {
+        setError('시작 시간은 종료 시간보다 이전이어야 합니다.');
+        //setError('종료 시간은 시작 시간보다 이후이어야 합니다.');
+        window.scrollTo(0, 0);
+        setLoading(false);
+        return;
+      }
+    }
     if (!confirm('게시글을 등록할까요?')) {
       return;
     }
     setLoading(true);
     setError(null);
 
-    if (subCategory == 7) {
-      const begin = new Date(sales_begin);
-      const end = new Date(sales_end);
-      if (begin >= end) {
-        setError('시작 시간은 종료 시간보다 이전이어야 합니다.');
-        setLoading(false);
-        return;
-      }
-    }
 
     if (!isEditMode) {
       const { error: insertError } = await supabase.from('trades').insert([{
@@ -151,11 +166,11 @@ export function TradeForm({ tap = 'gonggu', id }) {
         title,
         content,
         price: Number(price),
-        sales_begin: subCategory == 7 ? sales_begin : null,
-        sales_end: subCategory == 7 ? sales_end : null,
-        limit: subCategory == 7 ? Number(limit) : null,
-        limit_type: subCategory == 7 ? Number(limit_type) : null,
-        state: Number(1),
+        sales_begin: Number(subCategory) == 7 ? sales_begin : null,
+        sales_end: Number(subCategory) == 7 ? sales_end : null,
+        limit: Number(subCategory) == 7 ? Number(limit) : null,
+        limit_type: Number(subCategory) == 7 ? Number(limit_type) : null,
+        state: Number(0),
         main_img: mainImg,
         detail_img1: detailImgs[0],
         detail_img2: detailImgs[1],
@@ -178,10 +193,10 @@ export function TradeForm({ tap = 'gonggu', id }) {
           title,
           content,
           price: Number(price),
-          sales_begin: subCategory == 7 ? sales_begin : null,
-          sales_end: subCategory == 7 ? sales_end : null,
-          limit: subCategory == 7 ? Number(limit) : null,
-          limit_type: subCategory == 7 ? Number(limit_type) : null,
+          sales_begin: Number(subCategory) == 7 ? sales_begin : null,
+          sales_end: Number(subCategory) == 7 ? sales_end : null,
+          limit: Number(subCategory) == 7 ? Number(limit) : null,
+          limit_type: Number(subCategory) == 7 ? Number(limit_type) : null,
           main_img: mainImg,
           detail_img1: detailImgs[0],
           detail_img2: detailImgs[1],
@@ -217,6 +232,21 @@ export function TradeForm({ tap = 'gonggu', id }) {
     setIsMainImgUploading(false);
     setIsDetailImgsUploading(false);
   };
+  const handleMainImgRemove = () => {
+    // 현재 main 이미지 제거 → detailImgs 중 첫 번째 유효 이미지로 대체
+    const remainingImgs = filteredUrls.filter(url => url && url !== mainImg);
+    const newMain = remainingImgs.length > 0 ? remainingImgs[0] : '';
+
+    setMainImg(newMain);
+
+    setDetailImgs(prevImgs =>
+      prevImgs
+        .map(img => img === mainImg ? '' : img) // 메인이미지 제거
+        .filter(img => img !== '')              // 빈 값 제거
+        .slice(0, 4)                            // 최대 4장 유지
+    );
+  };
+
 
   return (<>
     <style>{`.inputBox{
@@ -303,17 +333,42 @@ export function TradeForm({ tap = 'gonggu', id }) {
 
               <div className="form-group">
                 <label>제한 수</label>
-                <input type="number" value={limit} onChange={e => setLimit(e.target.value)} required />
+                <input type="number"
+                  value={limit}
+                  onChange={
+                    //e => setLimit(e.target.value1)
+                    (e) => {
+                      let input = e.target.value;
+                      if (input == '') setLimit(Number(0));
+                      let value = Number(input);
+                      if (value < 0) {
+                        //  alert('제한 수가 0보다 작을 수 없습니다.');
+                        value = 1;
+                      }
+                      setLimit(value);
+                    }
+                  }
+                  required
+                  min={1}
+                />
               </div>
 
               <div className="form-group">
                 <label>시작 시간</label>
-                <input type="datetime-local" value={sales_begin} onChange={e => setSalesBegin(e.target.value)} required />
+                <input type="datetime-local"
+                  value={sales_begin}
+                  onChange={e => setSalesBegin(e.target.value)}
+                  required
+                />
               </div>
 
               <div className="form-group">
                 <label>종료 시간</label>
-                <input type="datetime-local" value={sales_end} onChange={e => setSalesEnd(e.target.value)} required />
+                <input type="datetime-local"
+                  value={sales_end}
+                  onChange={e => setSalesEnd(e.target.value)}
+                  required
+                />
               </div>
             </>
           )}
@@ -325,7 +380,7 @@ export function TradeForm({ tap = 'gonggu', id }) {
             ) : mainImg ? (
               <div className="img-wrapper">
                 <img src={getImages(mainImg)} alt="Main" />
-                <button type="button" className="img-remove" onClick={() => setMainImg('')}>×</button>
+                <button type="button" className="img-remove" onClick={() => handleMainImgRemove()}>×</button>
               </div>
             ) : null}
           </div>
