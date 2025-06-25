@@ -94,6 +94,69 @@ export default function BoardDetailPage() {
         fetchLikes();
     }, [post, user.info]);
 
+     // 좋아요 처리 후 알림을 생성하는 함수
+    const createLikeNotification = async () => {
+        try {
+            // 1. category 테이블에서 type 조회
+            const { data: categoryData, error: categoryError } = await supabase
+                .from('categories')
+                .select('type')
+                .eq('id', post.category_id)
+                .single();
+    
+            if (categoryError || !categoryData) throw categoryError;
+    
+            const categoryType = categoryData.type; // ex) 'board', 'trade'
+    
+            let postTitle = null; // title 
+            let postAuthorId = null;
+    
+            if (categoryType === 'boards') {
+                const { data, error } = await supabase
+                    .from('boards')
+                    .select('title, user_id')
+                    .eq('id', post.id)
+                    .single();
+    
+                if (error) throw error;
+                postTitle = data.title;
+                postAuthorId = data.user_id; // 게시글 작성자
+    
+            } else if (categoryType === 'trades') {
+                const { data, error } = await supabase
+                    .from('trades')
+                    .select('title, user_id')
+                    .eq('id', post.id)
+                    .single();
+    
+                if (error) throw error;
+                postTitle = data.title;
+                postAuthorId = data.user_id; // 게시글 작성자
+            }
+    
+            // 좋아요 갯수가 5개 이상일 때 알림 생성
+            if (likesCount % 5 === 0 && likesCount > 0) {
+                const { error: notificationError } = await supabase
+                    .from('notifications')
+                    .insert([{
+                        receiver_id: postAuthorId, // 게시글 작성자에게 알림
+                        message: `${postTitle} 게시글이 좋아요 ${likesCount}개를 달성했습니다.`,
+                        type: 'likes',
+                        table_type: categoryType,
+                        table_id: post.id
+                    }]);
+    
+                // 오류가 있을 경우
+                if (notificationError) {
+                    console.log('알림 생성 중 오류: ', notificationError);
+                }
+            }
+        } catch (error) {
+            // try-catch로 전체 오류 처리
+            console.log('알림 생성 중 오류: ', error);
+        }
+    };
+    
     const handleLikeToggle = async () => {
         if (!user.info || !post) {
             alert("로그인이 필요합니다.");
@@ -127,6 +190,7 @@ export default function BoardDetailPage() {
                 .eq("category_id", post.category_id)
                 .eq("table_id", post.id);
             setLikesCount(count || 0);
+            await createLikeNotification();
         } catch (err) {
             console.error("좋아요 처리 오류:", err);
             alert("좋아요 처리 중 오류가 발생했습니다.");

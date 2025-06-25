@@ -40,6 +40,59 @@ export function Likes({ categoryId, tableId, userInfo, detailCnt }) {
         fetchLikes();
     }, [categoryId, tableId, userInfo]);
 
+        // 좋아요 처리 후 알림을 생성하는 함수
+        const createLikeNotification = async () => {
+
+            try {
+                // 2. category 테이블에서 type 조회
+                const { data: categoryData, error: categoryError } = await supabase
+                    .from('categories')
+                    .select('type')
+                    .eq('id', categoryId)
+                    .single();
+    
+                if (categoryError || !categoryData) throw categoryError;
+    
+                const categoryType = categoryData.type; // ex) 'board', 'trade'
+    
+                let postTitle = null; // title 
+                if (categoryType === 'boards') {
+                    const { data, error } = await supabase
+                        .from('boards')
+                        .select('title')
+                        .eq('id', tableId)
+                        .single();
+    
+                    if (error) throw error;
+                    postTitle = data.title;
+    
+    
+                } else if (categoryType === 'trades') {
+                    const { data, error } = await supabase
+                        .from('trades')
+                        .select('title')
+                        .eq('id', tableId)
+                        .single();
+                    if (error) throw error;
+                    postTitle = data.title;
+                }
+    
+                if (likesCount % 5 === 0 && likesCount > 0) {
+                    const { error: notificationError } = await supabase
+                        .from('notifications')
+                        .insert([{
+                            receiver_id: userInfo.id,
+                            message: `${postTitle} 게시글이 좋아요 ${likesCount}개를 달성했습니다. `,
+                            type: 'likes',
+                            table_type: categoryType,
+                            table_id: tableId
+                        }])
+                }
+            } catch (error) {
+                console.log('알림 생성 중 오류 ', error);
+            }
+        }
+
     //좋아요 토글 핸들러
     const handleLikeToggle = async () => {
         if (!userInfo) {
@@ -72,6 +125,7 @@ export function Likes({ categoryId, tableId, userInfo, detailCnt }) {
                 setIsLiked(true);
             }
             await fetchLikes(); // 상태 갱신
+            await createLikeNotification(); // 좋아요 알림 함수
         } catch (error) {
             console.error('좋아요 처리 실패:', error);;
             alert('좋아요 처리 중 오류가 발생했습니다.');
@@ -80,35 +134,6 @@ export function Likes({ categoryId, tableId, userInfo, detailCnt }) {
         }
     };
 
-    // return (
-    //     <div>
-    //         <p className="mb-1">
-    //             <i className="bi bi-heart-fill text-danger"></i> 좋아요
-    //         </p>
-    //         <p className="fw-semibold">{likesCount}</p>
-    //         {userInfo &&
-    //             <Button
-    //                 variant={isLiked ? 'danger' : 'outline-danger'}
-    //                 size="sm"
-    //                 onClick={handleLikeToggle}
-    //                 disabled={isLiking}
-    //                 className="mt-2"
-    //             >
-    //                 {isLiked ? '❤️ 좋아요 취소' : '🤍 좋아요'}
-    //             </Button>
-    //         }
-    //         {productCnt && (
-    //             <div>
-    //                 <div>
-    //                     <p className="mb-1">
-    //                         <i className="bi bi-eye-fill text-secondary"></i> 조회수
-    //                     </p>
-    //                     <p className="fw-semibold">{productCnt}</p>
-    //                 </div>
-    //             </div>
-    //         )}
-    //     </div>
-    // );
 
     return (
         <div>
