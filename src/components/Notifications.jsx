@@ -9,6 +9,8 @@ import { useImage } from "../hooks/useImage";
 import { MdOutlineComment } from 'react-icons/md';
 import { IoLogoWechat } from 'react-icons/io5';
 import { TbMessageChatbot } from 'react-icons/tb';
+import { getCategoryUrl } from '../utils/utils';
+import { useCategoriesTable } from "../hooks/useCategoriesTable";
 
 
 
@@ -24,10 +26,12 @@ export function Notifications() {
     const [allSelected, setAllSelected] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     // const [newNotificationCount, setNewNotificationCount] = useState(0);
+    const { findById } = useCategoriesTable();
+    const [trades, setTrades] = useState([]);
 
 
     // on/off 토글 함수
-    const handleToggle = async() => {
+    const handleToggle = async () => {
         // const newToggle = !isToggled;
 
         setIsToggled(prev => !prev);
@@ -70,8 +74,6 @@ export function Notifications() {
 
     // 알림 이동 함수 (navigate)
     const handleNotificationClick = async (noti) => {
-
-
         const { error } = await supabase
             .from('notifications')
             .update({ is_read: true })
@@ -88,11 +90,43 @@ export function Notifications() {
             )
         );
 
+        // 채팅 상세페이지 이동
         if (noti.type === 'chats' && noti.table_id) {
             navigate(`/my/talk/${noti.sender_id}`)
         }
+        // trades 상세 페이지 이동
         else if (noti.table_type === 'trades' && noti.table_id) {
-            navigate(`/product/${noti.table_id}`);
+
+            // trades 테이블에서 category_id 찾기 
+            const {data:tradeData, error:tradeError} = await supabase 
+                .from('trades')
+                .select('category_id')
+                .eq('id', noti.table_id)
+                .single();
+
+            if(tradeError) {
+                console.error(tradeError);
+                return;
+            }
+
+            // findById(categories Hook)으로 categories 테이블에서 url컬럼 찾기
+            navigate(`/trade/${findById(tradeData.category_id).url}/${noti.table_id}?keyword=`);
+
+        } 
+        // boards 상세페이지 이동
+        else if (noti.table_type === "boards" && noti.table_id) {
+            const {data:boardData, error:boardError} = await supabase
+                .from('boards')
+                .select('category_id')
+                .eq('id', noti.table_id)
+                .single();
+
+            if(boardError){
+                console.error(boardError);
+                return;
+            }
+
+            navigate(`/board/${findById(boardData.category_id).url}/${noti.table_id}?keyword=`)
         }
     };
 
@@ -294,7 +328,7 @@ export function Notifications() {
             {loading ? (
                 <Spinner animation="border" variant="primary" />
             ) : (
-                <ListGroup>
+                <ListGroup className='list-group'>
                     {notifications.map((noti) => (
                         <ListGroup.Item
                             key={noti.id}
@@ -314,7 +348,7 @@ export function Notifications() {
                                 {getTypeIcon(noti.type)}
                             </div>
                             <div className='noti-content'>
-                                {!noti.is_read && <Badge bg="danger" className='badge'>New</Badge>}
+                                {!noti.is_read && <span className='badge'>New</span>}
 
                                 <div className='noti-message'>{noti.message}</div>
                                 <div className='noti-detail'>{noti.detailContent} </div>
