@@ -69,6 +69,7 @@ function App() {
               <Route path='/my' element={<MyPage />} />
               <Route path='/my/:tap' element={<MyPage />} />
               <Route path='/my/:tap/:item' element={<MyPage />} />
+              
               <Route path='/trade' element={<Trade />} />
               <Route path='/trade/:id' element={<TradeRouter />} /> 
               <Route path='/trade/:id/:item' element={<TradeRouter />} />
@@ -87,18 +88,6 @@ function App() {
     </BrowserRouter>
   );
 }
-// {/* 김종현 작업 -- 공구, 전체 */}
-// <Route path="/trade" element={<Trade />} />                   {/* 전체페이지 */}
-// <Route path="/trade/gonggu/:id" element={<TradeDetail />} />  {/* 공구 상품 상세 */}
-// <Route path="/trade/:tap" element={<Trade />} />              {/* 공구페이지 */}
-// <Route path="/trade/:tap/form" element={<TradeForm />} />     {/* 공구 등록 */}
-// <Route path="/trade/:tap/form/:id" element={<TradeForm />} /> {/* 공구 수정 */}
-// {/* 강수아 작업 -- 중고거래, 나눔, 판매 */}
-// <Route path='/trade/:id' element={<UsedBoard />} />
-// <Route path="/trade/:id/:item" element={<UsedDetail />} />
-// <Route path='/trade/deal/register' element={<UsedForm mode="create" />} />
-// <Route path='/trade/:id/:item/update' element={<UsedForm mode="edit" />} />
-
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

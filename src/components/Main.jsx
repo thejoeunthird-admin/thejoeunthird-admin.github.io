@@ -11,6 +11,7 @@ import { useImage } from '../hooks/useImage';
 import { LoadingCircle } from './LoadingCircle';
 import { formatTime } from '../utils/fomatTime';
 import { useNavigate } from 'react-router-dom';
+import noImg from '../public/noImg.png'
 
 function BestItems() {
     const nav = useNavigate();
@@ -21,7 +22,7 @@ function BestItems() {
     const [error, setError] = useState(false);
 
     const getFinalUrl = (img) => {
-        if (!img) return null;
+        if (!img) return noImg;
         return img.startsWith("http") ? img : getImages(img);
     };
 

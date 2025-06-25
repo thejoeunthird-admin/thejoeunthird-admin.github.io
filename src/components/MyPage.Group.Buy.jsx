@@ -4,13 +4,15 @@ import { useCategoriesTable } from "../hooks/useCategoriesTable";
 import { formatDateTime } from "../utils/formatDateTime";
 import { useNavigate } from "react-router-dom";
 import { useImage } from "../hooks/useImage";
+import Loadingfail from '../public/Loadingfail.png'
+import noImg from '../public/noImg.png'
 
 export function MyPageGroupBuy({ user }) {
     const { findById, findByUrl } = useCategoriesTable();
     const nav = useNavigate();
     const [buy, setbuy] = useState([]);
     const selectRef = useRef();
-    const { getImages } =useImage();
+    const { getImages } = useImage();
 
     const fetchSellLog = useCallback(async () => {
         const { data, error } = await supabase.rpc('get_groups_trades', { uid: user.info.id });
@@ -90,7 +92,7 @@ export function MyPageGroupBuy({ user }) {
                             type: 'chats',
                             table_type: 'trades',
                             table_id: o.table_id,
-                            message:`${title} 공구 결제 해주세요!`,
+                            message: `${title} 공구 결제 해주세요!`,
                         },
                     ]);
                 if (error) console.error('채팅 전송 실패:', error.message);
@@ -100,7 +102,7 @@ export function MyPageGroupBuy({ user }) {
     };
 
     const getFinalUrl = (img) => {
-        if (!img) return null;
+        if (!img) return noImg;
         return img.startsWith("http") ? img : getImages(img);
     };
 
@@ -112,6 +114,10 @@ export function MyPageGroupBuy({ user }) {
         <>
             <ul className="likes-list">
                 <span className='likes-title'>👛 공구 판매 목록</span>
+                {buy.length === 0 && <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <img src={Loadingfail} style={{ width: '100%' }} />
+                    <h2 style={{ fontWeight: 'bold' }}>{`판매 목록이 없거나\n정보를 찾지 못했어요.`}</h2>
+                </div>}
                 {buy.map((o) => {
                     const categorie = findById(o.category_id);
                     const parntCategorie = findById(o.super_category_id);

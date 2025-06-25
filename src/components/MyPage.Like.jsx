@@ -4,6 +4,8 @@ import { supabase } from '../supabase/supabase'; // 경로는 실제 프로젝�
 import { useCategoriesTable } from '../hooks/useCategoriesTable'; // 커스텀 훅
 import { formatDateTime } from '../utils/formatDateTime'; // 날짜 포매팅 함수
 import { useImage } from '../hooks/useImage';
+import Loadingfail from '../public/Loadingfail.png'
+import noimg from '../public/noimg.png'
 
 export function MyPageLike({ user }) {
     const { info } = user;
@@ -92,7 +94,7 @@ export function MyPageLike({ user }) {
     };
 
     const getFinalUrl = (img) => {
-        if (!img) return null;
+        if (!img) return noImg;
         return img.startsWith("http") ? img : getImages(img);
     };
 
@@ -105,6 +107,10 @@ export function MyPageLike({ user }) {
         <>
             <ul className="likes-list">
                 <span className='likes-title'>♥️좋아요 목록</span>
+                { likes.length === 0 &&<div style={{ display:'flex', flexDirection:'column', alignItems:'center' }}>
+                    <img src={Loadingfail} style={{ width:'100%' }} /> 
+                    <h2 style={{ fontWeight:'bold' }}>{`좋아요 누른 목록이 없거나\n정보를 찾지 못했어요.`}</h2> 
+                </div>}
                 {likes.map((o, k) => (
                     <li
                         key={o.id}
