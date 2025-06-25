@@ -36,10 +36,13 @@ export function UsedBoard() {
 
             const { data: postsData, error } = await supa;
 
+            // promise.all: 모든 작업이 완료될 때 까지 기다림(여러 개의 비동기 작업을 병렬로 처리)
             const postsWithCounts = await Promise.all(
                 (postsData || []).map(async (post) => {
                     const { count: commentsCount } = await supabase
                         .from("comments")
+                        // count: exact: 개수 반환(데이터 포함)
+                        // head: true: 실제 데이터는 반환하지 않음 => 같이 써줘야 함
                         .select("*", { count: "exact", head: true })
                         .eq("table_id", post.id);
 

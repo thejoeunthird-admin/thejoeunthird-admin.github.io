@@ -191,7 +191,7 @@ export function UsedDetail() {
                 chat:
                     detail.category_id === 4 ? '벼룩해요!' :
                         detail.category_id === 5 ? '나눔받을래요!' :
-                            detail.category_id === 6 ? '사고싶어요!' : '',
+                            detail.category_id === 6 ? '구해요!' : '',
                 create_date: now,
                 read: false,
                 trades_id: detail.id,

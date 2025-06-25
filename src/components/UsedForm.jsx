@@ -42,32 +42,38 @@ export function UsedForm({ mode }) {
     // 기존 데이터 불러오기
     useEffect(() => {
         if (mode === "edit" && item) {
-            supabase
-                .from('trades')
-                .select('*, categories(name)')
-                .eq('id', item)
-                .single()
-                .then(({ data, error }) => {
-                    if (data) {
-                        setTitle(data.title);
-                        setContent(data.content);
-                        setPrice(data.price);
-                        setCategory(String(data.category_id));
-                        setLocation(data.location);
-                        const oldImgs=[
-                            data.main_img,
-                            data.detail_img1,
-                            data.detail_img2,
-                            data.detail_img3,
-                            data.detail_img4
-                        ].filter(Boolean);
-                        initImage(oldImgs);
-                        setFileCount(oldImgs.length);
-                    }
-                });
-        }
+            // then-> async-await로 변경
+            const fetchPrev = async () => {
+                const { data, error } = await supabase
+                    .from('trades')
+                    .select('*, categories(name)')
+                    .eq('id', item)
+                    .single()
+                if (data) {
+                    setTitle(data.title);
+                    setContent(data.content);
+                    setPrice(data.price);
+                    setCategory(String(data.category_id));
+                    setLocation(data.location);
+                    // 기존 이미지 경로를 배열로 저장
+                    const oldImgs = [
+                        data.main_img,
+                        data.detail_img1,
+                        data.detail_img2,
+                        data.detail_img3,
+                        data.detail_img4
+                    ].filter(Boolean);
+                    // initImage로 배열을 넘겨서 imageList 초기화
+                    initImage(oldImgs);
+                    setFileCount(oldImgs.length);
+                }
+            }
+            fetchPrev();
+        };
     }, [mode, item]);
 
+
+    // create면 지역 설정
     useEffect(() => {
         if (mode === "create" && region) {
             setLocation(`${region.city} ${region.district}`);
@@ -81,9 +87,11 @@ export function UsedForm({ mode }) {
 
     // 파일 업로드
     const handleFileChange = (e) => {
+        // Array.from(e.target.files)로 파일 목록을 배열로 변환
         const files = Array.from(e.target.files);
         if (images.length + files.length > 5) {
             alert("사진은 최대 5장까지만 업로드할 수 있습니다.");
+            // 파일 입력 초기화
             fileInputRef.current.value = "";
             return;
         }
@@ -184,6 +192,7 @@ export function UsedForm({ mode }) {
         }
     }
 
+
     return (
         <div className="usededit-wrap">
             <form className="usededit-form" onSubmit={handleSubmit} autoComplete="off">
@@ -245,8 +254,8 @@ export function UsedForm({ mode }) {
                         이미지를 클릭하여 대표이미지를 설정해주세요.
                     </div>
                     {fileCount !== images.length && (
-                            <div className="form-desc">이미지 업로드 중입니다...</div>
-                        )}
+                        <div className="form-desc">이미지 업로드 중입니다...</div>
+                    )}
                     {/* 새 이미지 미리보기 */}
                     <div className="img-preview-list">
                         {images.length > 0 && images.map((img, idx) => (
@@ -265,8 +274,10 @@ export function UsedForm({ mode }) {
                                     alt={`업로드 이미지${idx + 1}`}
                                     className="img-preview"
                                     onClick={() => {
+                                        // idx===0: 이미 대표이미지임 -> return
                                         if (idx === 0) return;
                                         initImage(prev => {
+                                            // ...prev: 기존 이미지 배열
                                             const newArr = [...prev];
                                             const [selected] = newArr.splice(idx, 1);
                                             newArr.unshift(selected);
