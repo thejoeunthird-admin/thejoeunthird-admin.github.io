@@ -363,7 +363,13 @@ export function TradeDetail() {
 
           {/* 우측 상품 정보 */}
           <div className="detail-right">
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>{detail.title}</h2>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>
+              {detail.state == 0 ? '[모집중]'
+                : detail.state == 1 ? '[모집완료]'
+                  : detail.state == 2 ? '[모집실패]'
+                    : '[판매완료]'}
+              &nbsp;{detail.title}
+            </h2>
             <div className="meta">
               <span>
                 {getCategoryFullNameTag(detail.category_id, categoriesAll)} |{' '}
@@ -393,24 +399,24 @@ export function TradeDetail() {
               userInfo={userInfo?.info}
               detailCnt={detail.cnt}
             />
-              {detail.category_id === 7 && (
-                <div style={{ paddingTop:'10px', lineHeight:'1.5', fontSize:'0.9rem' }}>
-                  <small>시작: {new Date(detail.sales_begin).toLocaleString()}</small>
-                  <br />
-                  <small>종료: {new Date(detail.sales_end).toLocaleString()}</small>
-                </div>
-              )}
-              
+            {detail.category_id === 7 && (
+              <div style={{ paddingTop: '10px', lineHeight: '1.5', fontSize: '0.9rem' }}>
+                <small>시작: {new Date(detail.sales_begin).toLocaleString()}</small>
+                <br />
+                <small>종료: {new Date(detail.sales_end).toLocaleString()}</small>
+              </div>
+            )}
+
             {/* 공구 정보 */}
             {detail.category_id === 7 && (
-              <div className="gonggu-status" style={{ marginTop:'10px' }}>
+              <div className="gonggu-status" style={{ marginTop: '10px' }}>
                 <label>공구 진행률</label>
                 {detail.limit_type === 1 ? (
                   <>
                     <span>
                       최대 {detail.limit}명 / {detail.order_count}명 참여 중
                     </span>
-                    <div className="progress-bar-container" style={{ marginTop:'10px' }}>
+                    <div className="progress-bar-container" style={{ marginTop: '10px' }}>
                       <div
                         className="progress-bar-inner"
                         style={{ width: `${progressPercent}%` }}
@@ -486,9 +492,14 @@ export function TradeDetail() {
                       <button
                         className="btn secondary"
                         onClick={handleGongguClick}
-                        disabled={isGongguing}
+                        disabled={isGongguing || isGongguClosed}
                       >
-                        {isGonggued ? '❌ 참여 취소' : '🤝 공구 참여'}
+                        {
+                          //isGonggued ? '❌ 참여 취소' : '🤝 공구 참여'
+                          isGongguClosed
+                            ? '⛔ 공구 종료'
+                            : (isGonggued ? '❌ 참여 취소' : '🤝 공구 참여')
+                        }
                       </button>
                     </>
                   ) : (

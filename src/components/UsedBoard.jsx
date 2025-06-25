@@ -6,6 +6,7 @@ import { UsedItem } from './UsedItem';
 import { LoadingCircle } from './LoadingCircle';
 import { Trade } from './Trade';
 import { useUserTable } from '../hooks/useUserTable';
+import { useRegion } from '../hooks/useRegion';
 
 export function UsedBoard() {
     const [posts, setPosts] = useState([]);
@@ -21,6 +22,9 @@ export function UsedBoard() {
     const user = useUserTable();
     const { item } = useParams();
 
+    const {city, district} = useRegion();
+    const region = `${city} ${district}`;
+
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
@@ -29,6 +33,7 @@ export function UsedBoard() {
                 .select('*,categories(name), users(name)')
                 .eq('category_id', categoryId)
                 .eq('super_category_id', 3)
+                .eq('location', region)
                 .order('create_date', { ascending: false });
             if (keyword) {
                 supa = supa.or(
@@ -67,7 +72,7 @@ export function UsedBoard() {
             }
         }
         fetchPosts();
-    }, [categoryId, keyword]);
+    }, [categoryId, keyword, region]);
 
     const handleToggleMenu = () => {
         setShowRegisterMenu(prev => !prev);

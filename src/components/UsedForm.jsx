@@ -23,7 +23,8 @@ export function UsedForm({ mode, item }) {
 
     const { info: userInfo } = useUserTable();
 
-    const region = useRegion && useRegion();
+    const {city, district} = useRegion();
+    const region = `${city} ${district}`;
     const CATEGORY_MAP = { 4: "sell", 5: "share", 6: "buy" };
 
 
@@ -69,7 +70,7 @@ export function UsedForm({ mode, item }) {
 
     useEffect(() => {
         if (mode === "create" && region) {
-            setLocation(`${region.city} ${region.district}`);
+            setLocation(region);
         }
     }, [mode, region]);
 
@@ -163,7 +164,7 @@ export function UsedForm({ mode, item }) {
                     create_date: now,
                     update_date: now,
                     cnt: 0,
-                    state: 1,
+                    state: 0,
                     sales_begin: null,
                     sales_end: null,
                     limit_type: null,

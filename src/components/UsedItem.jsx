@@ -55,7 +55,7 @@ export function UsedItem({ used }) {
                     {used.location} · {getDateDiff(baseTime)}{isEdited && ' (수정)'}
                 </div>
             </div>
-            <span className="used-list-title">{used.title}</span>
+            <span className="used-list-title">{used.state === 2 && '[거래완료] '}{used.title}</span>
             <span className="used-list-body">{used.content}</span>
             <span className="used-list-footer">
                 <div className={`used-list-price${used.category_id === 5 ? " used-list-share" : ""}`}>

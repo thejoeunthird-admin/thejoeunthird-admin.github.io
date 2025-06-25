@@ -56,6 +56,7 @@ export function UsedDetail() {
                     .from('trades')
                     .select('*, categories(*), users(id, name)')
                     .eq('id', item)
+                    
                     .single();
                 if (error) {
                     console.log('error: ', error);
@@ -182,6 +183,11 @@ export function UsedDetail() {
 
     // 구매하기/나눔받기/팔기 -> 판매자 채팅으로
     const makeChats = async () => {
+        console.log('state: ', detail.state);
+        if (detail.state === 2 ){
+            alert('거래가 완료된 게시글입니다.');
+            return;
+        }
         if (!confirm('거래 요청 메시지를 보낼까요?')) return;
 
         const { data, error } = await supabase
@@ -223,14 +229,14 @@ export function UsedDetail() {
             return (
                 <div>
                     <button onClick={makeChats}>✉️ 쪽지</button>
-                    <Button
-                        variant={isLiked ? "danger" : "outline-danger"}
+                    <button
                         onClick={handleLikeToggle}
                         disabled={isLiking}
+                        className={isLiked ? "liked" : ""}
                     >
                         {isLiked ? "❤️" : "🤍"}
                         {isLiked ? " 좋아요 취소" : " 좋아요"}
-                    </Button>
+                    </button>
                 </div>
             );
         }
@@ -346,7 +352,7 @@ export function UsedDetail() {
                     {/* 오른쪽 정보 */}
                     <div className="detail-info">
                         {/* <div> */}
-                            <h2 className="detail-title">{detail.title}</h2>
+                            <h2 className="detail-title">{detail.state === 2 && '[거래완료] '}{detail.title}</h2>
                             <div className="detail-meta">
                                 <span>{detail.categories?.name} · {detail.location},&nbsp;
                                 {getDateDiff(baseTime)}{isEdited && ' (수정)'}</span>

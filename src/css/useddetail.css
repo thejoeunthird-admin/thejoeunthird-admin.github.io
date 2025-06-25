@@ -7,8 +7,9 @@
 
 .details-card {
     display: flex;
-     flex-wrap: wrap;
+    flex-wrap: wrap;
     max-width: 1100px;
+    height: fit-content;
     margin: 30px auto;
     border-radius: 24px;
     background: #fff;
@@ -30,6 +31,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    margin-right: 30px;
 
     .detail-img-wrap {
         /* ...기존 값 */
@@ -171,6 +173,16 @@
     background: #f5f5f5;
 }
 
+.detail-buttons button.liked {
+    background: #e14d54;
+    color: #fff;
+    border: 1.5px solid #e14d54;
+}
+.detail-buttons button.liked:hover {
+    background: #c4343d;
+}
+
+
 @media (max-width: 800px) {
     
     .caps {
@@ -188,11 +200,6 @@
         min-width: 220px;
         max-width: 100%;
         min-height: 220px;
-    }
-
-    .detail-info {
-        /* min-width: 0; */
-        /* width: 100%; */
     }
 }
 
