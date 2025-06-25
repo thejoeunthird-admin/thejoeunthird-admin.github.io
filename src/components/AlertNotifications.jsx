@@ -199,16 +199,15 @@ export function AlertNotifications({ notification, onClose, onAllClose }) {
     }
 
 
+    // useEffect
     useEffect(() => {
-        // const timer = setTimeout(() => {
-        //     onClose();
-        // }, 5000); // 5초 후 사라짐
+
         const timer = setTimeout(() => {
             setFadeOut(true);
             setTimeout(() => {
                 onClose();
             }, 500);
-        }, 5000);
+        }, 1100000);
 
         return () => clearTimeout(timer);
 

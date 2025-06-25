@@ -98,6 +98,7 @@ export function Comments({ productId, categoryId }) {
 
                 if (error) throw error;
                 postAuthorId = data.user_id;
+                postTitle = data.title;
 
             } else if (categoryType === 'trades') {
                 const { data, error } = await supabase
