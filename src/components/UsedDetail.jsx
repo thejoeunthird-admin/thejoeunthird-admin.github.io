@@ -184,12 +184,15 @@ export function UsedDetail() {
     // 구매하기/나눔받기/팔기 -> 판매자 채팅으로
     const makeChats = async () => {
         console.log('state: ', detail.state);
+        if (detail.state === 1 ){
+            alert('거래가 진행 중인 상품입니다.');
+            return;
+        }
         if (detail.state === 2 ){
             alert('거래가 완료된 게시글입니다.');
             return;
         }
         if (!confirm('거래 요청 메시지를 보낼까요?')) return;
-
         const { data, error } = await supabase
             .from('chats')
             .insert([{

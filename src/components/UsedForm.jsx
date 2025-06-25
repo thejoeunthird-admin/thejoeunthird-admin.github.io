@@ -23,7 +23,7 @@ export function UsedForm({ mode, item }) {
 
     const { info: userInfo } = useUserTable();
 
-    const {city, district} = useRegion();
+    const { city, district } = useRegion();
     const region = `${city} ${district}`;
     const CATEGORY_MAP = { 4: "sell", 5: "share", 6: "buy" };
 
@@ -42,29 +42,33 @@ export function UsedForm({ mode, item }) {
     // 기존 데이터 불러오기
     useEffect(() => {
         if (mode === "edit" && item) {
-            supabase
-                .from('trades')
-                .select('*, categories(name)')
-                .eq('id', item)
-                .single()
-                .then(({ data, error }) => {
-                    if (data) {
-                        setTitle(data.title);
-                        setContent(data.content);
-                        setPrice(data.price);
-                        setCategory(String(data.category_id));
-                        setLocation(data.location);
-                        const oldImgs=[
-                            data.main_img,
-                            data.detail_img1,
-                            data.detail_img2,
-                            data.detail_img3,
-                            data.detail_img4
-                        ].filter(Boolean);
-                        initImage(oldImgs);
-                        setFileCount(oldImgs.length);
-                    }
-                });
+            const fetchPrev = async () => {
+                const { data, error } = await supabase
+                    .from('trades')
+                    .select('*, categories(name)')
+                    .eq('id', item)
+                    .single();
+                if (data) {
+                    setTitle(data.title);
+                    setContent(data.content);
+                    setPrice(data.price);
+                    setCategory(String(data.category_id));
+                    setLocation(data.location);
+                    const oldImgs = [
+                        data.main_img,
+                        data.detail_img1,
+                        data.detail_img2,
+                        data.detail_img3,
+                        data.detail_img4
+                    ].filter(Boolean);
+                    initImage(oldImgs);
+                    setFileCount(oldImgs.length);
+                }
+                if (error) {
+                    console.error('error:', error);
+                }
+            };
+            fetchPrev();
         }
     }, [mode, item]);
 
@@ -185,7 +189,7 @@ export function UsedForm({ mode, item }) {
     }
 
     return (<>
-                <style>{`
+        <style>{`
                 .inputBox{
                     display: none !important;
                 }
@@ -250,8 +254,8 @@ export function UsedForm({ mode, item }) {
                         이미지를 클릭하여 대표이미지를 설정해주세요.
                     </div>
                     {fileCount !== images.length && (
-                            <div className="form-desc">이미지 업로드 중입니다...</div>
-                        )}
+                        <div className="form-desc">이미지 업로드 중입니다...</div>
+                    )}
                     {/* 새 이미지 미리보기 */}
                     <div className="img-preview-list">
                         {images.length > 0 && images.map((img, idx) => (

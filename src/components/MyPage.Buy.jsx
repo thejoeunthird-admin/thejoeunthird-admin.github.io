@@ -4,6 +4,7 @@ import { useCategoriesTable } from "../hooks/useCategoriesTable";
 import { formatDateTime } from "../utils/formatDateTime";
 import { useNavigate } from "react-router-dom";
 import { useImage } from "../hooks/useImage";
+import noImg from '../public/noImg.png'
 
 export function MyPageBuy({ user }) {
     const { findById, findByUrl } = useCategoriesTable();
@@ -18,7 +19,7 @@ export function MyPageBuy({ user }) {
     }, [])
 
     const getFinalUrl = (img) => {
-        if (!img) return null;
+        if (!img) return noImg;
         return img.startsWith("http") ? img : getImages(img);
     };
 
