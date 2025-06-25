@@ -526,7 +526,6 @@ export function TradeDetail() {
           <p>{detail.content}</p>
         </div>
       </div>
-
       <Comments productId={item} categoryId={detail.category_id} />
     </div>
 

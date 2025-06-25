@@ -9,6 +9,7 @@ import { useImage } from "../hooks/useImage";
 import { useRegion } from "../hooks/useRegion";
 import { timeAgo, timeAgoOrClosed, getCategoryFullName, getCategoryFullNameTag, getCategoryUrl } from '../utils/utils';
 import '../css/trade.css'
+import noImg from '../public/noImg.png'
 
 export function Trade({ tap }) {
   const user = useUserTable();
@@ -128,7 +129,7 @@ export function Trade({ tap }) {
 
                 <div className="card-body">
                   <img
-                    src={trade.main_img ? getImages(trade.main_img) : '/noImg.png'}
+                    src={trade.main_img ? getImages(trade.main_img) : noImg}
                     alt="대표 이미지"
                     className="card-thumbnail"
                   />

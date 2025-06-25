@@ -4,6 +4,7 @@ import { supabase } from '../supabase/supabase';
 import { useSubscribe } from '../hooks/useSubscribe';
 import { useImage } from '../hooks/useImage';
 import { useCategoriesTable } from '../hooks/useCategoriesTable';
+import noImg from '../public/noImg.png'
 
 export function MyPageTalkLog({ user }) {
     const talkRef = useRef();
@@ -16,7 +17,7 @@ export function MyPageTalkLog({ user }) {
     const { findById } = useCategoriesTable();
 
     const getFinalUrl = (img) => {
-        if (!img) return null;
+        if (!img) return noImg;
         return img.startsWith("http") ? img : getImages(img);
     };
     const fetchChatLog = async () => {

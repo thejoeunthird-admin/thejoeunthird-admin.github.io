@@ -4,6 +4,7 @@ import { useCategoriesTable } from "../hooks/useCategoriesTable";
 import { formatDateTime } from "../utils/formatDateTime";
 import { useNavigate } from "react-router-dom";
 import { useImage } from "../hooks/useImage";
+import noImg from '../public/noImg.png'
 
 export function MyPageSell({ user }) {
     const { findById } = useCategoriesTable();
@@ -21,13 +22,9 @@ export function MyPageSell({ user }) {
     }, []);
 
     const getFinalUrl = (img) => {
-        if (!img) return null;
+        if (!img) return noImg;
         return img.startsWith("http") ? img : getImages(img);
     };
-
-    if(sell.length !== 0){
-        console.log(sell[0])
-    }
     return (
         <>
             <ul className="likes-list">
@@ -35,7 +32,7 @@ export function MyPageSell({ user }) {
                 {sell.map((o, k) =>{ 
                     const categorie = findById(o.trade_category_id);
                     const parntCategorie = findById(categorie.parent_id);
-
+                    console.log(o)
                     return(
                     <li
                         key={o.id}
@@ -62,7 +59,7 @@ export function MyPageSell({ user }) {
                                     className="likes-link-btn"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        nav(`/${parntCategorie.url}/${categorie.url}/${o.table_id}`);
+                                        nav(`/${parntCategorie.url}/${categorie.url}/${o.table_id}?keyword=`);
                                     }}
                                 >
                                     Link
