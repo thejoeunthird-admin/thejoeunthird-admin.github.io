@@ -4,6 +4,8 @@ import { supabase } from "../supabase/supabase";
 import Loadingfail from '../public/Loadingfail.png'
 import { LoadingCircle } from '../components/LoadingCircle'; // 기존 로딩 컴포넌트 import
 import "./BoardListPage.css";
+import { useUserTable } from "../hooks/useUserTable";
+import { useCategoriesTable } from "../hooks/useCategoriesTable";
 
 // public/logo.png 경로로 접근
 const IcecreamImg = "/logo.png";
@@ -12,6 +14,8 @@ const getImages = (path) =>
   `https://mkoiswzigibhylmtkzdh.supabase.co/storage/v1/object/public/images/${path}`;
 
 export default function BoardListPage() {
+  const user = useUserTable();
+    const [showRegisterMenu, setShowRegisterMenu] = useState(false);
   const { tap } = useParams();
   const [boards, setBoards] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -19,6 +23,7 @@ export default function BoardListPage() {
   const params = new URLSearchParams(window.location.search);
   const keyword = params.get('keyword');
   const navigate = useNavigate();
+  const { findById } = useCategoriesTable();
 
   useEffect(() => {
     supabase.from("categories").select("*").then(({ data }) => {
@@ -29,7 +34,7 @@ export default function BoardListPage() {
   useEffect(() => {
     async function fetchBoards() {
       setLoading(true); // 로딩 시작
-      
+
       try {
         let query = supabase
           .from("boards")
@@ -89,11 +94,23 @@ export default function BoardListPage() {
   }, [tap, navigate, keyword]);
 
 
-  return (
-    <div className="boardlist-wrapper" style={{ width:'calc( 100% - 20px )', marginLeft:'10px', marginRight:'10px' }}>
+  return (<>
+    {user?.info?.id && (
+      <div className="floating-button-container">
+        <button 
+        className="write-button" 
+        onClick={(e) =>{
+          e.preventDefault();
+          navigate('/life/write')
+        }}>
+          + 글쓰기
+        </button>
+      </div>
+    )}
+    <div className="boardlist-wrapper" style={{ width: 'calc( 100% - 20px )', marginLeft: '10px', marginRight: '10px' }}>
       {loading ? (
-        <div style={{ marginTop:'10px' }}>
-          {/* <LoadingCircle/> */}
+        <div style={{ marginTop: '10px' }}>
+          <LoadingCircle/>
         </div>
       ) : boards.length !== 0 ? (
         <div className="board-card-list">
@@ -101,7 +118,10 @@ export default function BoardListPage() {
             <div
               key={board.id}
               className="board-card"
-              onClick={() => navigate(`/life/detail/${board.id}?keyword=`)}
+              onClick={() =>{ 
+                console.log(findById(board.category_id).url)
+                navigate(`/life/${findById(board.category_id).url}/${board.id}?keyword=`)
+              }}
             >
               <div className="board-card-thumb">
                 <img
@@ -116,7 +136,7 @@ export default function BoardListPage() {
                   <div className="category">
                     {"생활 > "} {board.categories?.name || "-"}
                   </div>
-                  <div className="board-card-meta" style={{ marginLeft:'auto' }}>
+                  <div className="board-card-meta" style={{ marginLeft: 'auto' }}>
                     <span className="author">{board.users?.name || "알수없음"}</span>
                     -
                     <span className="date">
@@ -129,7 +149,7 @@ export default function BoardListPage() {
                   {board.contents?.slice(0, 50)}
                   {board.contents?.length > 50 ? "..." : ""}
                 </div>
-                <div className="board-card-footer" style={{ marginLeft:'auto' }}>
+                <div className="board-card-footer" style={{ marginLeft: 'auto' }}>
                   <span title="조회수">👁️ {typeof board.cnt === "number" ? board.cnt : 0}</span>
                   <span title="댓글수" style={{ marginLeft: 14 }}>
                     💬 {board.commentsCount}
@@ -142,12 +162,12 @@ export default function BoardListPage() {
             </div>
           ))}
         </div>
-      ) :(<div style={{ display:'flex', width:'100%',  alignItems:'center', flexDirection:'column' }}>
-              <img src={Loadingfail} style={{ width:'50%' }}/>
-              <p style={{ fontSize:'1.rem', fontWeight:'700', color:'var(--base-color-1)' }}>
-                검색 조건이 없거나, 아직 게시글이 없어요!
-              </p>
-        </div>)}
+      ) : (<div style={{ display: 'flex', width: '100%', alignItems: 'center', flexDirection: 'column' }}>
+        <img src={Loadingfail} style={{ width: '50%' }} />
+        <p style={{ fontSize: '1.rem', fontWeight: '700', color: 'var(--base-color-1)' }}>
+          검색 조건이 없거나, 아직 게시글이 없어요!
+        </p>
+      </div>)}
     </div>
-  );
+  </>);
 }

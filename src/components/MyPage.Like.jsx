@@ -4,10 +4,12 @@ import { supabase } from '../supabase/supabase'; // 경로는 실제 프로젝�
 import { useCategoriesTable } from '../hooks/useCategoriesTable'; // 커스텀 훅
 import { formatDateTime } from '../utils/formatDateTime'; // 날짜 포매팅 함수
 import { useImage } from '../hooks/useImage';
+import Loadingfail from '../public/Loadingfail.png'
+import noImg from '../public/noImg.png'
 
 export function MyPageLike({ user }) {
     const { info } = user;
-    const [likes, setLikes] = useState([])
+    const [likes, setLikes] = useState(null)
     const { getImages } = useImage();
     const { findById } = useCategoriesTable();
     const nav = useNavigate();
@@ -37,6 +39,7 @@ export function MyPageLike({ user }) {
     };
 
     const fetchLikesWithCategoryAndItem = async () => {
+        const result = [];
         try {
             // 1. likes 가져오기
             const { data: likes, error: likesError } = await supabase
@@ -45,7 +48,7 @@ export function MyPageLike({ user }) {
                 .eq('user_id', info.id);
 
             if (likesError) throw likesError;
-            if (!likes || likes.length === 0) return [];
+            if (!likes || likes.length === 0) return;
 
             // 2. category_id들 중복 없이 추출
             const categoryIds = [...new Set(likes.map(like => like.category_id))];
@@ -75,7 +78,6 @@ export function MyPageLike({ user }) {
                     .select('*')
                     .eq('id', like.table_id)
                     .single();
-
                 if (itemError) {
                     console.warn(`${category.type} 테이블의 id=${like.table_id} 조회 실패`, itemError);
                     // result.push({ ...like, category, item: null });
@@ -83,16 +85,17 @@ export function MyPageLike({ user }) {
                     result.push({ ...like, category, item });
                 }
             }
-            setLikes(result);
-            return result;
         } catch (err) {
             console.error('❌ 전체 조회 실패:', err);
+        }
+        finally{
+            setLikes(result);
         }
 
     };
 
     const getFinalUrl = (img) => {
-        if (!img) return null;
+        if (!img) return noImg;
         return img.startsWith("http") ? img : getImages(img);
     };
 
@@ -101,11 +104,16 @@ export function MyPageLike({ user }) {
         fetchLikesWithCategoryAndItem();
     }, [info?.id]);
 
+    if(!likes) { return <></> }
     return (
         <>
             <ul className="likes-list">
                 <span className='likes-title'>♥️좋아요 목록</span>
-                {likes.map((o, k) => (
+                { likes.length === 0 ?<div style={{ display:'flex', flexDirection:'column', alignItems:'center' }}>
+                    <img src={Loadingfail} style={{ width:'100%' }} /> 
+                    <h2 style={{ fontWeight:'bold' }}>{`좋아요 누른 목록이 없거나\n정보를 찾지 못했어요.`}</h2> 
+                </div>
+                :likes.map((o, k) => (
                     <li
                         key={o.id}
                         className={`likes-item ${o?.is_liked === true ? 'delet' : ''}`}
@@ -128,7 +136,7 @@ export function MyPageLike({ user }) {
                                     className="likes-link-btn"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        nav(`/${findById(o.category.parent_id).url}/${o.category.url}/${o.id}`);
+                                        nav(`/${findById(o.category.parent_id).url}/${o.category.url}/${o.table_id}?keyword=`);
                                     }}
                                 >
                                     Link

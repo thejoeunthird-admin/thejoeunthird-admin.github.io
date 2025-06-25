@@ -4,6 +4,8 @@ import { useCategoriesTable } from "../hooks/useCategoriesTable";
 import { formatDateTime } from "../utils/formatDateTime";
 import { useNavigate } from "react-router-dom";
 import { useImage } from "../hooks/useImage";
+import noImg from '../public/noImg.png'
+import Loadingfail from '../public/Loadingfail.png'
 
 export function MyPageBuy({ user }) {
     const { findById, findByUrl } = useCategoriesTable();
@@ -18,7 +20,7 @@ export function MyPageBuy({ user }) {
     }, [])
 
     const getFinalUrl = (img) => {
-        if (!img) return null;
+        if (!img) return noImg;
         return img.startsWith("http") ? img : getImages(img);
     };
 
@@ -84,6 +86,10 @@ export function MyPageBuy({ user }) {
         <>
             <ul className="likes-list">
                 <span className='likes-title'>👛 판매 목록</span>
+                {buy.length === 0 && <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <img src={Loadingfail} style={{ width: '100%' }} />
+                    <h2 style={{ fontWeight: 'bold' }}>{`판매 목록이 없거나\n정보를 찾지 못했어요.`}</h2>
+                </div>}
                 {buy.map((o) => {
                     const categorie = findById(o.category_id);
                     const parntCategorie = findById(o.super_category_id);

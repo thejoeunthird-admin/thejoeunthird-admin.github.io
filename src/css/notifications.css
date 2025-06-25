@@ -1,0 +1,252 @@
+#notification-list .list-group {
+    padding-top: 5px;
+}
+
+/*알림 header */
+#notification-list .noti-header {
+    /* display: flex;
+    justify-content: space-between;
+    align-items: center; */
+    padding: 10px 16px;
+    border-bottom: 1px solid #ddd;
+    background-color: #FDEED9;
+}
+
+#notification-list .noti-header .header-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: auto;
+    width: 50%;
+}
+
+.noti-header .header-center {
+    /* position: absolute; */
+    font-size: 20px;
+    font-weight: bold;
+    /* left: 50%; */
+    /* transform: translateX(-50%); */
+    text-align: center;
+}
+
+.noti-header .header-allCheck {
+    border: none;
+    background: none;
+}
+
+.noti-header .noti-icon {
+    margin-right: 8px;
+}
+
+
+.noti-header .header-icon {
+    background-color: red;
+    color: #36454F;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.noti-header .header-toggle {
+    color: #36454F;
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+/* 알림 items */
+.noti-items {
+    display: flex;
+    align-items: center;
+    /* 세로 중앙 정렬 */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+    /*가로 이동, 세로 이동, 흐림 반경(퍼짐 정도), 투명도 */
+    margin-bottom: 5px;
+    background-color: #fff;
+    border-radius: 8px;
+    border-top: 1px solid #c9c9c9;
+}
+
+.noti-items.read .noti-message,
+.noti-items.read .noti-image img,
+.noti-items.read .noti-detail {
+    color: #999;
+    /* 텍스트를 회색으로 */
+    filter: grayscale(100%);
+    /* 이미지를 회색조로 처리 */
+}
+
+/* 삭제 체크박스 */
+.noti-items .noti-checked {
+    margin-top: 35px;
+    align-self: flex-start;
+}
+
+
+.noti-checked input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #E34989;
+}
+
+.noti-items .noti-type {
+    margin: 0 10px;
+    font-size: 25px;
+    margin-top: 35px;
+    align-self: flex-start;
+    color: #36454F;
+}
+
+
+/* 내용 */
+.noti-items .noti-content {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.read {
+    background-color: #fff;
+}
+
+.noti-content .badge {
+    width: 40px;
+    height: 20px;
+    background-color:#f36d95;
+    line-height: 20px;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.noti-content .noti-message {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+.noti-content .text-muted {
+    margin-top: 8px;
+}
+
+
+
+/* 이미지 */
+.noti-items .noti-image {
+    max-width: 100px;
+    border-radius: 4px;
+    margin-left: auto;
+}
+
+.noti-items .noti-image img {
+    width: 100px;
+    height: 100px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* 기존 스타일 유지 */
+
+/* 반응형 추가 */
+@media (max-width: 768px) {
+    #notification-list .noti-header .header-box {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .noti-header .header-center {
+        font-size: 18px;
+        text-align: center;
+
+        /* 불필요한 마진 제거 */
+        white-space: nowrap;
+        /* 글자가 한 줄로 나오게 강제 */
+        overflow: hidden;
+        /* 넘치는 부분 숨김 */
+
+    }
+
+    .noti-header .header-allCheck,
+    .noti-header .header-icon {
+        /* font-size: 1.2rem; */
+        margin: 4px;
+    }
+
+    .noti-items {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .noti-items .noti-checked {
+        margin-top: 0;
+        margin-bottom: 8px;
+        align-self: flex-start;
+    }
+
+    .noti-checked input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+
+    .noti-items .noti-type {
+        font-size: 22px;
+        margin: 0 0 8px 0;
+        align-self: flex-start;
+    }
+
+    .noti-items .noti-content {
+        width: 100%;
+    }
+
+    .noti-content .noti-message {
+        font-size: 16px;
+    }
+
+    .noti-content .text-muted {
+        margin-top: 6px;
+        font-size: 12px;
+    }
+
+    .noti-items .noti-image {
+        width: 80px;
+        height: 80px;
+        margin-left: 0;
+        margin-top: 8px;
+    }
+
+    .noti-items .noti-image img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* 더 작은 모바일 화면용 */
+@media (max-width: 480px) {
+    .noti-header .header-center {
+        font-size: 16px;
+    }
+
+    .noti-header .header-allCheck,
+    .noti-header .header-icon {
+        font-size: 1rem;
+    }
+
+    .noti-content .noti-message {
+        font-size: 14px;
+    }
+
+    .noti-content .text-muted {
+        font-size: 11px;
+    }
+
+    .noti-items .noti-type {
+        font-size: 20px;
+    }
+}

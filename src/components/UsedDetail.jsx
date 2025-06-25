@@ -23,6 +23,7 @@ export function UsedDetail() {
     const [isLiked, setIsLiked] = useState(false);      // 내가 눌렀는지
     const [isLiking, setIsLiking] = useState(false);    // 처리중
     const [loading, setLoading] = useState(true);
+    const user = useUserTable();
 
     // 글쓰기 메뉴
     const [showRegisterMenu, setShowRegisterMenu] = useState(false);
@@ -55,6 +56,7 @@ export function UsedDetail() {
                     .from('trades')
                     .select('*, categories(*), users(id, name)')
                     .eq('id', item)
+                    
                     .single();
                 if (error) {
                     console.log('error: ', error);
@@ -181,8 +183,16 @@ export function UsedDetail() {
 
     // 구매하기/나눔받기/팔기 -> 판매자 채팅으로
     const makeChats = async () => {
+        console.log('state: ', detail.state);
+        if (detail.state === 1 ){
+            alert('거래가 진행 중인 상품입니다.');
+            return;
+        }
+        if (detail.state === 2 ){
+            alert('거래가 완료된 게시글입니다.');
+            return;
+        }
         if (!confirm('거래 요청 메시지를 보낼까요?')) return;
-
         const { data, error } = await supabase
             .from('chats')
             .insert([{
@@ -222,14 +232,14 @@ export function UsedDetail() {
             return (
                 <div>
                     <button onClick={makeChats}>✉️ 쪽지</button>
-                    <Button
-                        variant={isLiked ? "danger" : "outline-danger"}
+                    <button
                         onClick={handleLikeToggle}
                         disabled={isLiking}
+                        className={isLiked ? "liked" : ""}
                     >
                         {isLiked ? "❤️" : "🤍"}
                         {isLiked ? " 좋아요 취소" : " 좋아요"}
-                    </Button>
+                    </button>
                 </div>
             );
         }
@@ -237,7 +247,7 @@ export function UsedDetail() {
 
     // 글 수정 버튼
     const handleUpdate = () => {
-        navigate('update');
+        navigate(`/trade/${id}/update/${item}`);
     }
 
     // 날짜 계산
@@ -284,65 +294,68 @@ export function UsedDetail() {
             }
         }, [keyword])
 
-        return (
+        return (<>
             <div className="detail-root">
                 {/* 플로팅 버튼 */}
-                <div className="usedboard-fab-zone">
-                    {showRegisterMenu && (
-                        <div className="usedboard-menu up">
-                            <button
-                                className="usedboard-menu-btn"
-                                onClick={() => handleRegisterNavigate('/trade/deal/register?keyword=')}
-                            >
-                                거래 등록
-                            </button>
-                            <button
-                                className="usedboard-menu-btn"
-                                onClick={() => handleRegisterNavigate('/trade/gonggu/register')}
-                            >
-                                공구 등록
-                            </button>
-                        </div>
-                    )}
-                    <button
-                        className="usedboard-fab"
-                        onClick={handleToggleMenu}
-                    >
-                        + 글쓰기
-                    </button>
-                </div>
+                {user?.info?.id && (
+                    <div className="floating-button-container">
+                        <button className="write-button" onClick={() => setShowRegisterMenu(prev => !prev)}>
+                            + 글쓰기
+                        </button>
 
-                <div className="detail-card">
-                    {/* 캐러셀 이미지 */}
-                    <div className="detail-img-wrap detail-carousel">
-                        {total === 0 ? (
-                            <div className="detail-noimg">
-                                <img src={noImg} alt="이미지 없음" className="noimg" />
+                        {showRegisterMenu && (
+                            <div className="write-menu">
+                                {['거래 등록', '공구 등록'].map((label, idx) => {
+                                    // `/trade/${tap}/form` - 하위카테고리 위치에서 등록버튼 처리
+                                    // `/trade/deal/form` - 전체페이지 위치에서 등록버튼 처리
+                                    const path = label === '거래 등록'
+                                        ? item ? `/trade/${id}/creative` : `/trade/${id}/creative`
+                                        : item ? `/trade/gonggu/creative` : `/trade/gonggu/creative`
+                                    return (
+                                        <button
+                                            key={idx}
+                                            className="write-menu-item"
+                                            onClick={() => navigate(path)}
+                                        >
+                                            {label}
+                                        </button>
+                                    );
+                                })}
                             </div>
-                        ) : (
-                            <>
-                                <img
-                                    className="detail-img"
-                                    src={getImages(images[current])}
-                                    alt={`상세 이미지 ${current + 1}`}
-                                />
-                                {/* 좌/우 버튼 (이미지 2장 이상일 때만) */}
-                                {total > 1 && (
-                                    <>
-                                        <button className="carousel-btn left" onClick={goPrev}>{'<'}</button>
-                                        <button className="carousel-btn right" onClick={goNext}>{'>'}</button>
-                                        <div className="carousel-indicator">{current + 1} / {total}</div>
-                                    </>
-                                )}
-                            </>
                         )}
                     </div>
-
-
+                )}
+                <div className="details-card">
+                    {/* 캐러셀 이미지 */}
+                    <div className='caps'>
+                    <div className="detail-img-wrap detail-carousel">
+                            {total === 0 ? (
+                                <div className="detail-noimg">
+                                    <img src={noImg} alt="이미지 없음" className="noimg" />
+                                </div>
+                            ) : (
+                                <>
+                                    <img
+                                        className="detail-img"
+                                        src={getImages(images[current])}
+                                        alt={`상세 이미지 ${current + 1}`}
+                                    />
+                                    {/* 좌/우 버튼 (이미지 2장 이상일 때만) */}
+                                    {total > 1 && (
+                                        <>
+                                            <button className="carousel-btn left" onClick={goPrev}>{'<'}</button>
+                                            <button className="carousel-btn right" onClick={goNext}>{'>'}</button>
+                                            <div className="carousel-indicator">{current + 1} / {total}</div>
+                                        </>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    </div>
                     {/* 오른쪽 정보 */}
                     <div className="detail-info">
-                        <div>
-                            <h2 className="detail-title">{detail.title}</h2>
+                        {/* <div> */}
+                            <h2 className="detail-title">{detail.state === 2 && '[거래완료] '}{detail.title}</h2>
                             <div className="detail-meta">
                                 <span>{detail.categories?.name} · {detail.location},&nbsp;
                                 {getDateDiff(baseTime)}{isEdited && ' (수정)'}</span>
@@ -360,14 +373,15 @@ export function UsedDetail() {
                                 <span>조회수 {detail.cnt ?? 0}</span>
                             </div>
                             <div className="detail-writer">작성자: {detail.users?.name ?? '알 수 없음'}</div>
-                        </div>
+                        {/* </div> */}
                         <div className="detail-buttons">{handleButtons()}</div>
                     </div>
                 </div>
-                <Comments productId={detail?.id} categoryId={detail?.category_id} />
-
+                <div style={{ width:`calc(100% - 20px )`, marginLeft:'10px' }}>
+                    <Comments productId={detail?.id} categoryId={detail?.category_id} />
+                </div>
             </div>
-        );
+        </>);
     };
 
     return (

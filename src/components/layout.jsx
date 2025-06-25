@@ -44,7 +44,7 @@ const SearchBar = forwardRef(({ }, ref) => {
                 const value = ref.current?.value.trim();
                 navigate(`?keyword=${encodeURIComponent(value)}`);
                 ref.current.value = '';
-            }} 
+            }}
             onClick={(e) => {
                 if (e.target.tagName === 'BUTTON') {
                     e.preventDefault();
@@ -257,6 +257,14 @@ export function Layout({ children }) {
                                         >
                                             채팅
                                         </b>
+                                        <b className='humbeger_btn'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                navigate('/notification')
+                                            }}
+                                        >
+                                            알림
+                                        </b>
                                         <b className='humbeger_btn logout' onClick={handleLogout}>
                                             로그아웃
                                         </b>
@@ -308,7 +316,7 @@ export function Layout({ children }) {
                 </div>
             ) : (
                 <div className="breakpoints main" >
-                    <div className='div' style={{ marginBottom: '50px', display:'flex' }}>
+                    <div className='div' style={{ marginBottom: '50px', display: 'flex' }}>
                         <main className="mainLayout">
                             {children}
                         </main>

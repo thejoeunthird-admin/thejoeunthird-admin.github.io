@@ -1,0 +1,74 @@
+#notification-alert {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    width: 90%;
+    /* 기본값: 화면 폭의 90% */
+    max-width: 1440px;
+    /* 최대 너비 제한 */
+    z-index: 9999;
+    /* 레이어층 (9999층 (맨위에)있다고 생각하면 됨)*/
+
+    /* 반투명 밝은 회색 + 그라데이션 */
+    background: linear-gradient(to bottom, rgba(245, 243, 243, 0.75), rgba(174, 174, 173, 0.5));
+
+    color: #222;
+
+    box-shadow: 0 4px 12px rgba(255, 201, 201, 0.2);
+    backdrop-filter: blur(4px);
+    
+    border-bottom: 1px solid rgba(147, 146, 146, 0.6); 
+
+
+    border-radius: 20px;
+    margin: 10px;
+    padding: 30px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    /* 클릭 가능하게 스타일링 */
+
+}
+
+/* 사라질 때 (위로 올라가며 fade-out) */
+#notification-alert.fade-out {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-50px);
+}
+
+/* 태블릿: 화면 너비가 768px 이상일 때 */
+@media (min-width: 768px) {
+    #notification-alert {
+        padding: 25px;
+        font-size: 17px;
+    }
+}
+
+/* 데스크탑: 화면 너비가 1024px 이상일 때 */
+@media (min-width: 1024px) {
+    #notification-alert {
+        padding: 30px;
+        font-size: 18px;
+    }
+}
+
+
+#notification-alert .alert-date {
+    margin-left: auto;
+}
+
+#notification-alert .alert-delete {
+    background: none;
+    margin-left: 10px;
+    border: none;
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+}

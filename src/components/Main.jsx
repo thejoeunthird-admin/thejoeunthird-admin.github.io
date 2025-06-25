@@ -11,6 +11,7 @@ import { useImage } from '../hooks/useImage';
 import { LoadingCircle } from './LoadingCircle';
 import { formatTime } from '../utils/fomatTime';
 import { useNavigate } from 'react-router-dom';
+import noImg from '../public/noImg.png'
 
 function BestItems() {
     const nav = useNavigate();
@@ -21,7 +22,7 @@ function BestItems() {
     const [error, setError] = useState(false);
 
     const getFinalUrl = (img) => {
-        if (!img) return null;
+        if (!img) return noImg;
         return img.startsWith("http") ? img : getImages(img);
     };
 
@@ -123,7 +124,7 @@ function BestItems() {
                             className='contents'
                             onClick={(e)=>{
                                 e.preventDefault();
-                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}`)
+                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}?keyword=`)
                             }}
                         >
                             <img src={getFinalUrl(o.main_img)} className='contents-img' />
@@ -272,7 +273,7 @@ function BestBoards() {
 export function Main() {
 
     return (<>
-        <div className="container">
+        <div className="container" style={{ marginTop:0 }}>
             <span className='boardsHeader'>🔥 꿀팁</span>
             <BestBoards />
             <span className='boardsHeader'>🍯 꿀템</span>

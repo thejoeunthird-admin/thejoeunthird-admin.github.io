@@ -7,10 +7,9 @@ import { getUser } from '../utils/getUser'; // create에서만 쓰는 부분이�
 import { useRegion } from "../hooks/useRegion"; // create에서만 쓰는 부분이면 아래에서 분기처리
 import '../css/usedform.css';
 
-export function UsedForm({ mode }) {
+export function UsedForm({ mode, item }) {
     const now = new Date().toISOString();
     const navigate = useNavigate();
-    const { item } = useParams();
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -24,7 +23,8 @@ export function UsedForm({ mode }) {
 
     const { info: userInfo } = useUserTable();
 
-    const region = useRegion && useRegion();
+    const { city, district } = useRegion();
+    const region = `${city} ${district}`;
     const CATEGORY_MAP = { 4: "sell", 5: "share", 6: "buy" };
 
 
@@ -42,20 +42,18 @@ export function UsedForm({ mode }) {
     // 기존 데이터 불러오기
     useEffect(() => {
         if (mode === "edit" && item) {
-            // then-> async-await로 변경
             const fetchPrev = async () => {
                 const { data, error } = await supabase
                     .from('trades')
                     .select('*, categories(name)')
                     .eq('id', item)
-                    .single()
+                    .single();
                 if (data) {
                     setTitle(data.title);
                     setContent(data.content);
                     setPrice(data.price);
                     setCategory(String(data.category_id));
                     setLocation(data.location);
-                    // 기존 이미지 경로를 배열로 저장
                     const oldImgs = [
                         data.main_img,
                         data.detail_img1,
@@ -63,20 +61,20 @@ export function UsedForm({ mode }) {
                         data.detail_img3,
                         data.detail_img4
                     ].filter(Boolean);
-                    // initImage로 배열을 넘겨서 imageList 초기화
                     initImage(oldImgs);
                     setFileCount(oldImgs.length);
                 }
-            }
+                if (error) {
+                    console.error('error:', error);
+                }
+            };
             fetchPrev();
-        };
+        }
     }, [mode, item]);
 
-
-    // create면 지역 설정
     useEffect(() => {
         if (mode === "create" && region) {
-            setLocation(`${region.city} ${region.district}`);
+            setLocation(region);
         }
     }, [mode, region]);
 
@@ -87,11 +85,9 @@ export function UsedForm({ mode }) {
 
     // 파일 업로드
     const handleFileChange = (e) => {
-        // Array.from(e.target.files)로 파일 목록을 배열로 변환
         const files = Array.from(e.target.files);
         if (images.length + files.length > 5) {
             alert("사진은 최대 5장까지만 업로드할 수 있습니다.");
-            // 파일 입력 초기화
             fileInputRef.current.value = "";
             return;
         }
@@ -172,7 +168,7 @@ export function UsedForm({ mode }) {
                     create_date: now,
                     update_date: now,
                     cnt: 0,
-                    state: 1,
+                    state: 0,
                     sales_begin: null,
                     sales_end: null,
                     limit_type: null,
@@ -192,8 +188,12 @@ export function UsedForm({ mode }) {
         }
     }
 
-
-    return (
+    return (<>
+        <style>{`
+                .inputBox{
+                    display: none !important;
+                }
+            `}</style>
         <div className="usededit-wrap">
             <form className="usededit-form" onSubmit={handleSubmit} autoComplete="off">
                 <div className="form-title">
@@ -274,10 +274,8 @@ export function UsedForm({ mode }) {
                                     alt={`업로드 이미지${idx + 1}`}
                                     className="img-preview"
                                     onClick={() => {
-                                        // idx===0: 이미 대표이미지임 -> return
                                         if (idx === 0) return;
                                         initImage(prev => {
-                                            // ...prev: 기존 이미지 배열
                                             const newArr = [...prev];
                                             const [selected] = newArr.splice(idx, 1);
                                             newArr.unshift(selected);
@@ -299,5 +297,5 @@ export function UsedForm({ mode }) {
                 </button>
             </form>
         </div>
-    );
+    </>);
 }

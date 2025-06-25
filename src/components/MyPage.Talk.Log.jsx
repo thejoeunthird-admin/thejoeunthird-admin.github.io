@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../supabase/supabase';
 import { useSubscribe } from '../hooks/useSubscribe';
 import { useImage } from '../hooks/useImage';
+import { useCategoriesTable } from '../hooks/useCategoriesTable';
+import noImg from '../public/noImg.png'
 
 export function MyPageTalkLog({ user }) {
     const talkRef = useRef();
@@ -11,9 +13,11 @@ export function MyPageTalkLog({ user }) {
     const { item: receiver } = useParams(); // 보낸사람
     const [receiverName, setReceiverName] = useState(null);
     const { getImages } = useImage();
+    const nav = useNavigate();
+    const { findById } = useCategoriesTable();
 
     const getFinalUrl = (img) => {
-        if (!img) return null;
+        if (!img) return noImg;
         return img.startsWith("http") ? img : getImages(img);
     };
     const fetchChatLog = async () => {
@@ -100,10 +104,10 @@ export function MyPageTalkLog({ user }) {
         if (item.trades.category_id === 7) {
             alert('미 완성입니다.')
         }
-        else { // 일반 구매
+        else {
             const { error } = await supabase.rpc('create_order_and_update_chat', {
                 p_trades_id: item.trades_id,
-                p_user_id: item.sender.id,
+                p_user_id: item.receiver.id,
                 p_price: item.trades.price,
                 p_quantity: item.trades_quantity
             });
@@ -140,7 +144,7 @@ export function MyPageTalkLog({ user }) {
                                         </strong>
                                         <span className={`talkLog-message ${o.receiver.id === user.info.id ? 'is-read' : ''}`}>
                                             <p>{o.chat}</p>
-                                            <small>{new Date(o.create_date).toISOString().slice(0, 10)}</small>
+                                            <small>{new Date(o.create_date).toLocaleDateString('ko-KR')}</small>
                                         </span>
                                     </li>
                                 )
@@ -159,25 +163,32 @@ export function MyPageTalkLog({ user }) {
                                                 <p style={{ padding: '2.5px 0px' }}>{o.chat}</p>
                                                 <div style={{ display: 'flex', height: '100%', flexDirection: 'row', marginTop: '5px' }}>
                                                     {o.receiver.id !== user.info.id && (
-                                                        <img src={`${o.trades.main_img}`} style={{ width: '100px', height: '100px' }} />
+                                                        <img
+                                                            src={`${getFinalUrl(o.trades.main_img)}`}
+                                                            style={{ width: '100px', height: '100px' }}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                nav(`/trade/${findById(o.trades.category_id).url}/${o.trades.id}?keyword=`)
+                                                            }}
+                                                        />
                                                     )}
                                                     <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px', marginRight: "10px", height: '100%', }}>
                                                         <p style={{ fontSize: '1.1rem', fontWeight: '700', padding: '5px 0px', }}>{o.trades.title}</p>
                                                         <p style={{ fontSize: '0.9rem', padding: '0px 0px' }}>{o.trades.price} x {o.trades_quantity} = {o.trades.price * o.trades_quantity} 원</p>
-                                                        {o.receiver.id !== user.info.id && (
+                                                        {o.receiver.id !== user.info.id && (<>
                                                             <button
                                                                 disabled={o.trades_state === true}
                                                                 onClick={(e) => handleOrder(e, o)}
                                                                 style={{ width: '100%', marginTop: '30px', background: o.trades_state ? 'whitesmoke' : 'rgb(255,173,198)', border: '0', padding: '5px', borderRadius: '5px' }}>
                                                                 거래 수락 {o.trades_state && '완료'}
                                                             </button>
-                                                        )}
+                                                        </>)}
                                                     </div>
                                                     {o.receiver.id === user.info.id && (
-                                                        <img src={`${o.trades.main_img}`} style={{ width: '100px', height: '100px' }} />
+                                                        <img src={`${getFinalUrl(o.trades.main_img)}`} style={{ width: '100px', height: '100px' }} />
                                                     )}
                                                 </div>
-                                                <small>{new Date(o.create_date).toISOString().slice(0, 10)}</small>
+                                                <small>{new Date(o.create_date).toLocaleDateString('ko-KR')}</small>
                                             </span>
                                         </li>
                                     )
@@ -192,10 +203,16 @@ export function MyPageTalkLog({ user }) {
                                                 {o.receiver.name}
                                             </strong>
                                             <span className={`talkLog-message ${o.receiver.id === user.info.id ? 'is-read' : ''}`}>
-                                                {/* <p style={{ padding: '2.5px 0px' }}>{o.chat}</p> */}
                                                 <div style={{ display: 'flex', height: '100%', flexDirection: 'row', marginTop: '5px' }}>
                                                     {o.receiver.id !== user.info.id && (
-                                                        <img src={`${o.trades.main_img}`} style={{ width: '100px', height: '100px' }} />
+                                                        <img
+                                                            src={`${getFinalUrl(o.trades.main_img)}`}
+                                                            style={{ width: '100px', height: '100px' }}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                nav(`/trade/${findById(o.trades.category_id).url}/${o.trades.id}?keyword=`)
+                                                            }}
+                                                        />
                                                     )}
                                                     <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px', marginRight: "10px", height: '100%', }}>
                                                         <p style={{ fontSize: '1.1rem', fontWeight: '700', padding: '5px 0px', }}>{o.trades.title}</p>
@@ -203,7 +220,7 @@ export function MyPageTalkLog({ user }) {
                                                         {o.receiver.id !== user.info.id && (
                                                             <p style={{ padding: '5px', paddingLeft: '0px' }}>{o.chat}</p>
                                                         )}
-                                                        {o.trades.state === 1 && o.receiver.id !== user.info.id &&
+                                                        {o.trades.state === 0 && o.receiver.id !== user.info.id &&
                                                             <button
                                                                 disabled={o.trades_state === true}
                                                                 onClick={(e) => alert('미구현입니다.')}
@@ -214,10 +231,10 @@ export function MyPageTalkLog({ user }) {
                                                         }
                                                     </div>
                                                     {o.receiver.id === user.info.id && (
-                                                        <img src={`${o.trades.main_img}`} style={{ width: '100px', height: '100px' }} />
+                                                        <img src={`${getFinalUrl(o.trades.main_img)}`} style={{ width: '100px', height: '100px' }} />
                                                     )}
                                                 </div>
-                                                <small>{new Date(o.create_date).toISOString().slice(0, 10)}</small>
+                                                <small>{new Date(o.create_date).toLocaleDateString('ko-KR')}</small>
                                             </span>
                                         </li>
                                     </>)

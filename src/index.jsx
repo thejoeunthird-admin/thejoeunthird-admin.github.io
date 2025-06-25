@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Navigate, } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useParams, } from 'react-router-dom';
 import { Provider as ReduxProvider } from "react-redux";
 import { redux } from "./store/redux";
 import './index.css';
@@ -9,7 +9,7 @@ import { Login } from './components/Login';
 import { LoginRedirect } from './components/Login.redirect'
 import { MyPage } from './components/Mypage';
 import { TestPage } from './components/testpage';
-import { Trade } from './components/Trade'
+// import { Trade } from './components/Trade'
 // import { UsedSell } from './components/UsedSell';
 // import { UsedShare } from './components/UsedShare';
 // import { UsedBuy } from './components/UsedBuy';
@@ -20,37 +20,70 @@ import WritePage from './board/WritePage';
 import BoardDetailPage from './board/BoardDetailPage';
 import EditPage from './board/EditPage';
 import { UsedBoard } from './components/UsedBoard';
+import { Trade } from './components/Trade';
+import { TradeForm } from './components/TradeForm';
+import { TradeDetail } from './components/TradeDetail';
+import { Notifications } from './components/Notifications';
+import { NotificationProvider } from './components/AlertNotifications';
 import { UsedForm } from './components/UsedForm';
+
+
+function TradeRouter() {
+  const { id, item, tap } = useParams();
+  if (id === 'gonggu') {
+    if(item){
+        switch(item){
+          case 'creative': return <TradeForm/>;
+          case 'update': return <TradeForm id={tap}/>;
+          default: return <TradeDetail />;
+      }
+    }
+    else return (<Trade tap={id}/>)
+  }
+  else {
+    if(item){
+      switch(item){
+        case 'creative': return <UsedForm mode="create" />;
+        case 'update': return <UsedForm mode="edit" item={tap}/>;
+        default: return <UsedDetail />;
+      }
+    }
+    else { return(<UsedBoard />) }
+  }
+}
 
 function App() {
   return (
     <BrowserRouter>
       {/* 리덕스 사용 */}
       <ReduxProvider store={redux}>
-        <Layout>
-          <Routes>
-            <Route path='/' element={<Main />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/login/redirect' element={<LoginRedirect />} />
-            <Route path='/my' element={<MyPage />} />
-            <Route path='/my/:tap' element={<MyPage />} />
-            <Route path='/my/:tap/:item' element={<MyPage />} />
-            {/* 강수아 작업 -- 중고거래, 나눔, 판매 */}
-            <Route path='/trade/:id' element={<UsedBoard />} />
-            <Route path="/trade/:id/:item" element={<UsedDetail />} />
-            <Route path='/trade/deal/register' element={<UsedForm mode="create" />} />
-            <Route path='/trade/:id/:item/update' element={<UsedForm mode="edit" />} />
-            {/* 김종현 작업 -- 공구, 전체 */}
-            <Route path='/trade' element={<Trade />} />
-            <Route path='/trade/gonggu' element={<Trade />} />
-            {/* 이신아 작업 -- 일반 게시판 */}
-            <Route path="/life" element={<BoardListPages />} />
-            <Route path="/life/:tap" element={<BoardListPages />} />
-            <Route path="/life/write" element={<WritePage />} />
-            <Route path="/life/edit/:id" element={<EditPage />} />
-            <Route path="/life/detail/:id" element={<BoardDetailPage />} />
-          </Routes>
-        </Layout>
+        <NotificationProvider>
+          <Layout>
+            <Routes>
+              {/* 박희뭔 작업 -- 알람 */}
+              <Route path='/notification' element={<Notifications />} />
+              {/* 백종욱 작업 -- 메인 */}
+              <Route path='/' element={<Main />} />
+              <Route path='/login' element={<Login />} />
+              <Route path='/login/redirect' element={<LoginRedirect />} />
+              <Route path='/my' element={<MyPage />} />
+              <Route path='/my/:tap' element={<MyPage />} />
+              <Route path='/my/:tap/:item' element={<MyPage />} />
+              
+              <Route path='/trade' element={<Trade />} />
+              <Route path='/trade/:id' element={<TradeRouter />} /> 
+              <Route path='/trade/:id/:item' element={<TradeRouter />} />
+              <Route path='/trade/:id/:item/:tap' element={<TradeRouter />} />
+
+              {/* 이신아 작업 -- 일반 게시판 */}
+              <Route path="/life" element={<BoardListPages />} />
+              <Route path="/life/:tap" element={<BoardListPages />} />
+              <Route path="/life/write" element={<WritePage />} />
+              <Route path="/life/edit/:id" element={<EditPage />} />
+              <Route path="/life/:tap/:id" element={<BoardDetailPage />} />
+            </Routes>
+          </Layout>
+        </NotificationProvider>
       </ReduxProvider>
     </BrowserRouter>
   );

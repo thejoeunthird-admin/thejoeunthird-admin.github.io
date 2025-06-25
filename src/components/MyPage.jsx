@@ -233,7 +233,7 @@ export function MyPage() {
         return () => window.removeEventListener('resize', checkSize);
     }, []);
 
-    if (user.loading) { return(<LoadingCircle text='내 꿀통 찾는중..'/>) }
+    if (user.loading && user.info === null) { return(<LoadingCircle text='내 꿀통 찾는중..'/>) }
     else if (user.info !== null) {
         switch (tap) {
             case 'talk': {

@@ -4,6 +4,9 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { supabase } from "../supabase/supabase";
 import { UsedItem } from './UsedItem';
 import { LoadingCircle } from './LoadingCircle';
+import { Trade } from './Trade';
+import { useUserTable } from '../hooks/useUserTable';
+import { useRegion } from '../hooks/useRegion';
 
 export function UsedBoard() {
     const [posts, setPosts] = useState([]);
@@ -16,8 +19,11 @@ export function UsedBoard() {
     const query = new URLSearchParams(location.search);
     const keyword = query.get('keyword') || '';
     const [loading, setLoading] = useState(true);
+    const user = useUserTable();
+    const { item } = useParams();
 
-
+    const {city, district} = useRegion();
+    const region = `${city} ${district}`;
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -27,6 +33,7 @@ export function UsedBoard() {
                 .select('*,categories(name), users(name)')
                 .eq('category_id', categoryId)
                 .eq('super_category_id', 3)
+                .eq('location', region)
                 .order('create_date', { ascending: false });
             if (keyword) {
                 supa = supa.or(
@@ -63,12 +70,12 @@ export function UsedBoard() {
             if (error) {
                 console.log("error: ", error);
             }
-            if(loading){
+            if (loading) {
                 <div>로딩중..</div>
             }
         }
         fetchPosts();
-    }, [categoryId, keyword]);
+    }, [categoryId, keyword, region]);
 
     const handleToggleMenu = () => {
         setShowRegisterMenu(prev => !prev);
@@ -88,36 +95,40 @@ export function UsedBoard() {
                     {posts.map((used) => (
                         <div className="usedboard-col" key={used.id}>
                             <UsedItem used={used}
-                            likesCount={used.likesCount}
-                            commentsCount={used.commentsCount} />
+                                likesCount={used.likesCount}
+                                commentsCount={used.commentsCount} />
                         </div>
                     ))}
                 </>
                 {/* 글쓰기 플로팅 버튼 */}
-                <div className="usedboard-fab-zone">
-                    <button
-                        className="usedboard-fab"
-                        onClick={handleToggleMenu}
-                    >
-                        + 글쓰기
-                    </button>
-                    {showRegisterMenu && (
-                        <div className="usedboard-menu">
-                            <button
-                                className="usedboard-menu-btn"
-                                onClick={() => handleRegisterNavigate('/trade/deal/register')}
-                            >
-                                거래 등록
-                            </button>
-                            <button
-                                className="usedboard-menu-btn"
-                                onClick={() => handleRegisterNavigate('/trade/gonggu/register')}
-                            >
-                                공구 등록
-                            </button>
-                        </div>
-                    )}
-                </div>
+                {user?.info?.id && (
+                    <div className="floating-button-container">
+                        <button className="write-button" onClick={() => setShowRegisterMenu(prev => !prev)}>
+                            + 글쓰기
+                        </button>
+
+                        {showRegisterMenu && (
+                            <div className="write-menu">
+                                {['거래 등록', '공구 등록'].map((label, idx) => {
+                                    // `/trade/${tap}/form` - 하위카테고리 위치에서 등록버튼 처리
+                                    // `/trade/deal/form` - 전체페이지 위치에서 등록버튼 처리
+                                    const path = label === '거래 등록'
+                                        ? item ? `/trade/all/creative` : `/trade/all/creative`
+                                        : item ? `/trade/${item}/creative` : `/trade/gonggu/creative`
+                                    return (
+                                        <button
+                                            key={idx}
+                                            className="write-menu-item"
+                                            onClick={() => navigate(path)}
+                                        >
+                                            {label}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         );
     };
