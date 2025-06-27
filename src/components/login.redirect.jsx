@@ -73,12 +73,8 @@ export function LoginRedirect() {
     if (city !== undefined) {
       isTable().then((data) => {
         setReturnData(data.user)
-        if (!data.created) {
-          setToggle(false);
-        }
-        else {
-          setToggle(false);
-        }
+        //data.created 
+        setToggle(false);
       });
     }
   }, []);
@@ -131,7 +127,7 @@ export function LoginRedirect() {
             // 버튼
             createNickname(name, city, district, profileImg).then(() => {
               alert(`${name} 님\n회원가입을 환영합니다.`)
-              // navigate('/')
+              navigate('/')
             });
           }}
         >
