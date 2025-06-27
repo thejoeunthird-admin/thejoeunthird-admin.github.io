@@ -92,7 +92,7 @@ export function MyPageGroupBuy({ user }) {
                             type: 'chats',
                             table_type: 'trades',
                             table_id: o.table_id,
-                            message: `${title} 공구 결제 해주세요!`,
+                            message: `${title} 공구 결제요청 메세지가 도착했습니다.`,
                         },
                     ]);
                 if (error) console.error('채팅 전송 실패:', error.message);
