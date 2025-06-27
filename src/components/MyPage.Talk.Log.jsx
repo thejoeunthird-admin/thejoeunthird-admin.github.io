@@ -100,22 +100,18 @@ export function MyPageTalkLog({ user }) {
         e.preventDefault();
         if (item.trades.state >= 1) {
             alert('판매(공구) 종료되었거나, 예약중입니다.')
+            return;
         }
-        if (item.trades.category_id === 7) {
-            alert('미 완성입니다.')
-        }
-        else {
-            const { error } = await supabase.rpc('create_order_and_update_chat', {
-                p_trades_id: item.trades_id,
-                p_user_id: item.receiver.id,
-                p_price: item.trades.price,
-                p_quantity: item.trades_quantity
-            });
-            if (error) {
-                console.error('거래 수락 실패:', error.message);
-            } else {
-                fetchChatLog();
-            }
+        const { error } = await supabase.rpc('create_order_and_update_chat', {
+            p_trades_id: item.trades_id,
+            p_user_id: item.receiver.id,
+            p_price: item.trades.price,
+            p_quantity: item.trades_quantity
+        });
+        if (error) {
+            console.error('거래 수락 실패:', error.message);
+        } else {
+            fetchChatLog();
         }
     }, [fetchChatLog]);
 
@@ -194,6 +190,7 @@ export function MyPageTalkLog({ user }) {
                                     )
                                 }
                                 else {
+                                    console.log('dd')
                                     return (<>
                                         <li
                                             key={k}
@@ -220,13 +217,13 @@ export function MyPageTalkLog({ user }) {
                                                         {o.receiver.id !== user.info.id && (
                                                             <p style={{ padding: '5px', paddingLeft: '0px' }}>{o.chat}</p>
                                                         )}
-                                                        {o.trades.state === 0 && o.receiver.id !== user.info.id &&
+                                                        {o.receiver.id !== user.info.id &&
                                                             <button
                                                                 disabled={o.trades_state === true}
-                                                                onClick={(e) => alert('미구현입니다.')}
+                                                                onClick={(e) => handleOrder(e, o)}
                                                                 style={{ width: '100%', marginTop: '5px', background: o.trades_state ? 'whitesmoke' : 'rgb(255,173,198)', border: '0', padding: '5px', borderRadius: '5px' }}
                                                             >
-                                                                결제하기
+                                                                공동 구매 결제{o.trades_state ?' 완료':'하기'}
                                                             </button>
                                                         }
                                                     </div>
