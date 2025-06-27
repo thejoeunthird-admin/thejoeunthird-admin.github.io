@@ -46,7 +46,6 @@ export function MyPageLike({ user }) {
                 .from('likes')
                 .select('*')
                 .eq('user_id', info.id);
-
             if (likesError) throw likesError;
             if (!likes || likes.length === 0) return;
 
@@ -80,18 +79,15 @@ export function MyPageLike({ user }) {
                     .single();
                 if (itemError) {
                     console.warn(`${category.type} 테이블의 id=${like.table_id} 조회 실패`, itemError);
-                    // result.push({ ...like, category, item: null });
                 } else {
                     result.push({ ...like, category, item });
                 }
             }
+            setLikes(result);
         } catch (err) {
             console.error('❌ 전체 조회 실패:', err);
+            setLikes([])
         }
-        finally{
-            setLikes(result);
-        }
-
     };
 
     const getFinalUrl = (img) => {
