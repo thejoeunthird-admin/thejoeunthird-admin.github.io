@@ -233,7 +233,7 @@ export function MyPage() {
         return () => window.removeEventListener('resize', checkSize);
     }, []);
 
-    if (user.loading && user.info === null) { return(<LoadingCircle text='내 꿀통 찾는중..'/>) }
+    if (user.loading && user.info === null) { return(<LoadingCircle text='내 꿀단지 찾는중..'/>) }
     else if (user.info !== null) {
         switch (tap) {
             case 'talk': {
@@ -263,5 +263,5 @@ export function MyPage() {
             } break;
         }
     }
-    else { return(<LoadingCircle fail text={`내 꿀통을 찾지 못했어요... \n로그인하거나, 새로고침 해주세요.`}/>) }
+    else { return(<LoadingCircle fail text={`내 꿀단지를 찾지 못했어요... \n로그인하거나, 새로고침 해주세요.`}/>) }
 }

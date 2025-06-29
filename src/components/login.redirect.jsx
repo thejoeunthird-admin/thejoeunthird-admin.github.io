@@ -116,7 +116,7 @@ export function LoginRedirect() {
         </div>
 
         <h2 className="loding">
-          맞는 꿀통 찾는 중 ...
+          맞는 꿀단지 찾는 중 ...
         </h2>
         <form
           className={`box ${toggle ? "" : "out"}`}

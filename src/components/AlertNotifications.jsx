@@ -207,7 +207,7 @@ export function AlertNotifications({ notification, onClose, onAllClose }) {
             setTimeout(() => {
                 onClose();
             }, 500);
-        }, 1100000);
+        }, 5000);
 
         return () => clearTimeout(timer);
 

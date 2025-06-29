@@ -18,7 +18,7 @@ export function LoadingCircle({fail, dontText, text = null, alignItems='center' 
     if (text !== null) {
       str = text; // text가 제공되면 그것을 사용
     } else {
-      str = fail ? `꿀통을 찾지 못했어요..\n새로고침 해주세요.` : `꿀통 찾는중...`; // 기본 메시지
+      str = fail ? `꿀단지를 찾지 못했어요..\n새로고침 해주세요.` : `꿀단지 찾는중...`; // 기본 메시지
     }
   }
   

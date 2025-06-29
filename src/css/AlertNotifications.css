@@ -13,14 +13,15 @@
     /* 레이어층 (9999층 (맨위에)있다고 생각하면 됨)*/
 
     /* 반투명 밝은 회색 + 그라데이션 */
-    background: linear-gradient(to bottom, rgba(245, 243, 243, 0.75), rgba(174, 174, 173, 0.5));
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.75), rgba(255, 253, 247, 0.836));
+    /*background-color: rgba(255, 254, 249, 0.654);*/
 
     color: #222;
 
-    box-shadow: 0 4px 12px rgba(255, 201, 201, 0.2);
+    /*box-shadow: 0 4px 12px rgba(255, 201, 201, 0.2);*/
     backdrop-filter: blur(4px);
     
-    border-bottom: 1px solid rgba(147, 146, 146, 0.6); 
+    border-bottom: 1px solid rgba(123, 123, 123, 0.6); 
 
 
     border-radius: 20px;
