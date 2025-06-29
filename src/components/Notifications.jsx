@@ -126,7 +126,7 @@ export function Notifications() {
                 return;
             }
 
-            navigate(`/board/${findById(boardData.category_id).url}/${noti.table_id}?keyword=`)
+            navigate(`/life/${findById(boardData.category_id).url}/${noti.table_id}?keyword=`)
         }
     };
 
