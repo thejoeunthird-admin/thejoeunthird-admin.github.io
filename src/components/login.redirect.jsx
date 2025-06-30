@@ -82,10 +82,11 @@ export function LoginRedirect() {
         },
       });
 
+      console.log(res)
       if (!res.ok) {
         const errorText = await res.text();
         console.error(`서버 응답 오류: ${res.status} ${res.statusText} - ${errorText}`);
-        return false;
+        return errorText;
       }
       const result = await res.json();
       return result;
@@ -93,8 +94,8 @@ export function LoginRedirect() {
     if (city !== undefined) {
       isTable().then((data) => {
         console.log(data)
-        setReturnData(data.user)
-        setToggle(false);
+        // setReturnData(data.user)
+        // setToggle(false);
       });
     }
   }, []);
