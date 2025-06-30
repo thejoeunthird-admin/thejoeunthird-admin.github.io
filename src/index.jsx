@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Navigate, useParams, } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useParams, HashRouter, } from 'react-router-dom';
 import { Provider as ReduxProvider } from "react-redux";
 import { redux } from "./store/redux";
 import './index.css';
@@ -9,13 +9,9 @@ import { Login } from './components/Login';
 import { LoginRedirect } from './components/Login.redirect'
 import { MyPage } from './components/Mypage';
 import { TestPage } from './components/testpage';
-// import { Trade } from './components/Trade'
-// import { UsedSell } from './components/UsedSell';
-// import { UsedShare } from './components/UsedShare';
-// import { UsedBuy } from './components/UsedBuy';
 import { Main } from './components/Main';
 import { UsedDetail } from './components/UsedDetail';
-import BoardListPages from './board/BoardListPages';
+import BoardListPage from './board/BoardListPage';
 import WritePage from './board/WritePage';
 import BoardDetailPage from './board/BoardDetailPage';
 import EditPage from './board/EditPage';
@@ -76,8 +72,8 @@ function App() {
               <Route path='/trade/:id/:item/:tap' element={<TradeRouter />} />
 
               {/* 이신아 작업 -- 일반 게시판 */}
-              <Route path="/life" element={<BoardListPages />} />
-              <Route path="/life/:tap" element={<BoardListPages />} />
+              <Route path="/life" element={<BoardListPage />} />
+              <Route path="/life/:tap" element={<BoardListPage />} />
               <Route path="/life/write" element={<WritePage />} />
               <Route path="/life/edit/:id" element={<EditPage />} />
               <Route path="/life/:tap/:id" element={<BoardDetailPage />} />
