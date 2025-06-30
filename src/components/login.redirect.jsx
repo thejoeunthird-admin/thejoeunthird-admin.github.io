@@ -83,6 +83,8 @@ export function LoginRedirect() {
       });
 
       if (!res.ok) {
+        const errorText = await res.text();
+        console.error(`서버 응답 오류: ${res.status} ${res.statusText} - ${errorText}`);
         return false;
       }
       const result = await res.json();
