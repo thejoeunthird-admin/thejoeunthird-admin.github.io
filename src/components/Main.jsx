@@ -81,7 +81,8 @@ function BestItems() {
                             className='contents'
                             onClick={(e)=>{
                                 e.preventDefault();
-                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}`)
+                                console.log('keyword')
+                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}?keyword=''`)
                             }}
                         >
                             <img src={getFinalUrl(o.main_img)} className='contents-img' />
@@ -210,7 +211,7 @@ function BestBoards() {
                         className='contents'
                         onClick={(e)=>{
                             e.preventDefault();
-                            nav(`/life/detail/${o.id}`)
+                            nav(`/life/detail/${o.id}?keyword=`)
                         }}
                     >
                         <p className='contents_title'>
@@ -244,7 +245,7 @@ function BestBoards() {
                             className='line'
                             onClick={(e)=>{
                                 e.preventDefault();
-                                nav(`/life/detail/${o.id}`)
+                                nav(`/life/detail/${o.id}?keyword=`)
                             }}
                         >
                             <strong className='contents_tag'>{findById(o.category_id).name}</strong>

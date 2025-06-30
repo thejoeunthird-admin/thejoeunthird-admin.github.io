@@ -5,28 +5,40 @@ import { FcGoogle } from "react-icons/fc";
 import { IoLogoGithub } from "react-icons/io";
 import logo from '../public/logo.png';
 
-//** 로그인만들기 */
 const signInWithGoogle = async (e, path) => {
   e.preventDefault();
-  const redirectUrl = window.location.hostname === "localhost"
-  ? "http://localhost:3000/#/login/redirect"
-  : "https://thejoeunthird-admin.github.io/#/login/redirect";
+  
+  // 개발/프로덕션 환경에 따른 리다이렉트 URL 설정
+  const isLocalhost = window.location.hostname === "localhost";
+  const baseUrl = isLocalhost 
+    ? "http://localhost:3000" 
+    : "https://thejoeunthird-admin.github.io";
+  
+  const redirectUrl = `${baseUrl}/#/login/redirect`;
+
   try {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: path, // 일반적으로 'google'
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: path, // 'google'
       options: {
         redirectTo: redirectUrl,
         queryParams: {
-          prompt: 'select_account' // ← 핵심 옵션
-        }
+          access_type: 'offline', // refresh token 요청
+          prompt: 'select_account', // 계정 선택 강제
+          // 추가 Google OAuth 파라미터
+          include_granted_scopes: 'true'
+        },
+        // PKCE 사용을 위한 추가 설정
+        pkce: true,
+        scopes: 'openid profile email' // 요청할 스코프
       }
     });
 
-    if (error) {
-      console.error("로그인 오류:", error.message);
-    }
+    if (error) throw error;
+    
   } catch (error) {
-    console.error("로그인 중 예외 발생:", error);
+    console.error("로그인 오류:", error.message);
+    // 에러 처리 로직 추가 가능
+    alert(`로그인 실패: ${error.message}`);
   }
 };
 

@@ -33,7 +33,6 @@ export function UsedDetail() {
     // 로그인한 사람의 정보
     const { info: userInfo } = useUserTable();
 
-
     const handleToggleMenu = () => {
         setShowRegisterMenu(prev => !prev);
     };
@@ -288,8 +287,8 @@ export function UsedDetail() {
 
 
         useEffect(() => {
-            if (keyword !== '') {
-                // 전체로 검색
+            if (keyword && keyword.trim() !== '') {
+                console.log(keyword)
                 navigate(`/trade?keyword=${keyword}`)
             }
         }, [keyword])
