@@ -11,7 +11,7 @@ const signInWithGoogle = async (e, path) => {
   const redirectUrl = window.location.hostname === "localhost"
   ? "http://localhost:3000/login/redirect"
   : "https://thejoeunthird-admin.github.io/#/login/redirect";
-
+  console.log(redirectUrl);
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: path, // 일반적으로 'google'
