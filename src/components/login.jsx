@@ -12,6 +12,7 @@ const signInWithGoogle = async (e, path) => {
   ? "http://localhost:3000/login/redirect"
   : "https://thejoeunthird-admin.github.io/#/login/redirect";
   console.log(redirectUrl);
+  /*
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: path, // 일반적으로 'google'
@@ -29,6 +30,7 @@ const signInWithGoogle = async (e, path) => {
   } catch (error) {
     console.error("로그인 중 예외 발생:", error);
   }
+  */
 };
 
 
