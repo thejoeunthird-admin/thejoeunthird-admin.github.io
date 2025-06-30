@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../supabase/supabase";
 import Loadingfail from '../public/Loadingfail.png'
 import { LoadingCircle } from '../components/LoadingCircle'; // 기존 로딩 컴포넌트 import
@@ -21,11 +21,12 @@ export default function BoardListPage() {
   const [boards, setBoards] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
-  const params = new URLSearchParams(window.location.search);
-  const keyword = params.get('keyword');
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword');
   const navigate = useNavigate();
   const { findById } = useCategoriesTable();
 
+  console.log(keyword)
   useEffect(() => {
     supabase.from("categories").select("*").then(({ data }) => {
       setCategories(data || []);

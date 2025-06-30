@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { supabase } from "../supabase/supabase";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUserTable } from "../hooks/useUserTable";
@@ -282,8 +282,8 @@ export function UsedDetail() {
         const goNext = () => setCurrent(prev => (prev === total - 1 ? 0 : prev + 1));
 
 
-        const params = new URLSearchParams(window.location.search);
-        const keyword = params.get('keyword');
+        const [searchParams] = useSearchParams();
+        const keyword = searchParams.get('keyword');  
 
 
         useEffect(() => {

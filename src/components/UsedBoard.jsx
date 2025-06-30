@@ -7,6 +7,7 @@ import { LoadingCircle } from './LoadingCircle';
 import { Trade } from './Trade';
 import { useUserTable } from '../hooks/useUserTable';
 import { useRegion } from '../hooks/useRegion';
+import Loadingfail from '../public/Loadingfail.png'
 
 export function UsedBoard() {
     const [posts, setPosts] = useState([]);
@@ -85,11 +86,15 @@ export function UsedBoard() {
 
     const UsedBoardContent = () => {
         if (!posts) return <div><LoadingCircle /></div>;
-
         return (
             <div className="usedboard-container">
                 <>
-                    {posts.map((used) => (
+                    {posts.length === 0 ?(<>
+                            <img src={Loadingfail} style={{ width:'50%' }}/>
+                            <p style={{ fontWeight:700, }}>검색된 꿀단지가 없습니다.</p>
+                          </>
+                    
+                    ):posts.map((used) => (
                         <div className="usedboard-col" key={used.id}>
                             <UsedItem used={used}
                                 likesCount={used.likesCount}

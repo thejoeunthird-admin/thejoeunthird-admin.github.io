@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../supabase/supabase";
 import { useUserTable } from "../hooks/useUserTable";
 import { Comments } from "../components/Comments";
@@ -22,8 +22,8 @@ export default function BoardDetailPage() {
     const [isLiked, setIsLiked] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
 
-    const params = new URLSearchParams(window.location.search);
-    const keyword = params.get('keyword');
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword');  
 
     useEffect(() => {
         async function getUser() {
@@ -33,6 +33,7 @@ export default function BoardDetailPage() {
         getUser();
     }, []);
 
+    console.log(keyword)
     useEffect(() => {
         if (post !== null && keyword !== '') {
             navigate(`/life/${tap}?keyword=${keyword}`)

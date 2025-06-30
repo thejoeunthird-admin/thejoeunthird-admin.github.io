@@ -10,6 +10,7 @@ import { useRegion } from "../hooks/useRegion";
 import { timeAgo, timeAgoOrClosed, getCategoryFullName, getCategoryFullNameTag, getCategoryUrl } from '../utils/utils';
 import '../css/trade.css'
 import noImg from '../public/noImg.png'
+import Loadingfail from '../public/Loadingfail.png'
 
 export function Trade({ tap }) {
   const user = useUserTable();
@@ -106,8 +107,11 @@ export function Trade({ tap }) {
               )}
             </div>
           )}
-
-          {trades.map(trade => {
+          { trades.length === 0 ?(<>
+            <img src={Loadingfail} style={{ width:'50%' }}/>
+            <p style={{ fontWeight:700, }}>검색된 꿀단지가 없습니다.</p>
+          </>)
+          :trades.map(trade => {
             const progressPercent = trade.limit && trade.order_count
               ? Math.min(100, Math.round((trade.order_count / trade.limit) * 100))
               : 0;
