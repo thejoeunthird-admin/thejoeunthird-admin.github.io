@@ -165,12 +165,6 @@ export function Layout({ children }) {
                         오생꿀
                     </p>
                     <div className='displayOff'>
-                        {/* <p
-                            className={`board-item ${location.pathname === '/' ? 'red' : ''}`}
-                            onClick={(e) => handleNavigate(e, `/`)}
-                        >
-                            홈
-                        </p> */}
                         {categories.filter((o) => ![16, 26].includes(o.id)).map((o, k) => (
                             <React.Fragment key={k}>
                                 <p
