@@ -288,7 +288,6 @@ export function UsedDetail() {
 
         useEffect(() => {
             if (keyword && keyword.trim() !== '') {
-                console.log(keyword)
                 navigate(`/trade?keyword=${keyword}`)
             }
         }, [keyword])
