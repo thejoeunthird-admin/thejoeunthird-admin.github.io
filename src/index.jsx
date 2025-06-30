@@ -23,7 +23,7 @@ import { Notifications } from './components/Notifications';
 import { NotificationProvider } from './components/AlertNotifications';
 import { UsedForm } from './components/UsedForm';
 
-
+// 배포 1
 function TradeRouter() {
   const { id, item, tap } = useParams();
   if (id === 'gonggu') {
