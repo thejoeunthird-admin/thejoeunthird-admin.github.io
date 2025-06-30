@@ -9,7 +9,7 @@ import logo from '../public/logo.png';
 const signInWithGoogle = async (e, path) => {
   e.preventDefault();
   const redirectUrl = window.location.hostname === "localhost"
-  ? "http://localhost:3000/login/redirect"
+  ? "http://localhost:3000/#/login/redirect"
   : "https://thejoeunthird-admin.github.io/#/login/redirect";
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({

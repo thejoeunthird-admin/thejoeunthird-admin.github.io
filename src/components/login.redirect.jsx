@@ -9,6 +9,7 @@ import loginRedirectHoney from '../public/loginRedirectHoney.png'
 import profile from '../public/profile.png'
 import { FiPlusCircle } from "react-icons/fi";
 import { useImage } from "../hooks/useImage";
+import { supabase } from "../supabase/supabase";
 
 
 const createNickname = async (name, city, district, img) => {
@@ -21,7 +22,7 @@ const createNickname = async (name, city, district, img) => {
         'Authorization': `Bearer ${user.token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: user.id, name: name, region: JSON.stringify([city, district]), email: user.email, img:img }),
+      body: JSON.stringify({ id: user.id, name: name, region: JSON.stringify([city, district]), email: user.email, img: img }),
     });
 
     if (!res.ok) {
@@ -37,7 +38,7 @@ const createNickname = async (name, city, district, img) => {
 export function LoginRedirect() {
   const inputRef = useRef();
   const [toggle, setToggle] = useState(true);
-  const [ returnData, setReturnData ] = useState({ })
+  const [returnData, setReturnData] = useState({})
   const {
     images,
     setImages,
@@ -51,27 +52,27 @@ export function LoginRedirect() {
     citys, districts,
   } = useRegion();
 
-    useEffect(() => {
-    // 1. 해시에서 access_token 등 토큰 추출
-    const hash = window.location.hash; // 예: "#/login/redirect#access_token=..."
+  useEffect(() => {
+    const hash = window.location.hash;
     if (hash.includes('access_token=')) {
-      // 예: 해시가 두 개 (#/login/redirect#access_token=...) 형태임
-      // split('#access_token=') 로 분리하고, 필요하면 토큰 저장 작업 수행
-      const parts = hash.split('#access_token=');
-      const pathPart = parts[0]; // '#/login/redirect'
-      const tokenPart = parts[1].split('&')[0]; // 토큰 문자열만 추출 (access_token=토큰&다음파라미터...)
-
-      // TODO: 이 토큰으로 supabase에 로그인 처리 등 필요한 작업 수행
-      // 예를 들어 localStorage 등에 저장하거나, getUser() 같은 함수와 연동
-
-      // 2. 주소창에서 해시 부분 정리 (토큰 제거)
-      window.history.replaceState(null, '', window.location.pathname + pathPart);
+      const params = new URLSearchParams(hash.split('#')[2]);
+      const access_token = params.get('access_token');
+      const refresh_token = params.get('refresh_token');
+      if (access_token && refresh_token) {
+        supabase.auth.setSession({
+          access_token,
+          refresh_token,
+        }).then(({ error }) => {
+          if (error) console.error("세션 설정 실패:", error.message);
+        });
+      }
     }
   }, []);
 
   useEffect(() => {
     const isTable = async () => {
       const { user } = await getUser();
+      console.log(user);
       if (!user || !user.id) return false;
       const query = new URLSearchParams({ id: user.id, name: user.name, region: JSON.stringify([city, district]) }).toString();
       const url = `https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/user?${query}`;
@@ -82,11 +83,10 @@ export function LoginRedirect() {
         },
       });
 
-      console.log(res)
       if (!res.ok) {
         const errorText = await res.text();
         console.error(`서버 응답 오류: ${res.status} ${res.statusText} - ${errorText}`);
-        return errorText;
+        return false;
       }
       const result = await res.json();
       return result;
@@ -94,11 +94,12 @@ export function LoginRedirect() {
     if (city !== undefined) {
       isTable().then((data) => {
         console.log(data)
-        // setReturnData(data.user)
-        // setToggle(false);
+        setReturnData(data.user)
+        setToggle(false);
       });
     }
   }, []);
+
   return (<>
     <div className="login">
       <section
@@ -117,7 +118,7 @@ export function LoginRedirect() {
 
         </div>
         <div className="profile_img" style={{ display: toggle ? 'none' : 'flex' }} >
-          <img src={images.length === 0?profile:getImages(images[images.length -1])}/>
+          <img src={images.length === 0 ? profile : getImages(images[images.length - 1])} />
           <div onClick={(e) => {
             e.preventDefault();
             const input = document.createElement('input');
@@ -144,7 +145,7 @@ export function LoginRedirect() {
           onSubmit={(e) => {
             e.preventDefault();
             const name = inputRef.current.value === "" ? inputRef.current.placeholder : inputRef.current.value
-            const profileImg = images.length === 0?(returnData?.img):(images[images.length-1]);
+            const profileImg = images.length === 0 ? (returnData?.img) : (images[images.length - 1]);
             // 버튼
             createNickname(name, city, district, profileImg).then(() => {
               alert(`${name} 님\n회원가입을 환영합니다.`)
