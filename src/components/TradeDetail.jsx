@@ -37,9 +37,8 @@ export function TradeDetail() {
   const keyword = searchParams.get('keyword');
 
   useEffect(() => {
-    if (keyword !== null && keyword !== 'null') {
-      console.log('keyword = [' + keyword + ']');
-      // navigate(`/trade/${getCategoryUrl(detail.category_id, categoriesAll)}?keyword=${keyword}`);
+    if (keyword !== '') {
+      navigate(`/trade/${getCategoryUrl(detail.category_id, categoriesAll)}?keyword=${keyword}`);
     }
   }, [keyword, detail?.category_id, categoriesAll]);
 
