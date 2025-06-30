@@ -89,7 +89,7 @@ export function MyPageTalkLog({ user }) {
                     type: 'chats',
                     table_type: 'chats',
                     table_id: data.id,
-                    message: `${user.info.name} 님에게 메세지가 도착 했습니다.`,
+                    message: `${user.info.name} 님이 메세지를 보냈습니다.`,
                 },
             ]);
         if (!error) inputRef.current.value = '';
