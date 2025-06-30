@@ -50,7 +50,7 @@ function TradeRouter() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter >
       {/* 리덕스 사용 */}
       <ReduxProvider store={redux}>
         <NotificationProvider>
@@ -81,7 +81,7 @@ function App() {
           </Layout>
         </NotificationProvider>
       </ReduxProvider>
-    </BrowserRouter>
+    </HashRouter >
   );
 }
 
