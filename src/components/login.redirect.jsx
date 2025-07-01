@@ -45,7 +45,7 @@ export function LoginRedirect() {
     getImages,
   } = useImage();
   const navigate = useNavigate();
-  const { user, refetch } = useUserTable();
+  const { user:data, refetch } = useUserTable();
 
   const {
     city, setCity,
@@ -101,7 +101,7 @@ export function LoginRedirect() {
         }
       });
     }
-  });
+  },[data]);
 
   return (<>
     <div className="login">
