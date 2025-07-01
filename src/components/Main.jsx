@@ -82,7 +82,7 @@ function BestItems() {
                             onClick={(e)=>{
                                 e.preventDefault();
                                 console.log('keyword')
-                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}?keyword=''`)
+                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}?keyword=`)
                             }}
                         >
                             <img src={getFinalUrl(o.main_img)} className='contents-img' />
