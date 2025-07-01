@@ -28,13 +28,13 @@ const createNickname = async (name, city, district, email, img) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ id: user.id, name: name, region: JSON.stringify([city, district]), email: email, img: img }),
-        });
-
+        })
         if (!res.ok) {
             const errorData = await res.json();
             console.error("닉네임 업데이트 실패:", errorData.error ?? res.statusText);
             return;
         }
+
     } catch (err) {
         console.error("예외 발생:", err.message);
     }
@@ -45,6 +45,7 @@ function Default({ user }) {
     const [name, setName] = useState(null);
     const [email, setEmail] = useState(null);
     const [city, setCity] = useState(user.info.region[0])
+    const { refetch } = useUserTable();
     const [district, setDistrict] = useState(user.info.region[1])
     const [realName, setRealName] = useState('')
     const {citys, districts, setBoth } = useRegion();
@@ -89,6 +90,7 @@ function Default({ user }) {
                                         if (obj.length !== 0) {
                                             createNickname(user.info.name, user.info.region[0], user.info.region[1], user.info.email, obj[0]).then(() => {
                                                 initImage([ obj[0], ])
+                                                refetch();
                                             })
                                         }
                                     })
