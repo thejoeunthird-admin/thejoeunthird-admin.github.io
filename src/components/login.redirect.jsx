@@ -92,7 +92,8 @@ export function LoginRedirect() {
       const result = await res.json();
       return result;
     };
-    if (city !== undefined) {
+    
+    if (city) {
       isTable().then((data) => {
         if(data !== false){
           refetch().then(()=>{
