@@ -72,7 +72,6 @@ export function LoginRedirect() {
   useEffect(() => {
     const isTable = async () => {
       const { user } = await getUser();
-      console.log(user);
       if (!user || !user.id) return false;
       const query = new URLSearchParams({ id: user.id, name: user.name, region: JSON.stringify([city, district]) }).toString();
       const url = `https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/user?${query}`;
@@ -93,8 +92,10 @@ export function LoginRedirect() {
     };
     if (city !== undefined) {
       isTable().then((data) => {
-        setReturnData(data.user)
-        setToggle(false);
+        if(data !== false){
+          setReturnData(data.user)
+          setToggle(false);
+        }
       });
     }
   }, []);
