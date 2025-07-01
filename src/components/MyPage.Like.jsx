@@ -9,7 +9,7 @@ import noImg from '../public/noImg.png'
 
 export function MyPageLike({ user }) {
     const { info } = user;
-    const [likes, setLikes] = useState(null)
+    const [likes, setLikes] = useState([])
     const { getImages } = useImage();
     const { findById } = useCategoriesTable();
     const nav = useNavigate();
@@ -100,7 +100,7 @@ export function MyPageLike({ user }) {
         fetchLikesWithCategoryAndItem();
     }, [info?.id]);
 
-    if(!likes) { return <></> }
+
     return (
         <>
             <ul className="likes-list">

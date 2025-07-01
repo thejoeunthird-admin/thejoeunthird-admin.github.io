@@ -69,7 +69,7 @@ export function MyPageTalk({ user }) {
                                 </li>
                             );
                         })
-                    ) : (<>노채팅</>)}
+                    ) : (<div style={{ marginLeft: `10px`, }}>채팅이 없어요!</div>)}
                 </div>
             </ul>
             {item !== undefined ? (

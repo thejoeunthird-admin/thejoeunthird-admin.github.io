@@ -93,7 +93,6 @@ export function LoginRedirect() {
     };
     if (city !== undefined) {
       isTable().then((data) => {
-        console.log(data)
         setReturnData(data.user)
         setToggle(false);
       });

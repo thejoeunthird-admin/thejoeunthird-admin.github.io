@@ -4,7 +4,6 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { supabase } from "../supabase/supabase";
 import { UsedItem } from './UsedItem';
 import { LoadingCircle } from './LoadingCircle';
-import { Trade } from './Trade';
 import { useUserTable } from '../hooks/useUserTable';
 import { useRegion } from '../hooks/useRegion';
 import Loadingfail from '../public/Loadingfail.png'
@@ -23,7 +22,7 @@ export function UsedBoard() {
     const user = useUserTable();
     const { item } = useParams();
 
-    const {city, district} = useRegion();
+    const { city, district } = useRegion();
     const region = `${city} ${district}`;
 
     useEffect(() => {
@@ -89,12 +88,12 @@ export function UsedBoard() {
         return (
             <div className="usedboard-container">
                 <>
-                    {posts.length === 0 ?(<>
-                            <img src={Loadingfail} style={{ width:'50%' }}/>
-                            <p style={{ fontWeight:700, }}>검색된 꿀단지가 없습니다.</p>
-                          </>
-                    
-                    ):posts.map((used) => (
+                    {posts.length === 0 ? (<div style={{ display: 'flex', width: '100%', alignItems: 'center', flexDirection: 'column' }}>
+                        <img src={Loadingfail} style={{ width: '50%' }} />
+                        <p style={{ fontSize: '1.rem', fontWeight: '700', color: 'var(--base-color-1)' }}>
+                            검색 조건이 없거나, 아직 게시글이 없어요!
+                        </p>
+                    </div>) : posts.map((used) => (
                         <div className="usedboard-col" key={used.id}>
                             <UsedItem used={used}
                                 likesCount={used.likesCount}

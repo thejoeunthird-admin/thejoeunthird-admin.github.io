@@ -107,69 +107,71 @@ export function Trade({ tap }) {
               )}
             </div>
           )}
-          { trades.length === 0 ?(<>
-            <img src={Loadingfail} style={{ width:'50%' }}/>
-            <p style={{ fontWeight:700, }}>검색된 꿀단지가 없습니다.</p>
-          </>)
-          :trades.map(trade => {
-            const progressPercent = trade.limit && trade.order_count
-              ? Math.min(100, Math.round((trade.order_count / trade.limit) * 100))
-              : 0;
+          {trades.length === 0 ? (<div style={{ display: 'flex', width: '100%', alignItems: 'center', flexDirection: 'column' }}>
+            <img src={Loadingfail} style={{ width: '50%' }} />
+            <p style={{ fontSize: '1.rem', fontWeight: '700', color: 'var(--base-color-1)' }}>
+              검색 조건이 없거나, 아직 게시글이 없어요!
+            </p>
+          </div>)
+            : trades.map(trade => {
+              const progressPercent = trade.limit && trade.order_count
+                ? Math.min(100, Math.round((trade.order_count / trade.limit) * 100))
+                : 0;
 
-            return (
-              <div
-                key={trade.id}
-                className="custom-card"
-                onClick={() => navigate(`/trade/${getCategoryUrl(trade.category_id, categoriesAll)}/${trade.id}?keyword=`)}
-                style={trade.category_id == 7 ? { border: '1px solid var(--base-color-5) !important' } : {}}
-              >
-                {trade.category_id === 7 && (
-                  <div className="progress-bar-container">
-                    <div className="progress-bar-inner" style={{ width: `${progressPercent}%` }}>
-                      &nbsp;&nbsp;&nbsp;{progressPercent}%
+              return (
+                <div
+                  key={trade.id}
+                  className="custom-card"
+                  onClick={() => navigate(`/trade/${getCategoryUrl(trade.category_id, categoriesAll)}/${trade.id}?keyword=`)}
+                  style={trade.category_id == 7 ? { border: '1px solid var(--base-color-5) !important' } : {}}
+                >
+                  {trade.category_id === 7 && (
+                    <div className="progress-bar-container">
+                      <div className="progress-bar-inner" style={{ width: `${progressPercent}%` }}>
+                        &nbsp;&nbsp;&nbsp;{progressPercent}%
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                <div className="card-body">
-                  <img
-                    src={trade.main_img ? getImages(trade.main_img) : noImg}
-                    alt="대표 이미지"
-                    className="card-thumbnail"
-                  />
+                  <div className="card-body">
+                    <img
+                      src={trade.main_img ? getImages(trade.main_img) : noImg}
+                      alt="대표 이미지"
+                      className="card-thumbnail"
+                    />
 
-                  <div className="card-content">
-                    <div className="text-muted small">{getCategoryFullName(trade.category_id, categoriesAll)} | <strong>{trade.location || '지역 알 수 없음'}</strong></div>
-                    <div className="text-secondary small">
-                      <strong>{trade.user_name || '알 수 없음'}</strong> | {timeAgo(trade.update_date)}
-                    </div>
+                    <div className="card-content">
+                      <div className="text-muted small">{getCategoryFullName(trade.category_id, categoriesAll)} | <strong>{trade.location || '지역 알 수 없음'}</strong></div>
+                      <div className="text-secondary small">
+                        <strong>{trade.user_name || '알 수 없음'}</strong> | {timeAgo(trade.update_date)}
+                      </div>
 
-                    <h3 className="card-title">{trade.title}</h3>
-                    <p className="card-desc">{trade.content}</p>
+                      <h3 className="card-title">{trade.title}</h3>
+                      <p className="card-desc">{trade.content}</p>
 
-                    <div className="card-badges">
-                      <span className="badge">💰 {trade.price.toLocaleString()}원</span>
-                      <span className="badge">👁️ {trade.cnt}</span>
-                      <span className="badge">❤️ {trade.like_count}</span>
-                      <span className="badge">💬 {trade.comment_count}</span>
+                      <div className="card-badges">
+                        <span className="badge">💰 {trade.price.toLocaleString()}원</span>
+                        <span className="badge">👁️ {trade.cnt}</span>
+                        <span className="badge">❤️ {trade.like_count}</span>
+                        <span className="badge">💬 {trade.comment_count}</span>
 
-                      {trade.category_id === 7 && trade.sales_end && (
-                        <span className="badge deadline">
-                          {timeAgoOrClosed(trade.sales_end)}
-                        </span>
+                        {trade.category_id === 7 && trade.sales_end && (
+                          <span className="badge deadline">
+                            {timeAgoOrClosed(trade.sales_end)}
+                          </span>
+                        )}
+                      </div>
+
+                      {trade.category_id === 7 && new Date() < new Date(trade.sales_end) && (
+                        <div className="card-actions">
+                          <button className="btn-join" onClick={() => { }}>참여하기</button>
+                        </div>
                       )}
                     </div>
-
-                    {trade.category_id === 7 && new Date() < new Date(trade.sales_end) && (
-                      <div className="card-actions">
-                        <button className="btn-join" onClick={() => { }}>참여하기</button>
-                      </div>
-                    )}
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </>
       )}
     </div>
