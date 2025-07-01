@@ -45,7 +45,7 @@ export function LoginRedirect() {
     getImages,
   } = useImage();
   const navigate = useNavigate();
-  const { user:data, refetch } = useUserTable();
+  const { user: userData, refetch } = useUserTable();
 
   const {
     city, setCity,
@@ -70,11 +70,12 @@ export function LoginRedirect() {
     }
   }, []);
 
+
   useEffect(() => {
     const isTable = async () => {
       const { user } = await getUser();
       if (!user || !user.id) return false;
-      const query = new URLSearchParams({ id: user.id, name: user.name, email:user.email, region: JSON.stringify([city, district]) }).toString();
+      const query = new URLSearchParams({ id: user.id, name: user.name, email: user.email, region: JSON.stringify([city, district]) }).toString();
       const url = `https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/user?${query}`;
       const res = await fetch(url, {
         method: 'GET',
@@ -91,17 +92,15 @@ export function LoginRedirect() {
       const result = await res.json();
       return result;
     };
-    if (city !== undefined) {
-      isTable().then((data) => {
-        if(data !== false){
-          refetch().then(()=>{
-            setReturnData(data.user)
-            setToggle(false);
-          })
-        }
-      });
-    }
-  },[data]);
+    isTable().then((data) => {
+      if (data !== false) {
+        refetch().then(() => {
+          setReturnData(data.user)
+          setToggle(false);
+        })
+      }
+    });
+  }, [userData]);
 
   return (<>
     <div className="login">
