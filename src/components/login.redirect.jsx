@@ -92,7 +92,6 @@ export function LoginRedirect() {
       const result = await res.json();
       return result;
     };
-    
     if (city) {
       isTable().then((data) => {
         if(data !== false){
@@ -151,8 +150,8 @@ export function LoginRedirect() {
             e.preventDefault();
             const name = inputRef.current.value === "" ? inputRef.current.placeholder : inputRef.current.value
             const profileImg = images.length === 0 ? (returnData?.img) : (images[images.length - 1]);
-            // 버튼
             createNickname(name, city, district, profileImg).then(() => {
+              refetch();
               alert(`${name} 님\n회원가입을 환영합니다.`)
               navigate('/')
             });
