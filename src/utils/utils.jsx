@@ -56,10 +56,14 @@ export const getCategoryFullNameTag = (categoryId, categoryList) => {
     return (
         <>
             {parent && (
-                <a href={`/${parent.url}`} className="text-decoration-none text-primary">{parent.name}</a>
+                // <a href={`/${parent.url}`} className="text-decoration-none text-primary">{parent.name}</a>
+                <a className="text-decoration-none text-primary">{parent.name}</a>
             )}
             {parent && ' > '}
-            <a href={`/${parent?.url}/${category.url}`} className="text-decoration-none text-dark fw-semibold">
+            {/* <a href={`/${parent?.url}/${category.url}`} className="text-decoration-none text-dark fw-semibold">
+                {category.name}
+            </a> */}
+            <a className="text-decoration-none text-dark fw-semibold">
                 {category.name}
             </a>
         </>

@@ -98,7 +98,7 @@ export function MyPageTalkLog({ user }) {
 
     const handleOrder = useCallback(async (e, item) => {
         e.preventDefault();
-        if (item.trades.state >= 1) {
+        if (item.trades.state > 1) {
             alert('판매(공구) 종료되었거나, 예약중입니다.')
             return;
         }
@@ -112,6 +112,7 @@ export function MyPageTalkLog({ user }) {
             console.error('거래 수락 실패:', error.message);
         } else {
             fetchChatLog();
+            alert('공동구매가 되었습니다.')
         }
     }, [fetchChatLog]);
 
@@ -156,7 +157,7 @@ export function MyPageTalkLog({ user }) {
                                                 {o.receiver.name}
                                             </strong>
                                             <span className={`talkLog-message ${o.receiver.id === user.info.id ? 'is-read' : ''}`}>
-                                                <p style={{ padding: '2.5px 0px' }}>{o.chat}</p>
+                                                { o.receiver.id !== user.info.id && <p style={{ padding: '2.5px 0px' }}>{o.chat}</p> }
                                                 <div style={{ display: 'flex', height: '100%', flexDirection: 'row', marginTop: '5px' }}>
                                                     {o.receiver.id !== user.info.id && (
                                                         <img
@@ -171,14 +172,15 @@ export function MyPageTalkLog({ user }) {
                                                     <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px', marginRight: "10px", height: '100%', }}>
                                                         <p style={{ fontSize: '1.1rem', fontWeight: '700', padding: '5px 0px', }}>{o.trades.title}</p>
                                                         <p style={{ fontSize: '0.9rem', padding: '0px 0px' }}>{o.trades.price} x {o.trades_quantity} = {o.trades.price * o.trades_quantity} 원</p>
-                                                        {o.receiver.id !== user.info.id && (<>
+                                                        {o.receiver.id !== user.info.id ? (<>
                                                             <button
                                                                 disabled={o.trades_state === true}
                                                                 onClick={(e) => handleOrder(e, o)}
                                                                 style={{ width: '100%', marginTop: '30px', background: o.trades_state ? 'whitesmoke' : 'rgb(255,173,198)', border: '0', padding: '5px', borderRadius: '5px' }}>
                                                                 거래 수락 {o.trades_state && '완료'}
                                                             </button>
-                                                        </>)}
+                                                        </>)
+                                                        :(<p style={{ padding: '2.5px 0px' }}>{o.trades.title} {o.chat}</p>)}
                                                     </div>
                                                     {o.receiver.id === user.info.id && (
                                                         <img src={`${getFinalUrl(o.trades.main_img)}`} style={{ width: '100px', height: '100px' }} />
@@ -190,7 +192,6 @@ export function MyPageTalkLog({ user }) {
                                     )
                                 }
                                 else {
-                                    console.log('dd')
                                     return (<>
                                         <li
                                             key={k}

@@ -162,11 +162,11 @@ export function Trade({ tap }) {
                         )}
                       </div>
 
-                      {trade.category_id === 7 && new Date() < new Date(trade.sales_end) && (
+                      {/* {trade.category_id === 7 && new Date() < new Date(trade.sales_end) && (
                         <div className="card-actions">
                           <button className="btn-join" onClick={() => { }}>참여하기</button>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 </div>

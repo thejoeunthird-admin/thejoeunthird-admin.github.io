@@ -23,9 +23,9 @@ import { Notifications } from './components/Notifications';
 import { NotificationProvider } from './components/AlertNotifications';
 import { UsedForm } from './components/UsedForm';
 
-// 배포 1
 function TradeRouter() {
   const { id, item, tap } = useParams();
+  /* 김종현 작업 --- 공구, 거래 전체 게시판 */
   if (id === 'gonggu') {
     if(item){
         switch(item){
@@ -36,6 +36,7 @@ function TradeRouter() {
     }
     else return (<Trade tap={id}/>)
   }
+  /* 김종현 작업 --- 공구, 거래 게시판 */
   else {
     if(item){
       switch(item){
@@ -50,7 +51,7 @@ function TradeRouter() {
 
 function App() {
   return (
-    <HashRouter >
+    <HashRouter>
       {/* 리덕스 사용 */}
       <ReduxProvider store={redux}>
         <NotificationProvider>
@@ -65,12 +66,11 @@ function App() {
               <Route path='/my' element={<MyPage />} />
               <Route path='/my/:tap' element={<MyPage />} />
               <Route path='/my/:tap/:item' element={<MyPage />} />
-              
+              {/* 김종현, 강수아 작업 --- 거래 게시판 */}
               <Route path='/trade' element={<Trade />} />
               <Route path='/trade/:id' element={<TradeRouter />} /> 
               <Route path='/trade/:id/:item' element={<TradeRouter />} />
               <Route path='/trade/:id/:item/:tap' element={<TradeRouter />} />
-
               {/* 이신아 작업 -- 일반 게시판 */}
               <Route path="/life" element={<BoardListPage />} />
               <Route path="/life/:tap" element={<BoardListPage />} />

@@ -192,6 +192,7 @@ export function UsedDetail() {
             return;
         }
         if (!confirm('거래 요청 메시지를 보낼까요?')) return;
+        /*
         const { data, error } = await supabase
             .from('chats')
             .insert([{
@@ -214,6 +215,8 @@ export function UsedDetail() {
             console.log('data: ', data);
             navigate(`/my/talk/${detail?.user_id}`)
         }
+        */
+        navigate(`/my/talk/${detail?.user_id}`)
     }
 
     // 버튼 분기
