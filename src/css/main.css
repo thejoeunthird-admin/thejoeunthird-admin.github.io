@@ -158,7 +158,7 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
-    width: 100%;
+    width: calc(100% - 20px);
 }
 .containers .bestItems .row {
     width: 50%;
