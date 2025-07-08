@@ -41,9 +41,8 @@ function BestItems() {
     }, []);
 
     useEffect(() => {
-        //get_earliest_trades_category_5
         const fetchBoards = async () => {
-            const { data, error: dataError } = await supabase.rpc('get_earliest_trades_category_5');
+            const { data, error: dataError } = await supabase.rpc('get_earliest_trades_category_7');
             if (dataError) {
                 setError(true)
                 return;
@@ -272,7 +271,6 @@ function BestBoards() {
 }
 
 export function Main() {
-
     return (<>
         <div className="containers" style={{ marginTop:0 }}>
             <span className='boardsHeader'>🔥 꿀팁</span>

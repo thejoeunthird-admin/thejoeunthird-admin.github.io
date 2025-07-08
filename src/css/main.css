@@ -195,6 +195,7 @@
     flex-direction: column;
     flex: 1;
     gap: 5px;
+    overflow: hidden;
 }
 .containers .bestItems .contents .contents-box .start-string{
     display: flex;
@@ -215,10 +216,15 @@
     padding: 1px 0px;
 }
 .containers .bestItems .contents .contents-box .contents-string{
-    font-size: 1.rem;
+    font-size: 1rem; /* 1.rem → 1rem 오타 수정 */
     font-weight: 600;
     padding: 1px 0px;
-    color: rgb(0,0,0,0.5);
+    color: rgba(0, 0, 0, 0.5); /* rgba로 수정 */
+
+    /* 텍스트 생략 처리 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
