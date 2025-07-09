@@ -7,7 +7,7 @@
 
 .details-card {
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     max-width: 1100px;
     height: fit-content;
     margin: 30px auto;
@@ -15,13 +15,14 @@
     background: #fff;
     margin: 40px 35px;
     align-items: flex-start;
-    width: calc( 100% - 70px );
+    width: calc(100% - 70px);
     gap: 10px;
 }
 
 .caps {
     width: 50%
 }
+
 .detail-img-wrap {
     flex: 1 1 0;
     border-radius: 18px;
@@ -178,17 +179,18 @@
     color: #fff;
     border: 1.5px solid #e14d54;
 }
+
 .detail-buttons button.liked:hover {
     background: #c4343d;
 }
 
 
 @media (max-width: 800px) {
-    
+
     .caps {
         display: flex;
         justify-content: center;
-        width: 100%;   
+        width: 100%;
     }
 
     .details-card {
@@ -219,7 +221,7 @@
 
     .detail-img {
         border-radius: 8px;
-        box-shadow: 0 1px 8px 0 rgba(0,0,0,0.09);
+        box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.09);
     }
 
     .detail-noimg {
@@ -257,7 +259,9 @@
         min-height: 30px;
     }
 
-    .detail-meta, .detail-stat, .detail-writer {
+    .detail-meta,
+    .detail-stat,
+    .detail-writer {
         font-size: 0.89rem !important;
         margin-bottom: 3px;
     }
@@ -272,11 +276,13 @@
         padding: 6px 12px;
         border-radius: 5px;
     }
+
     .carousel-btn {
         width: 28px;
         height: 28px;
         font-size: 1.2rem;
     }
+
     .carousel-indicator {
         font-size: 0.85rem;
         padding: 2px 7px;
@@ -330,4 +336,32 @@
     padding: 3px 13px;
     border-radius: 14px;
     font-weight: 500;
+}
+
+@media (min-width: 801px) and (max-width: 1014px) {
+    .details-card {
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .detail-img-wrap {
+        display: flex;
+        justify-content: center;
+    }
+
+    .detail-img {
+        width: 100%;
+        /* 이미지만 가로폭 100% */
+        height: auto;
+        /* 세로 비율 유지 */
+        border-radius: 14px;
+        object-fit: cover;
+    }
+
+    .detail-info {
+        width: 100%;
+        gap: 14px;
+        /* min-width/max-width 등 없음 */
+    }
 }

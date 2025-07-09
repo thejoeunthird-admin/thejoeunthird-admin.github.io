@@ -182,6 +182,11 @@ export function UsedDetail() {
 
     // 구매하기/나눔받기/팔기 -> 판매자 채팅으로
     const makeChats = async () => {
+        if(!userInfo) {
+            alert('로그인 후 이용해주세요.');
+            navigate('/login');
+            return;
+        }
         console.log('state: ', detail.state);
         if (detail.state === 1 ){
             alert('거래가 진행 중인 상품입니다.');
