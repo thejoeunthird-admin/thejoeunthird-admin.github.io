@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { supabase } from "../supabase/supabase";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUserTable } from "../hooks/useUserTable";
@@ -32,7 +32,6 @@ export function UsedDetail() {
     const [detail, setDetail] = useState(null);
     // 로그인한 사람의 정보
     const { info: userInfo } = useUserTable();
-
 
     const handleToggleMenu = () => {
         setShowRegisterMenu(prev => !prev);
@@ -193,6 +192,7 @@ export function UsedDetail() {
             return;
         }
         if (!confirm('거래 요청 메시지를 보낼까요?')) return;
+        /*
         const { data, error } = await supabase
             .from('chats')
             .insert([{
@@ -201,7 +201,7 @@ export function UsedDetail() {
                 chat:
                     detail.category_id === 4 ? '벼룩해요!' :
                         detail.category_id === 5 ? '나눔받을래요!' :
-                            detail.category_id === 6 ? '구해요!' : '',
+                            detail.category_id === 6 ? '사고싶어요!' : '',
                 create_date: now,
                 read: false,
                 trades_id: detail.id,
@@ -215,6 +215,8 @@ export function UsedDetail() {
             console.log('data: ', data);
             navigate(`/my/talk/${detail?.user_id}`)
         }
+        */
+        navigate(`/my/talk/${detail?.user_id}`)
     }
 
     // 버튼 분기
@@ -283,13 +285,12 @@ export function UsedDetail() {
         const goNext = () => setCurrent(prev => (prev === total - 1 ? 0 : prev + 1));
 
 
-        const params = new URLSearchParams(window.location.search);
-        const keyword = params.get('keyword');
+        const [searchParams] = useSearchParams();
+        const keyword = searchParams.get('keyword');  
 
 
         useEffect(() => {
-            if (keyword !== '') {
-                // 전체로 검색
+            if (keyword && keyword.trim() !== '') {
                 navigate(`/trade?keyword=${keyword}`)
             }
         }, [keyword])

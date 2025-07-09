@@ -1,3 +1,8 @@
+#notification-list {
+    margin-top: -10px;
+    position: relative;
+}
+
 #notification-list .list-group {
     padding-top: 5px;
 }

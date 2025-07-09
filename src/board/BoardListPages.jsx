@@ -6,9 +6,10 @@ import { LoadingCircle } from '../components/LoadingCircle'; // 기존 로딩 �
 import "./BoardListPage.css";
 import { useUserTable } from "../hooks/useUserTable";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
+import noImg from '../public/noImg.png'
+
 
 // public/logo.png 경로로 접근
-const IcecreamImg = "/logo.png";
 
 const getImages = (path) =>
   `https://mkoiswzigibhylmtkzdh.supabase.co/storage/v1/object/public/images/${path}`;
@@ -125,8 +126,8 @@ export default function BoardListPage() {
             >
               <div className="board-card-thumb">
                 <img
-                  src={board.main_img ? getImages(board.main_img) : IcecreamImg}
-                  onError={(e) => (e.currentTarget.src = IcecreamImg)}
+                  src={board.main_img ? getImages(board.main_img) : noImg}
+                  onError={(e) => (e.currentTarget.src = noImg)}
                   alt="썸네일"
                   style={{ borderRadius: 10, objectFit: "cover" }}
                 />

@@ -23,7 +23,7 @@ export function MyPageGroupBuy({ user }) {
         const { error } = await supabase.rpc('update_trade_state', {
             trade_id: tradeId,
             new_state: Number(newState)
-        }); // ✅ .select() 제거
+        }); 
 
         if (error) {
             console.error('업데이트 실패:', error.message);
@@ -32,7 +32,7 @@ export function MyPageGroupBuy({ user }) {
             console.log('업데이트 성공');
             setbuy(prevBuy =>
                 prevBuy.map(item =>
-                    item.trade_id === tradeId // ✅ 필드명 수정
+                    item.trade_id === tradeId
                         ? { ...item, state: Number(newState) }
                         : item
                 )
@@ -92,7 +92,7 @@ export function MyPageGroupBuy({ user }) {
                             type: 'chats',
                             table_type: 'trades',
                             table_id: o.table_id,
-                            message: `${title} 공구 결제 해주세요!`,
+                            message: `${title} 공구 결제요청 메세지가 도착했습니다.`,
                         },
                     ]);
                 if (error) console.error('채팅 전송 실패:', error.message);

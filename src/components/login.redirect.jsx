@@ -9,6 +9,7 @@ import loginRedirectHoney from '../public/loginRedirectHoney.png'
 import profile from '../public/profile.png'
 import { FiPlusCircle } from "react-icons/fi";
 import { useImage } from "../hooks/useImage";
+import { supabase } from "../supabase/supabase";
 
 
 const createNickname = async (name, city, district, img) => {
@@ -21,7 +22,7 @@ const createNickname = async (name, city, district, img) => {
         'Authorization': `Bearer ${user.token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: user.id, name: name, region: JSON.stringify([city, district]), email: user.email, img:img }),
+      body: JSON.stringify({ id: user.id, name: name, region: JSON.stringify([city, district]), email: user.email, img: img }),
     });
 
     if (!res.ok) {
@@ -37,13 +38,14 @@ const createNickname = async (name, city, district, img) => {
 export function LoginRedirect() {
   const inputRef = useRef();
   const [toggle, setToggle] = useState(true);
-  const [ returnData, setReturnData ] = useState({ })
+  const [returnData, setReturnData] = useState({})
   const {
     images,
     setImages,
     getImages,
   } = useImage();
   const navigate = useNavigate();
+  const { user:userData, refetch } = useUserTable();
 
   const {
     city, setCity,
@@ -52,10 +54,28 @@ export function LoginRedirect() {
   } = useRegion();
 
   useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.includes('access_token=')) {
+      const params = new URLSearchParams(hash.split('#')[2]);
+      const access_token = params.get('access_token');
+      const refresh_token = params.get('refresh_token');
+      if (access_token && refresh_token) {
+        supabase.auth.setSession({
+          access_token,
+          refresh_token,
+        }).then(({ error }) => {
+          if (error) console.error("세션 설정 실패:", error.message);
+        });
+      }
+    }
+  }, []);
+
+
+  useEffect(() => {
     const isTable = async () => {
       const { user } = await getUser();
       if (!user || !user.id) return false;
-      const query = new URLSearchParams({ id: user.id, name: user.name, region: JSON.stringify([city, district]) }).toString();
+      const query = new URLSearchParams({ id: user.id, name: user.name, email:user.email, region: JSON.stringify([city, district]) }).toString();
       const url = `https://mkoiswzigibhylmtkzdh.supabase.co/functions/v1/user?${query}`;
       const res = await fetch(url, {
         method: 'GET',
@@ -65,23 +85,25 @@ export function LoginRedirect() {
       });
 
       if (!res.ok) {
+        const errorText = await res.text();
+        console.error(`서버 응답 오류: ${res.status} ${res.statusText} - ${errorText}`);
         return false;
       }
       const result = await res.json();
       return result;
     };
-    if (city !== undefined) {
+    if (city) {
       isTable().then((data) => {
-        setReturnData(data.user)
-        if (!data.created) {
-          setToggle(false);
-        }
-        else {
-          setToggle(false);
+        if(data !== false){
+          refetch().then(()=>{
+            setReturnData(data.user)
+            setToggle(false);
+          })
         }
       });
     }
-  }, []);
+  },[city]);
+
   return (<>
     <div className="login">
       <section
@@ -100,7 +122,7 @@ export function LoginRedirect() {
 
         </div>
         <div className="profile_img" style={{ display: toggle ? 'none' : 'flex' }} >
-          <img src={images.length === 0?profile:getImages(images[images.length -1])}/>
+          <img src={images.length === 0 ? profile : getImages(images[images.length - 1])} />
           <div onClick={(e) => {
             e.preventDefault();
             const input = document.createElement('input');
@@ -120,18 +142,18 @@ export function LoginRedirect() {
         </div>
 
         <h2 className="loding">
-          맞는 꿀통 찾는 중 ...
+          맞는 꿀단지 찾는 중 ...
         </h2>
         <form
           className={`box ${toggle ? "" : "out"}`}
           onSubmit={(e) => {
             e.preventDefault();
             const name = inputRef.current.value === "" ? inputRef.current.placeholder : inputRef.current.value
-            const profileImg = images.length === 0?(returnData?.img):(images[images.length-1]);
-            // 버튼
+            const profileImg = images.length === 0 ? (returnData?.img) : (images[images.length - 1]);
             createNickname(name, city, district, profileImg).then(() => {
+              refetch();
               alert(`${name} 님\n회원가입을 환영합니다.`)
-              // navigate('/')
+              navigate('/')
             });
           }}
         >

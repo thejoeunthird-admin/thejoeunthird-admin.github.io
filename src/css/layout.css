@@ -551,8 +551,8 @@
 }
 
 .footer_container {
-    width: 100%;
-    min-width: var(--breakpoint-min);
+    width: calc( 100% - 20px );
+    min-width: calc( var(--breakpoint-min) -20px );
     max-width: var(--breakpoint-max);
     margin: 10px;
     display: flex;

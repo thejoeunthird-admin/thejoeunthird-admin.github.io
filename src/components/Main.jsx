@@ -41,9 +41,8 @@ function BestItems() {
     }, []);
 
     useEffect(() => {
-        //get_earliest_trades_category_5
         const fetchBoards = async () => {
-            const { data, error: dataError } = await supabase.rpc('get_earliest_trades_category_5');
+            const { data, error: dataError } = await supabase.rpc('get_earliest_trades_category_7');
             if (dataError) {
                 setError(true)
                 return;
@@ -81,7 +80,8 @@ function BestItems() {
                             className='contents'
                             onClick={(e)=>{
                                 e.preventDefault();
-                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}`)
+                                console.log('keyword')
+                                nav(`/trade/${(findById(o.category_id)).url}/${o.id}?keyword=`)
                             }}
                         >
                             <img src={getFinalUrl(o.main_img)} className='contents-img' />
@@ -210,7 +210,7 @@ function BestBoards() {
                         className='contents'
                         onClick={(e)=>{
                             e.preventDefault();
-                            nav(`/life/detail/${o.id}`)
+                            nav(`/life/detail/${o.id}?keyword=`)
                         }}
                     >
                         <p className='contents_title'>
@@ -244,7 +244,7 @@ function BestBoards() {
                             className='line'
                             onClick={(e)=>{
                                 e.preventDefault();
-                                nav(`/life/detail/${o.id}`)
+                                nav(`/life/detail/${o.id}?keyword=`)
                             }}
                         >
                             <strong className='contents_tag'>{findById(o.category_id).name}</strong>
@@ -271,9 +271,8 @@ function BestBoards() {
 }
 
 export function Main() {
-
     return (<>
-        <div className="container" style={{ marginTop:0 }}>
+        <div className="containers" style={{ marginTop:0 }}>
             <span className='boardsHeader'>🔥 꿀팁</span>
             <BestBoards />
             <span className='boardsHeader'>🍯 꿀템</span>

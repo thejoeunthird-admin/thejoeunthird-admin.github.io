@@ -4,9 +4,9 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { supabase } from "../supabase/supabase";
 import { UsedItem } from './UsedItem';
 import { LoadingCircle } from './LoadingCircle';
-import { Trade } from './Trade';
 import { useUserTable } from '../hooks/useUserTable';
 import { useRegion } from '../hooks/useRegion';
+import Loadingfail from '../public/Loadingfail.png'
 
 export function UsedBoard() {
     const [posts, setPosts] = useState([]);
@@ -22,7 +22,7 @@ export function UsedBoard() {
     const user = useUserTable();
     const { item } = useParams();
 
-    const {city, district} = useRegion();
+    const { city, district } = useRegion();
     const region = `${city} ${district}`;
 
     useEffect(() => {
@@ -43,13 +43,10 @@ export function UsedBoard() {
 
             const { data: postsData, error } = await supa;
 
-            // promise.all: 모든 작업이 완료될 때 까지 기다림(여러 개의 비동기 작업을 병렬로 처리)
             const postsWithCounts = await Promise.all(
                 (postsData || []).map(async (post) => {
                     const { count: commentsCount } = await supabase
                         .from("comments")
-                        // count: exact: 개수 반환(데이터 포함)
-                        // head: true: 실제 데이터는 반환하지 않음 => 같이 써줘야 함
                         .select("*", { count: "exact", head: true })
                         .eq("table_id", post.id);
 
@@ -88,11 +85,15 @@ export function UsedBoard() {
 
     const UsedBoardContent = () => {
         if (!posts) return <div><LoadingCircle /></div>;
-
         return (
             <div className="usedboard-container">
                 <>
-                    {posts.map((used) => (
+                    {posts.length === 0 ? (<div style={{ display: 'flex', width: '100%', alignItems: 'center', flexDirection: 'column' }}>
+                        <img src={Loadingfail} style={{ width: '50%' }} />
+                        <p style={{ fontSize: '1.rem', fontWeight: '700', color: 'var(--base-color-1)' }}>
+                            검색 조건이 없거나, 아직 게시글이 없어요!
+                        </p>
+                    </div>) : posts.map((used) => (
                         <div className="usedboard-col" key={used.id}>
                             <UsedItem used={used}
                                 likesCount={used.likesCount}

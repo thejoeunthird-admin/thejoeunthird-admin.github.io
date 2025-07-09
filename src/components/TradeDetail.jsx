@@ -37,9 +37,8 @@ export function TradeDetail() {
   const keyword = searchParams.get('keyword');
 
   useEffect(() => {
-    if (keyword !== null && keyword !== 'null') {
-      console.log('keyword = [' + keyword + ']');
-      // navigate(`/trade/${getCategoryUrl(detail.category_id, categoriesAll)}?keyword=${keyword}`);
+    if (keyword !== '') {
+      navigate(`/trade/${getCategoryUrl(detail.category_id, categoriesAll)}?keyword=${keyword}`);
     }
   }, [keyword, detail?.category_id, categoriesAll]);
 
@@ -264,6 +263,8 @@ export function TradeDetail() {
   // 구매하기/나눔받기/팔기 -> 판매자 채팅으로
   const makeChats = async () => {
     if (!confirm('거래 요청 메시지를 보낼까요?')) return;
+    navigate(`/my/talk/${detail?.user_id}`)
+    /*
     const { data, error } = await supabase
       .from('chats')
       .insert([{
@@ -292,6 +293,7 @@ export function TradeDetail() {
       console.log('data: ', data);
       navigate(`/my/talk/${detail?.user_id}`)
     }
+    */
   }
 
   if (loading) {
@@ -317,8 +319,6 @@ export function TradeDetail() {
       </div>
     );
   }
-
-
 
   return (
     <div className="detail-wrapper">

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Navigate, useParams, } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useParams, HashRouter, } from 'react-router-dom';
 import { Provider as ReduxProvider } from "react-redux";
 import { redux } from "./store/redux";
 import './index.css';
@@ -9,13 +9,9 @@ import { Login } from './components/Login';
 import { LoginRedirect } from './components/Login.redirect'
 import { MyPage } from './components/Mypage';
 import { TestPage } from './components/testpage';
-// import { Trade } from './components/Trade'
-// import { UsedSell } from './components/UsedSell';
-// import { UsedShare } from './components/UsedShare';
-// import { UsedBuy } from './components/UsedBuy';
 import { Main } from './components/Main';
 import { UsedDetail } from './components/UsedDetail';
-import BoardListPages from './board/BoardListPages';
+import BoardListPage from './board/BoardListPage';
 import WritePage from './board/WritePage';
 import BoardDetailPage from './board/BoardDetailPage';
 import EditPage from './board/EditPage';
@@ -27,9 +23,9 @@ import { Notifications } from './components/Notifications';
 import { NotificationProvider } from './components/AlertNotifications';
 import { UsedForm } from './components/UsedForm';
 
-
 function TradeRouter() {
   const { id, item, tap } = useParams();
+  /* 김종현 작업 --- 공구, 거래 전체 게시판 */
   if (id === 'gonggu') {
     if(item){
         switch(item){
@@ -40,6 +36,7 @@ function TradeRouter() {
     }
     else return (<Trade tap={id}/>)
   }
+  /* 김종현 작업 --- 공구, 거래 게시판 */
   else {
     if(item){
       switch(item){
@@ -54,7 +51,7 @@ function TradeRouter() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       {/* 리덕스 사용 */}
       <ReduxProvider store={redux}>
         <NotificationProvider>
@@ -69,15 +66,14 @@ function App() {
               <Route path='/my' element={<MyPage />} />
               <Route path='/my/:tap' element={<MyPage />} />
               <Route path='/my/:tap/:item' element={<MyPage />} />
-              
+              {/* 김종현, 강수아 작업 --- 거래 게시판 */}
               <Route path='/trade' element={<Trade />} />
               <Route path='/trade/:id' element={<TradeRouter />} /> 
               <Route path='/trade/:id/:item' element={<TradeRouter />} />
               <Route path='/trade/:id/:item/:tap' element={<TradeRouter />} />
-
               {/* 이신아 작업 -- 일반 게시판 */}
-              <Route path="/life" element={<BoardListPages />} />
-              <Route path="/life/:tap" element={<BoardListPages />} />
+              <Route path="/life" element={<BoardListPage />} />
+              <Route path="/life/:tap" element={<BoardListPage />} />
               <Route path="/life/write" element={<WritePage />} />
               <Route path="/life/edit/:id" element={<EditPage />} />
               <Route path="/life/:tap/:id" element={<BoardDetailPage />} />
@@ -85,7 +81,7 @@ function App() {
           </Layout>
         </NotificationProvider>
       </ReduxProvider>
-    </BrowserRouter>
+    </HashRouter >
   );
 }
 

@@ -115,7 +115,7 @@
 
 .likes-item {
     width: 100%;
-    max-height: 500px;
+    /* max-height: 500px; */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     transition: all 0.3s ease;

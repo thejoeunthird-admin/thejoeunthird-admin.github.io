@@ -110,12 +110,10 @@ export function Layout({ children }) {
     const handleLogout = useCallback(async (e) => {
         e.preventDefault()
         const { error } = await supabase.auth.signOut();
-        if (error) {
-            alert('로그아웃 실패: ' + error.message);
-        } else {
-            alert('로그아웃 되었습니다.');
-            dispatch(clearUserInfo());
-        }
+        localStorage.clear();
+        sessionStorage.clear();
+        alert('로그아웃 되었습니다.');
+        dispatch(clearUserInfo());
     }, [dispatch]);
 
     const handleNavigate = useCallback((e, path) => {
@@ -165,12 +163,6 @@ export function Layout({ children }) {
                         오생꿀
                     </p>
                     <div className='displayOff'>
-                        {/* <p
-                            className={`board-item ${location.pathname === '/' ? 'red' : ''}`}
-                            onClick={(e) => handleNavigate(e, `/`)}
-                        >
-                            홈
-                        </p> */}
                         {categories.filter((o) => ![16, 26].includes(o.id)).map((o, k) => (
                             <React.Fragment key={k}>
                                 <p
