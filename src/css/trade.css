@@ -170,6 +170,7 @@
 
 .card-content {
     flex: 1;
+    width: 0px;
 }
 
 .card-title {
@@ -182,6 +183,9 @@
     font-size: 0.95rem;
     color: #555;
     margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-badges {
