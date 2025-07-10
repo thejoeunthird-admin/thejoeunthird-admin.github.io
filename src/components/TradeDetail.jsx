@@ -11,7 +11,6 @@ import { CustomCarousel } from "./CustomCarousel";
 import { timeAgo, timeAgoOrClosed, getCategoryFullName, getCategoryFullNameTag, getCategoryUrl } from '../utils/utils';
 import '../css/tradeDetail.css'
 import '../css/trade.css'
-import { getUser } from '../utils/getUser';
 
 export function TradeDetail() {
   const navigate = useNavigate();
@@ -27,22 +26,27 @@ export function TradeDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [likesCount, setLikesCount] = useState(0);
-  const [progressPercent, setProgressPercent] = useState(0);
-  const [isGonggued, setIsGonggued] = useState(false);
-  const [isGongguing, setIsGongguing] = useState(false);
-  const [isGongguClosed, setIsGongguClosed] = useState(false);
+  const [gongguState, setGongguState] = useState({
+    likesCount: 0,
+    progressPercent: 0,
+    isGonggued: false,
+    isGongguing: false,
+    isGongguClosed: false,
+  });
+
+
   const categoriesAll = useSelector(state => state.categories.all);
   const now = new Date();
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword');
 
   useEffect(() => {
-    if (keyword !== '') {
-      navigate(`/trade/${getCategoryUrl(detail.category_id, categoriesAll)}?keyword=${keyword}`);
+    if (keyword !== null && keyword !== 'null') {
+      console.log('keyword = [' + keyword + ']');
+      // navigate(`/trade/${getCategoryUrl(detail.category_id, categoriesAll)}?keyword=${keyword}`);
     }
   }, [keyword, detail?.category_id, categoriesAll]);
-  
+
   // 상품 정보, 판매자 정보, 좋아요 수, 현재 유저 좋아요/공동구매 상태 조회
   useEffect(() => {
     const fetchDetailData = async () => {
@@ -66,20 +70,6 @@ export function TradeDetail() {
           [detail.detail_img1, detail.detail_img2, detail.detail_img3, detail.detail_img4].filter(Boolean)
         );
         setDetailUser({ id: detail.user_id, name: detail.user_name, img: detail.user_img });
-        setLikesCount(detail.likes_count);
-        if (detail.category_id === 7) {
-          setIsGonggued(Boolean(detail.is_ordered));
-          if (detail.limit_type === 1) {  
-            const chk_close = detail.state === 9 || now > new Date(detail.sales_end) || detail.order_count >= detail.limit
-              ? true : false;
-            setIsGongguClosed(chk_close);
-          } else {
-            const chk_close = detail.state === 9 || now > new Date(detail.sales_end)
-              ? true : false;
-            setIsGongguClosed(chk_close);
-          }
-          setProgressPercent(Math.min(100, Math.round((detail.order_count / detail.limit) * 100)));
-        }
 
         // 조회수 증가 처리
         await supabase.rpc('increment_view_count', {
@@ -90,11 +80,55 @@ export function TradeDetail() {
         console.error('상품 데이터 불러오기 오류:', err);
         setError(err.message || '데이터 로드 중 오류 발생');
       } finally {
-        setLoading(false);
+        setLoading(false);  
       }
     };
+
     fetchDetailData();
-  },[userInfo.loading,item]);
+  }, [userInfo.loading,item]);
+
+  useEffect(() => {
+    if (!detail) return;
+
+    // 공통값
+    setGongguState(prev => ({
+      ...prev,
+      likesCount: detail.likes_count,
+    }));
+
+    // 공동구매일 경우
+    if (detail.category_id === 7) {
+      setGongguState(prev => ({
+        ...prev,
+        isGonggued: Boolean(detail.is_ordered),
+      }));
+
+      const now = new Date();
+      const isClosed =
+        detail.state !== 0 ||
+        now > new Date(detail.sales_end) ||
+        (detail.limit_type === 1 && detail.order_count >= detail.limit);
+
+      setGongguState(prev => ({
+        ...prev,
+        isGongguClosed: isClosed,
+        progressPercent: Math.min(100, Math.round((detail.order_count / detail.limit) * 100)),
+      }));
+    }
+  }, [detail]);
+
+  const refreshDetail = async () => {
+    const { data, error } = await supabase.rpc('get_trade_detail', {
+      input_table_id: detail.id,
+      input_user_id: currentUserId
+    }).single();
+    if (error) {
+      console.error('상세 정보 재조회 오류:', error.message);
+      return;
+    }
+    setDetail(data);
+  };
+
 
   // 글 삭제
   const handleDeleteDetails = async () => {
@@ -125,7 +159,8 @@ export function TradeDetail() {
       return;
     }
     try {
-      const newState = isGongguClosed ? 0 : 9; // 마감 취소 or 마감
+      // 마감 취소 or 마감 // trades 0모집중 1모집완료 2모집실패 3판매완료
+      const newState = isGongguClosed ? 0 : 1;
       const { error } = await supabase
         .from('trades')
         .update({ state: newState })
@@ -135,11 +170,17 @@ export function TradeDetail() {
         console.error('공동구매 상태 변경 오류:', error);
         alert(`공동구매 상태 변경 중 오류: ${error.message}`);
       } else {
-        alert(newState === 9 ? '공동구매를 마감했습니다.' : '공동구매 마감을 취소했습니다.');
-        if (newState === 9) {
-          setIsGongguClosed(true);
+        alert(newState === 1 ? '공동구매를 마감했습니다.' : '공동구매 마감을 취소했습니다.');
+        if (newState === 1) {
+          setGongguState(prev => ({
+            ...prev,
+            isGongguClosed: true
+          }));
         } else {
-          setIsGongguClosed(false);
+          setGongguState(prev => ({
+            ...prev,
+            isGongguClosed: false
+          }));
         }
         // 상태 반영을 위해 detail state 업데이트
         setDetail(prev => ({ ...prev, state: newState }));
@@ -161,8 +202,12 @@ export function TradeDetail() {
       alert('공구 상품이 아닙니다.');
       return;
     }
-
-    setIsGongguing(true);
+    /*
+        setGongguState(prev => ({
+          ...prev,
+          isGongguing: true
+        }));
+        */
     try {
       // 🔒 최신 상태 다시 확인 (마감됐는지 체크)
       const { data: latestOrder, error: stateCheckError } = await supabase
@@ -174,13 +219,19 @@ export function TradeDetail() {
 
       if (stateCheckError) {
         alert(`공동구매 상태 확인 중 오류가 발생했습니다. : ${stateCheckError}`);
-        setIsGongguing(false);
+        setGongguState(prev => ({
+          ...prev,
+          isGongguing: false
+        }));
         return;
       }
-      if (latestOrder && latestOrder.state === 9) {
+      if (latestOrder && latestOrder.state !== 0) {
         alert('이 공동구매는 마감되었습니다.');
-        setIsGongguing(false);
-        setIsGongguClosed(true);
+        setGongguState(prev => ({
+          ...prev,
+          isGongguing: false,
+          isGongguClosed: true
+        }));
         return;
       }
       // 🔢 수량 유효성 검사
@@ -193,19 +244,25 @@ export function TradeDetail() {
           console.error('Delete error:', error);
           alert(`공동구매 수량 조회 중 오류: ${error.message}`);
         } else {
-          setIsGonggued(false);
+          setGongguState(prev => ({
+            ...prev,
+            isGonggued: false
+          }));
           alert('공동구매 수량 확인에 문제가 발생했습니다.');
         }
         const totalOrdered = data.reduce((sum, row) => sum + row.quantity, 0);
         const available = detail.limit - totalOrdered;
         if (quantity < 1 || quantity > available) {
           alert(`1개 이상 ${available}개 이하로 입력해주세요`);
-          setIsGongguing(false);
+          setGongguState(prev => ({
+            ...prev,
+            isGongguing: false
+          }));
           return;
         }
       }
 
-      if (isGonggued) { // 공구 취소
+      if (gongguState.isGonggued) { // 공구 취소
         const { error } = await supabase
           .from('trades_order')
           .delete()
@@ -215,7 +272,12 @@ export function TradeDetail() {
           console.error('Delete error:', error);
           alert(`공동구매 취소 중 오류: ${error.message}`);
         } else {
-          setIsGonggued(false);
+          setGongguState(prev => ({
+            ...prev,
+            isGonggued: false
+          }));
+          await updateProgress();
+          await refreshDetail();
           alert('공동구매 참여가 취소되었습니다.');
         }
       } else {  // 공구 신청
@@ -235,7 +297,12 @@ export function TradeDetail() {
           console.error('Insert error:', error);
           alert(`공동구매 참여 중 오류: ${error.message}`);
         } else {
-          setIsGonggued(true);
+          setGongguState(prev => ({
+            ...prev,
+            isGonggued: true
+          }));
+          await updateProgress();
+          await refreshDetail();
           alert('공동구매에 참여했습니다.');
         }
       }
@@ -243,7 +310,10 @@ export function TradeDetail() {
       console.error('Unexpected error:', error);
       alert(`공동구매 처리 중 오류: ${error.message}`);
     } finally {
-      setIsGongguing(false);
+      setGongguState(prev => ({
+        ...prev,
+        isGongguing: false
+      }));
     }
   };
 
@@ -262,14 +332,27 @@ export function TradeDetail() {
 
   // 구매하기/나눔받기/팔기 -> 판매자 채팅으로
   const makeChats = async () => {
+    if (!currentUserId) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
     if (!confirm('거래 요청 메시지를 보낼까요?')) return;
-    navigate(`/my/talk/${detail?.user_id}`)
     const { data, error } = await supabase
       .from('chats')
       .insert([{
         sender_id: detail?.user_id, // 게시물 작성자(detail.user_id)
         receiver_id: userInfo?.info.id, // 로그인한 사람 id(userInfo.id)
-        chat: '공구참여 하고 싶어요!',
+        chat:
+          detail?.category_id == 4
+            ? '벼룩해요!'
+            : detail?.category_id == 5
+              ? '드림해요!'
+              : detail?.category_id == 6
+                ? '구해요!'
+                : detail?.category_id == 7
+                  ? '공구해요!'
+                  : '거래해요!?',
         create_date: now,
         read: false,
         trades_id: detail.id,
@@ -285,7 +368,28 @@ export function TradeDetail() {
     }
   }
 
-  if(loading || userInfo.loading || !detail) {
+  const updateProgress = async () => {
+    const { data, error } = await supabase
+      .from('trades_order')
+      .select('quantity')
+      .eq('table_id', detail.id);
+
+    if (error) {
+      console.error('공동구매 수량 조회 오류:', error.message);
+      return;
+    }
+
+    const totalOrdered = data.reduce((sum, row) => sum + row.quantity, 0);
+    const percent = Math.min(100, Math.round((totalOrdered / detail.limit) * 100));
+
+    setGongguState(prev => ({
+      ...prev,
+      progressPercent: percent
+    }));
+  };
+
+
+  if (loading) {
     return (
       <div className="loading-wrapper">
         <LoadingCircle />
@@ -317,9 +421,9 @@ export function TradeDetail() {
           <div className="progress-bar-container">
             <div
               className="progress-bar-inner"
-              style={{ width: `${progressPercent}%` }}
+              style={{ width: `${gongguState.progressPercent}%` }}
             >
-              &nbsp;&nbsp;&nbsp;{progressPercent}%
+              &nbsp;&nbsp;&nbsp;{gongguState.progressPercent}%
             </div>
           </div>
           // </div>
@@ -329,10 +433,10 @@ export function TradeDetail() {
           {/* 좌측 이미지 */}
           <div className="detail-left">
             <div className="image-carousel">
-              <CustomCarousel
+              {/* <CustomCarousel
                 images={[detail.main_img, ...detailImages]}
                 getImages={getImages}
-              />
+              /> */}
             </div>
 
             {/* 좌측 하단 작성자 정보 */}
@@ -352,11 +456,8 @@ export function TradeDetail() {
 
           {/* 우측 상품 정보 */}
           <div className="detail-right">
+
             <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>
-              {detail.state == 0 ? '[모집중]'
-                : detail.state == 1 ? '[모집완료]'
-                  : detail.state == 2 ? '[모집실패]'
-                    : '[판매완료]'}
               &nbsp;{detail.title}
             </h2>
             <div className="meta">
@@ -370,6 +471,18 @@ export function TradeDetail() {
               <h3>거래희망장소: {detail.location}</h3>
               <h3>{Number(detail.price).toLocaleString()}원</h3>
             </div>
+
+            {/* <div className="owner-info">
+              <p>❤️ 좋아요 {likesCount} | 👁 조회수 {detail.cnt}</p>
+              {detail.category_id === 7 && (
+                <div style={{ paddingTop:'10px', lineHeight:'1.5', fontSize:'0.9rem' }}>
+                  <small>시작: {new Date(detail.sales_begin).toLocaleString()}</small>
+                  <br />
+                  <small>종료: {new Date(detail.sales_end).toLocaleString()}</small>
+                </div>
+              )}
+            </div> */}
+
             <Likes
               categoryId={detail.category_id}
               tableId={detail.id}
@@ -387,7 +500,12 @@ export function TradeDetail() {
             {/* 공구 정보 */}
             {detail.category_id === 7 && (
               <div className="gonggu-status" style={{ marginTop: '10px' }}>
-                <label>공구 진행률</label>
+                <label>{detail.state == 0 ? '[모집중] '
+                  : detail.state == 1 ? '[모집완료] '
+                    : detail.state == 2 ? '[모집실패] '
+                      : '[판매완료] '}
+                  공구 진행률 : &nbsp;
+                </label>
                 {detail.limit_type === 1 ? (
                   <>
                     <span>
@@ -396,9 +514,9 @@ export function TradeDetail() {
                     <div className="progress-bar-container" style={{ marginTop: '10px' }}>
                       <div
                         className="progress-bar-inner"
-                        style={{ width: `${progressPercent}%` }}
+                        style={{ width: `${gongguState.progressPercent}%` }}
                       >
-                        &nbsp;&nbsp;&nbsp;{progressPercent}%
+                        &nbsp;&nbsp;&nbsp;{gongguState.progressPercent}%
                       </div>
                     </div>
                   </>
@@ -426,7 +544,7 @@ export function TradeDetail() {
                       ✏️ 수정
                     </button>
                     <button
-                      className="btn outline-primary"
+                      className="btn outline-secondary"
                       onClick={handleDeleteDetails}
                     >
                       ❌ 삭제
@@ -436,7 +554,7 @@ export function TradeDetail() {
                   {detail.category_id === 7 && (
                     <div className="button-group">
                       <button
-                        className={`btn ${detail.state === 9
+                        className={`btn ${detail.state !== 0
                           ? 'outline-success'
                           : 'outline-danger'
                           }`}
@@ -456,7 +574,7 @@ export function TradeDetail() {
                 <div className="button-group">
                   {detail.category_id === 7 ? (
                     <>
-                      {!isGongguClosed && (
+                      {!gongguState.isGongguClosed && (
                         <button
                           className="btn outline-secondary"
                           onClick={() => {
@@ -469,13 +587,13 @@ export function TradeDetail() {
                       <button
                         className="btn secondary"
                         onClick={handleGongguClick}
-                        disabled={isGongguing || isGongguClosed}
+                        disabled={gongguState.isGongguing || gongguState.isGongguClosed && !gongguState.isGonggued}
                       >
                         {
                           //isGonggued ? '❌ 참여 취소' : '🤝 공구 참여'
-                          isGongguClosed
-                            ? '⛔ 공구 종료'
-                            : (isGonggued ? '❌ 참여 취소' : '🤝 공구 참여')
+                          gongguState.isGongguClosed
+                            ? (gongguState.isGonggued ? '❌ 참여 취소' : '⛔ 공구 종료')
+                            : (gongguState.isGonggued ? '❌ 참여 취소' : '🤝 공구 참여')
                         }
                       </button>
                     </>
@@ -503,6 +621,7 @@ export function TradeDetail() {
           <p>{detail.content}</p>
         </div>
       </div>
+
       <Comments productId={item} categoryId={detail.category_id} />
     </div>
 
