@@ -15,7 +15,7 @@ import noImg from '../public/noImg.png'
 
 function BestItems() {
     const nav = useNavigate();
-    const { findById } =useCategoriesTable();
+    const { findById } = useCategoriesTable();
     const { getImages } = useImage();
     const [gonggu, setGonggu] = useState([])
     const [items, setItems] = useState([]);
@@ -75,10 +75,10 @@ function BestItems() {
                 <ul className='row trade'>
                     <h2 className='row_title'>중고 거래</h2>
                     {items.map((o, k) =>
-                        <li 
-                            key={k} 
+                        <li
+                            key={k}
                             className='contents'
-                            onClick={(e)=>{
+                            onClick={(e) => {
                                 e.preventDefault();
                                 console.log('keyword')
                                 nav(`/trade/${(findById(o.category_id)).url}/${o.id}?keyword=`)
@@ -119,10 +119,10 @@ function BestItems() {
                 <ul className='row trade'>
                     <h2 className='row_title'>공동 구매</h2>
                     {gonggu.map((o, k) =>
-                        <li 
-                            key={k} 
+                        <li
+                            key={k}
                             className='contents'
-                            onClick={(e)=>{
+                            onClick={(e) => {
                                 e.preventDefault();
                                 nav(`/trade/${(findById(o.category_id)).url}/${o.id}?keyword=`)
                             }}
@@ -135,7 +135,16 @@ function BestItems() {
                                         className='end-string'
                                         style={{ fontSize: '0.9rem', fontWeight: '500' }}
                                     >
-                                        {formatDateTime(o.create_date)}
+                                        {o.create_date
+                                            ? new Date(new Date(o.create_date).getTime() + 9 * 60 * 60 * 1000).toLocaleString("ko-KR", {
+                                                year: "numeric",
+                                                month: "2-digit",
+                                                day: "2-digit",
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                                hour12: false
+                                            })
+                                            : ""}
                                     </small>
                                 </p>
                                 <p className='contents-title'>
@@ -172,7 +181,7 @@ function BestBoards() {
     const [boardsTop3, setBoardsTop3] = useState([]);
     const [boards, setBoards] = useState([]);
     const [error, setError] = useState(false);
-    
+
     useEffect(() => {
         const fetchBoards = async () => {
             const { data, error: dataError } = await supabase.rpc('get_top_liked_boards');
@@ -205,10 +214,10 @@ function BestBoards() {
         return (<>
             <ul className="bestBoards">
                 {boardsTop3.map((o, k) =>
-                    <li 
-                        key={k} 
+                    <li
+                        key={k}
                         className='contents'
-                        onClick={(e)=>{
+                        onClick={(e) => {
                             e.preventDefault();
                             nav(`/life/detail/${o.id}?keyword=`)
                         }}
@@ -224,7 +233,13 @@ function BestBoards() {
                                 {findById(o.category_id).name}
                             </p>
                             <p className='timestamp'>
-                                {formatTime(o.create_date)}
+                                {o.create_date
+                                    ? new Date(new Date(o.create_date).getTime() + 9 * 60 * 60 * 1000).toLocaleTimeString("ko-KR", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        hour12: false
+                                    })
+                                    : ""}
                             </p>
                         </div>
                         <span className='contents_area'>
@@ -239,10 +254,10 @@ function BestBoards() {
                 )}
                 <li className='contents-span'>
                     {boards.map((o, k) =>
-                        <a 
-                            key={k} 
+                        <a
+                            key={k}
                             className='line'
-                            onClick={(e)=>{
+                            onClick={(e) => {
                                 e.preventDefault();
                                 nav(`/life/detail/${o.id}?keyword=`)
                             }}
@@ -272,7 +287,7 @@ function BestBoards() {
 
 export function Main() {
     return (<>
-        <div className="containers" style={{ marginTop:0 }}>
+        <div className="containers" style={{ marginTop: 0 }}>
             <span className='boardsHeader'>🔥 꿀팁</span>
             <BestBoards />
             <span className='boardsHeader'>🍯 꿀템</span>

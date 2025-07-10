@@ -11,6 +11,7 @@ import { CustomCarousel } from "./CustomCarousel";
 import { timeAgo, timeAgoOrClosed, getCategoryFullName, getCategoryFullNameTag, getCategoryUrl } from '../utils/utils';
 import '../css/tradeDetail.css'
 import '../css/trade.css'
+import { getUser } from '../utils/getUser';
 
 export function TradeDetail() {
   const navigate = useNavigate();
@@ -66,14 +67,14 @@ export function TradeDetail() {
         );
         setDetailUser({ id: detail.user_id, name: detail.user_name, img: detail.user_img });
         setLikesCount(detail.likes_count);
-        if (detail.category_id == 7) {
+        if (detail.category_id === 7) {
           setIsGonggued(Boolean(detail.is_ordered));
-          if (detail.limit_type == 1) {
-            const chk_close = detail.state == 9 || now > new Date(detail.sales_end) || detail.order_count >= detail.limit
+          if (detail.limit_type === 1) {  
+            const chk_close = detail.state === 9 || now > new Date(detail.sales_end) || detail.order_count >= detail.limit
               ? true : false;
             setIsGongguClosed(chk_close);
           } else {
-            const chk_close = detail.state == 9 || now > new Date(detail.sales_end)
+            const chk_close = detail.state === 9 || now > new Date(detail.sales_end)
               ? true : false;
             setIsGongguClosed(chk_close);
           }
@@ -92,9 +93,8 @@ export function TradeDetail() {
         setLoading(false);
       }
     };
-
     fetchDetailData();
-  }, [item]);
+  },[userInfo.loading,item]);
 
   // 글 삭제
   const handleDeleteDetails = async () => {
@@ -264,22 +264,12 @@ export function TradeDetail() {
   const makeChats = async () => {
     if (!confirm('거래 요청 메시지를 보낼까요?')) return;
     navigate(`/my/talk/${detail?.user_id}`)
-    /*
     const { data, error } = await supabase
       .from('chats')
       .insert([{
         sender_id: detail?.user_id, // 게시물 작성자(detail.user_id)
         receiver_id: userInfo?.info.id, // 로그인한 사람 id(userInfo.id)
-        chat:
-          detail?.category_id == 4
-            ? '벼룩해요!'
-            : detail?.category_id == 5
-              ? '드림해요!'
-              : detail?.category_id == 6
-                ? '구해요!'
-                : detail?.category_id == 7
-                  ? '공구해요!'
-                  : '거래해요!?',
+        chat: '공구참여 하고 싶어요!',
         create_date: now,
         read: false,
         trades_id: detail.id,
@@ -293,7 +283,6 @@ export function TradeDetail() {
       console.log('data: ', data);
       navigate(`/my/talk/${detail?.user_id}`)
     }
-    */
   }
 
   if (loading) {
@@ -320,6 +309,7 @@ export function TradeDetail() {
     );
   }
 
+  if(userInfo.loading) { return(<></>) }
   return (
     <div className="detail-wrapper">
       <div className="detail-card">
@@ -381,18 +371,6 @@ export function TradeDetail() {
               <h3>거래희망장소: {detail.location}</h3>
               <h3>{Number(detail.price).toLocaleString()}원</h3>
             </div>
-
-            {/* <div className="owner-info">
-              <p>❤️ 좋아요 {likesCount} | 👁 조회수 {detail.cnt}</p>
-              {detail.category_id === 7 && (
-                <div style={{ paddingTop:'10px', lineHeight:'1.5', fontSize:'0.9rem' }}>
-                  <small>시작: {new Date(detail.sales_begin).toLocaleString()}</small>
-                  <br />
-                  <small>종료: {new Date(detail.sales_end).toLocaleString()}</small>
-                </div>
-              )}
-            </div> */}
-
             <Likes
               categoryId={detail.category_id}
               tableId={detail.id}

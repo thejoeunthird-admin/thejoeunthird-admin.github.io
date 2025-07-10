@@ -197,16 +197,15 @@ export function UsedDetail() {
             return;
         }
         if (!confirm('거래 요청 메시지를 보낼까요?')) return;
-        /*
         const { data, error } = await supabase
             .from('chats')
             .insert([{
                 sender_id: detail?.user_id, // 게시물 작성자(detail.user_id)
                 receiver_id: userInfo?.id, // 로그인한 사람 id(userInfo.id)
                 chat:
-                    detail.category_id === 4 ? '벼룩해요!' :
-                        detail.category_id === 5 ? '나눔받을래요!' :
-                            detail.category_id === 6 ? '사고싶어요!' : '',
+                    detail.category_id === 4 ? '벼룩 참여하고 싶어요!' :
+                        detail.category_id === 5 ? '나눔 참여하고 싶어요!' :
+                            detail.category_id === 6 ? '사고 싶어요!' : '',
                 create_date: now,
                 read: false,
                 trades_id: detail.id,
@@ -220,7 +219,6 @@ export function UsedDetail() {
             console.log('data: ', data);
             navigate(`/my/talk/${detail?.user_id}`)
         }
-        */
         navigate(`/my/talk/${detail?.user_id}`)
     }
 
