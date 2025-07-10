@@ -2,11 +2,13 @@ import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../utils/getUser";
 import { setUserInfo, clearUserInfo } from "../store/userReducer";
+import { useRegion } from "./useRegion";
 
 /**supabase 내의 유저 테이블을 가져오는 함수*/
 export const useUserTable = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user.info);
+  const { setBoth } = useRegion();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false); // 🔥 추가
 
@@ -42,6 +44,7 @@ export const useUserTable = () => {
       if (!res.ok) throw new Error(await res.text());
       const { data } = await res.json();
       dispatch(setUserInfo(data));
+      setBoth(data.region[0],data.region[1])
       setError(null);
     } catch (err) {
       setError(err.message);

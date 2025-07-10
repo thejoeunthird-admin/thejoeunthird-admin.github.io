@@ -8,7 +8,6 @@ const DEFAULT_COORDS = {
     x: 126.9780,
     y: 37.5665
 };
-const KAKAOKEY = 'bc7544842f15980d1e228d96a24008e5'
 
 /**자신의 위치를 기반하여, 시군구 데이터를 내보내는 훅*/
 export const useRegion = () => {
@@ -50,7 +49,6 @@ export const useRegion = () => {
 
     const fetchAddress = useCallback(() => {
         dispatch(resetRegion());
-
         if (!navigator.geolocation) {
             console.warn('Geolocation을 지원하지 않는 브라우저입니다. 기본 좌표를 사용합니다.');
             getAddressFromCoords(DEFAULT_COORDS.x, DEFAULT_COORDS.y);
@@ -94,7 +92,6 @@ export const useRegion = () => {
     const setBoth = (city, district) => {
         dispatch(setRegionBoth(city, district));
     };
-
 
     return {
         /** 시 */
