@@ -433,10 +433,10 @@ export function TradeDetail() {
           {/* 좌측 이미지 */}
           <div className="detail-left">
             <div className="image-carousel">
-              {/* <CustomCarousel
+              <CustomCarousel
                 images={[detail.main_img, ...detailImages]}
                 getImages={getImages}
-              /> */}
+              />
             </div>
 
             {/* 좌측 하단 작성자 정보 */}
