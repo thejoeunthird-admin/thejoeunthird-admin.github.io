@@ -53,6 +53,9 @@ export const useUserTable = () => {
 
   useEffect(() => {
     fetchUserInfo();
+    if(!userInfo){
+      fetchUserInfo();
+    }
   }, [fetchUserInfo]);
 
   const refetch = useCallback(async () => {

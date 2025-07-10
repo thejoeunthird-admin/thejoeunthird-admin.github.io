@@ -42,7 +42,7 @@ export function TradeDetail() {
       navigate(`/trade/${getCategoryUrl(detail.category_id, categoriesAll)}?keyword=${keyword}`);
     }
   }, [keyword, detail?.category_id, categoriesAll]);
-
+  
   // 상품 정보, 판매자 정보, 좋아요 수, 현재 유저 좋아요/공동구매 상태 조회
   useEffect(() => {
     const fetchDetailData = async () => {
@@ -285,7 +285,7 @@ export function TradeDetail() {
     }
   }
 
-  if (loading) {
+  if(loading || userInfo.loading || !detail) {
     return (
       <div className="loading-wrapper">
         <LoadingCircle />
@@ -309,7 +309,6 @@ export function TradeDetail() {
     );
   }
 
-  if(userInfo.loading) { return(<></>) }
   return (
     <div className="detail-wrapper">
       <div className="detail-card">

@@ -70,7 +70,7 @@ export function MyPageGroupSell({ user }) {
                                         className="likes-link-btn"
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            nav(`/${parntCategorie.url}/${categorie.url}/${o.table_id}`);
+                                            nav(`/${parntCategorie.url}/${categorie.url}/${o.table_id}?keyword=`);
                                         }}
                                     >
                                         Link
