@@ -113,7 +113,7 @@ export function MyPageBuy({ user }) {
                                         className="likes-link-btn"
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            nav(`/${parntCategorie.url}/${categorie.url}/${o.trade_id}`);
+                                            nav(`/${parntCategorie.url}/${categorie.url}/${o.trade_id}?keyword=`);
                                         }}
                                     >
                                         Link

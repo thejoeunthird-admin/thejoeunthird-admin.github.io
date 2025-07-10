@@ -142,7 +142,7 @@ export function MyPageGroupBuy({ user }) {
                                         onClick={(e) => {
                                             e.preventDefault();
                                             console.log(o)
-                                            nav(`/${parntCategorie.url}/${categorie.url}/${o.trade_id}`);
+                                            nav(`/${parntCategorie.url}/${categorie.url}/${o.trade_id}?keyword=`);
                                         }}
                                     >
                                         Link
