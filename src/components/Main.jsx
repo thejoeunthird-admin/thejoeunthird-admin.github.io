@@ -4,7 +4,7 @@ import { FaHeart } from "react-icons/fa";
 import img from '../public/noImg.png'
 import fullLogo from '../public/fullLogo.png';
 import { useEffect, useState } from 'react';
-import { supabase } from '../supabase/supabase';
+import { supabase } from '../supabase';
 import { useCategoriesTable } from '../hooks/useCategoriesTable';
 import { formatDateTime } from '../utils/formatDateTime';
 import { useImage } from '../hooks/useImage';

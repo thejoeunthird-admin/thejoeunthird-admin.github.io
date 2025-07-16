@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { supabase } from '../supabase/supabase';
+import { supabase } from '../supabase';
 import WritePage from './WritePage';
 
 export default function EditPage() {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { supabase } from "../supabase/supabase";
+import { supabase } from "../supabase";
 
 // children은 렌더링 함수
 export function LikesController({ categoryId, tableId, userInfo, children }) {

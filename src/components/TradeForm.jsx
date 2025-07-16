@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { supabase } from '../supabase/supabase';
-import { useUserTable } from "../hooks/useUserTable";
+import { supabase } from '../supabase';
+import { useUserTable } from "../hooks/useUser";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
 import { useImage } from "../hooks/useImage";
 import { useRegion } from "../hooks/useRegion";

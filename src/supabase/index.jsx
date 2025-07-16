@@ -10,7 +10,6 @@ export const supabase = createClient(url, key, {
     persistSession: true,
     detectSessionInUrl: true,
     storage: window.localStorage,
-    // HashRouter용 추가 설정
     redirectTo: window.location.origin + '/#/login/redirect'
   }
 })

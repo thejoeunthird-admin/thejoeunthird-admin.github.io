@@ -533,8 +533,7 @@
 .layout .select_region::-webkit-scrollbar-thumb:hover,
 .layout .select_region::-webkit-scrollbar-thumb:hover {
     background: var(--base-color-3);
-    ;
-    /* 원하는 호버 색상으로 변경 */
+    
     border-radius: 4px;
 }
 

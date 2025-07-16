@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import { supabase } from "../supabase/supabase";
+import { supabase } from "../supabase";
 import { useImage } from "../hooks/useImage";
-import { useUserTable } from "../hooks/useUserTable";
+import { useUserTable } from "../hooks/useUser";
 import { getUser } from '../utils/getUser'; // create에서만 쓰는 부분이면 아래에서 분기처리
 import { useRegion } from "../hooks/useRegion"; // create에서만 쓰는 부분이면 아래에서 분기처리
 import '../css/usedform.css';

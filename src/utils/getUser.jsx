@@ -1,4 +1,4 @@
-import { supabase } from '../supabase/supabase';
+import { supabase } from '../supabase';
 
 /** 세션에 들어가 있는 유저의 정보를 가져온다. */
 export const getUser = async () => {

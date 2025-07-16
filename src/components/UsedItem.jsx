@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { supabase } from "../supabase/supabase";
+import { supabase } from "../supabase";
 import { useEffect, useState } from "react";
 import { useImage } from "../hooks/useImage";
 import noImg from '../public/noImg.png';

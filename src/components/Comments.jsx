@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useSyncExternalStore, } from 'react';
-import { supabase } from '../supabase/supabase';
-import { useUserTable } from "../hooks/useUserTable";
+import { supabase } from '../supabase';
+import { useUserTable } from "../hooks/useUser";
 import { FaRegUserCircle, FaEllipsisV, FaCommentAlt, FaRegThumbsUp } from "react-icons/fa";
 import "../css/comments.css"
 
@@ -133,7 +133,6 @@ export function Comments({ productId, categoryId }) {
             setNewComment('');
             setReplyTo(null); // 대댓글 작성 후, replyTo 초기화
             fetchComments();
-
         } catch (error) {
             console.error('댓글 작성 실패', error);
         }
@@ -383,7 +382,7 @@ export function Comments({ productId, categoryId }) {
                                                     <button className='small-button'><FaRegThumbsUp className='small-icon' /></button>
 
                                                     {/*댓글 아이콘 */}
-                                                    {/* <button className='small-button' onClick={() => setReplyTo(reply)}><FaCommentAlt className='small-icon' /></button> */}
+                                                    <button className='small-button' onClick={() => setReplyTo(reply)}><FaCommentAlt className='small-icon' /></button>
 
                                                     {!reply.is_deleted && userInfo?.id === reply.user_id && (
                                                         <>

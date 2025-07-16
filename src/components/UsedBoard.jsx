@@ -1,10 +1,10 @@
 import '../css/usedboard.css';
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { supabase } from "../supabase/supabase";
+import { supabase } from "../supabase";
 import { UsedItem } from './UsedItem';
 import { LoadingCircle } from './LoadingCircle';
-import { useUserTable } from '../hooks/useUserTable';
+import { useUserTable } from '../hooks/useUser';
 import { useRegion } from '../hooks/useRegion';
 import Loadingfail from '../public/Loadingfail.png'
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { supabase } from '../supabase/supabase'
+import { supabase } from '../supabase'
 
 /** 구독할 테이블을 있는지 확인 할건지 체크 */
 const TABLE_CHECK = false;

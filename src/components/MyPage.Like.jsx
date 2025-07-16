@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../supabase/supabase'; // 경로는 실제 프로젝트 구조에 맞게 조정
+import { supabase } from '../supabase'; // 경로는 실제 프로젝트 구조에 맞게 조정
 import { useCategoriesTable } from '../hooks/useCategoriesTable'; // 커스텀 훅
 import { formatDateTime } from '../utils/formatDateTime'; // 날짜 포매팅 함수
 import { useImage } from '../hooks/useImage';

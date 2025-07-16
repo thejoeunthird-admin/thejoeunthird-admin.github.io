@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { supabase } from '../supabase/supabase';
-import { useUserTable } from "../hooks/useUserTable";
+import { supabase } from '../supabase';
+import { useUserTable } from "../hooks/useUser";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
 import { LoadingCircle } from "./LoadingCircle";
 import { useImage } from "../hooks/useImage";

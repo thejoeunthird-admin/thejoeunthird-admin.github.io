@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { supabase } from "../supabase/supabase";
+import { supabase } from "../supabase";
 
 export function Likes({ categoryId, tableId, userInfo, detailCnt }) {
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수

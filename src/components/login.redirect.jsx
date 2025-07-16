@@ -3,13 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 import { getUser } from '../utils/getUser';
 import { useNavigate } from 'react-router-dom';
 import { useRegion } from '../hooks/useRegion';
-import { useUserTable } from "../hooks/useUserTable";
+import { useUserTable } from "../hooks/useUser";
 import loginRedirectBee from '../public/loginRedirectBee.png'
 import loginRedirectHoney from '../public/loginRedirectHoney.png'
 import profile from '../public/profile.png'
 import { FiPlusCircle } from "react-icons/fi";
 import { useImage } from "../hooks/useImage";
-import { supabase } from "../supabase/supabase";
+import { supabase } from "../supabase";
 
 
 const createNickname = async (name, city, district, img) => {

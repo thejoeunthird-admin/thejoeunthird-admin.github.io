@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams, useSearchParams } from "react-router-dom";
-import { supabase } from "../supabase/supabase";
+import { supabase } from "../supabase";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useUserTable } from "../hooks/useUserTable";
+import { useUserTable } from "../hooks/useUser";
 import { Carousel, Row, Col, Button, Badge, Card } from 'react-bootstrap';
 import { Comments } from "./Comments";
 import { useImage } from "../hooks/useImage";

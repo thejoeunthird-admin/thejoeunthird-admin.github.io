@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { supabase } from "../supabase/supabase";
+import { supabase } from "../supabase";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
 import { formatDateTime } from "../utils/formatDateTime";
 import { useNavigate } from "react-router-dom";

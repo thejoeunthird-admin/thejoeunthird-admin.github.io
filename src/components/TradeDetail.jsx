@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { supabase } from '../supabase/supabase';
-import { useUserTable } from "../hooks/useUserTable";
+import { supabase } from '../supabase';
+import { useUserTable } from "../hooks/useUser";
 import { useImage } from "../hooks/useImage";
 import { Comments } from './Comments';
 import { Likes } from './Likes';
@@ -80,12 +80,12 @@ export function TradeDetail() {
         console.error('상품 데이터 불러오기 오류:', err);
         setError(err.message || '데이터 로드 중 오류 발생');
       } finally {
-        setLoading(false);  
+        setLoading(false);
       }
     };
 
     fetchDetailData();
-  }, [userInfo.loading,item]);
+  }, [item]);
 
   useEffect(() => {
     if (!detail) return;
@@ -565,7 +565,7 @@ export function TradeDetail() {
                           new Date() > new Date(detail.sales_end)
                         }
                       >
-                        {isGongguClosed ? '✅ 마감 취소' : '🚫 마감'}
+                        {gongguState.isGongguClosed ? '✅ 마감 취소' : '🚫 마감'}
                       </button>
                     </div>
                   )}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { supabase } from '../supabase/supabase';
+import { supabase } from '../supabase';
 import { MyPageTalkLog } from './MyPage.Talk.Log';
 
 export function MyPageTalk({ user }) {

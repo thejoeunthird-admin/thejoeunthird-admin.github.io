@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { supabase } from "../supabase/supabase";
-import { useUserTable } from "../hooks/useUserTable";
+import { supabase } from "../supabase";
+import { useUserTable } from "../hooks/useUser";
 import { Comments } from "../components/Comments";
 import { useCategoriesTable } from '../hooks/useCategoriesTable';
 import { LoadingCircle } from '../components/LoadingCircle';

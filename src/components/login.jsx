@@ -1,6 +1,6 @@
 
 import "../css/login.css"
-import { supabase } from '../supabase/supabase'
+import { supabase } from '../supabase'
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoGithub } from "react-icons/io";
 import logo from '../public/logo.png';

@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState, useRef, forwardRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { FaBell } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
-import { useUserTable } from "../hooks/useUserTable";
+import { useUserTable } from "../hooks/useUser";
 import { useDispatch } from 'react-redux';
 import { clearUserInfo } from '../store/userReducer';
-import { supabase } from "../supabase/supabase";
+import { supabase } from "../supabase";
 import { useRegion } from "../hooks/useRegion";
-import { useCategoriesTable } from "../hooks/useCategoriesTable";
+import { useCategoriesTable } from "../hooks/useCategories";
 import "../css/layout.css";
 import { LayoutMenu } from './Layout.Menu';
 import { LayoutMenuTop } from './Layout.Menu.Top'
@@ -87,6 +87,7 @@ export function Layout({ children }) {
         citys, districts,
     } = useRegion();
     const [atTop, setAtTop] = useState(true);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const linkRef = useRef();
 

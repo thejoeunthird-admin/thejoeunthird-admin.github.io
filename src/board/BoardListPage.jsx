@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { supabase } from "../supabase/supabase";
+import { supabase } from "../supabase";
 import Loadingfail from '../public/Loadingfail.png'
 import { LoadingCircle } from '../components/LoadingCircle'; // 기존 로딩 컴포넌트 import
 import "./BoardListPage.css";
-import { useUserTable } from "../hooks/useUserTable";
+import { useUserTable } from "../hooks/useUser";
 import { useCategoriesTable } from "../hooks/useCategoriesTable";
 import noImg from '../public/noImg.png'
 

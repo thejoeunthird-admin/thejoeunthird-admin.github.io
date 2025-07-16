@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { supabase } from '../supabase/supabase';
+import { supabase } from '../supabase';
 import { useSubscribe } from '../hooks/useSubscribe';
 import { useImage } from '../hooks/useImage';
 import { useCategoriesTable } from '../hooks/useCategoriesTable';

@@ -1,7 +1,7 @@
 import '../css/myPage.css'
 import { useEffect, useState } from 'react';
 import { useParams, } from 'react-router-dom';
-import { useUserTable } from '../hooks/useUserTable'
+import { useUserTable } from '../hooks/useUser'
 import { MyPageTalk } from './MyPage.Talk'
 import { MyPageTalkLog } from './MyPage.Talk.Log'
 import { MyPageLike } from './MyPage.Like'

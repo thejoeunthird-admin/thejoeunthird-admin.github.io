@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../supabase/supabase';
-import { useUserTable } from '../hooks/useUserTable';
+import { supabase } from '../supabase';
+import { useUserTable } from '../hooks/useUser';
 import { Spinner, Alert, ListGroup, Badge } from 'react-bootstrap';
 import { FaToggleOn, FaToggleOff, FaBell, FaRegTrashAlt, FaRegHeart } from 'react-icons/fa';
 import '../css/notifications.css';

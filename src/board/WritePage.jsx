@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import { supabase } from '../supabase/supabase';
-import { useUserTable } from "../hooks/useUserTable";
+import { supabase } from '../supabase';
+import { useUserTable } from "../hooks/useUser";
 import { useImage } from "../hooks/useImage";
 import './WritePage.css'; // CSS 파일 import
 

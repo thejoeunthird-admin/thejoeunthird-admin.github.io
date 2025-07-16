@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import imageCompression from 'browser-image-compression';
 import { getUser } from '../utils/getUser';
-import { supabase } from "../supabase/supabase";
+import { supabase } from "../supabase";
 
 export const useImage = () => {
     // 이미지의 경로들
