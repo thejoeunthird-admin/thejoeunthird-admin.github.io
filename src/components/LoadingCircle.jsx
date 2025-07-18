@@ -1,8 +1,4 @@
-import { useEffect } from "react";
-import "../css/layout.css";
-import loading from '../public/Loading.png'
-import Loadingfail from '../public/Loadingfail.png'
-
+import { loading, Loadingfail  } from '@img/Loading.png'
 /**
  * 로딩 UI 컴포넌트 
  * @param {boolean} fail - true일 경우 실패 상태를 표시합니다

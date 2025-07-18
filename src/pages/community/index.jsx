@@ -1,43 +1,45 @@
-import { noImg, Loadingfail } from '@img'
-import { useLoaderData, useLocation, useNavigate, useParams, useRevalidator, useRouteLoaderData } from 'react-router-dom'
+import { noImg, loadingfail } from '@img'
+import { useLocation, useNavigate, useRevalidator, useRouteLoaderData } from 'react-router-dom'
 import { useImage } from '../../hooks/useImage';
 import * as S from './index.styled'
 import { useCallback, useEffect } from "react";
 import { useCategories } from '../../hooks/useCategories';
+import { Loading } from '@components';
 
 export { loader } from './loader'
 export function Community() {
-    const { revalidate, state } = useRevalidator();
+    const { revalidate, state:loading } = useRevalidator();
     const location = useLocation();
     const user = useRouteLoaderData('user');
     const communityData = useRouteLoaderData('community');
     const { findById } = useCategories();
     const { getImages } = useImage();
     const navigate = useNavigate();
+
     const handleNavigate = useCallback((e, path) => {
         e.preventDefault();
-        const search = location.search; // ?category=free 이런 거
+        const search = location.search;
+        console.log(search)
         navigate(path + search);
     }, [navigate])
 
     useEffect(() => {
         revalidate();
     }, [location.pathname, location.search])
-
     return (<>
         {user && (
             <S.WriteBtn
                 onClick={(e) => {
                     e.preventDefault();
                     const p = location.pathname === '/life' ? location.pathname + '/all' : location.pathname
-                    const search = location.search; // ?category=free 이런 거
+                    const search = location.search+'false';
                     navigate(p + '/write/' + search);
                 }}
             >
                 + 글쓰기
             </S.WriteBtn>
         )}
-        { state === 'loading' ? <></>
+        { loading === 'loading' ? <Loading />
             :<S.Container>
                 {communityData.length !== 0 ? (
                     <ul>
@@ -84,7 +86,7 @@ export function Community() {
                     </ul>
                 ) : (
                     <div className="messing">
-                        <img src={Loadingfail} style={{ width: '50%' }} />
+                        <img src={loadingfail} style={{ width: '50%' }} />
                         <p> 검색 조건이 없거나, 아직 게시글이 없어요!</p>
                     </div>
                 )}

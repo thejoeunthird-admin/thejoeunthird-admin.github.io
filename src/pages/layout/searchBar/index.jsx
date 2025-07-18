@@ -1,14 +1,14 @@
 import React, { forwardRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FaSearch, FaArrowAltCircleRight } from 'react-icons/fa';
 import * as S from './index.styled'
 
-
 export const SearchBar = forwardRef(({ }, ref) => {
+    const [ searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [isFocused, setIsFocused] = useState(false);
-    const params = new URLSearchParams(window.location.search);
-    const keyword = params.get('keyword') || '';
+
+    if(searchParams.get('keyword') === 'false') { return; }
     return (<>
         <S.Container
             onSubmit={(e) => {
@@ -39,8 +39,8 @@ export const SearchBar = forwardRef(({ }, ref) => {
                 {isFocused ? <FaArrowAltCircleRight /> : <FaSearch />}
             </S.Button>
         </S.Container>
-        {keyword !== '' && <div style={{ marginLeft: "15px", fontWeight: '700', fontSize: '0.8rem', color: 'rgb(0,0,0,0.5)', padding: '5px 0px' }}>
-            '{keyword}' 으로 검색된 결과입니다.
+        {searchParams.get('keyword') !== '' && <div style={{ marginLeft: "15px", fontWeight: '700', fontSize: '0.8rem', color: 'rgb(0,0,0,0.5)', padding: '5px 0px' }}>
+            '{searchParams.get('keyword')}' 으로 검색된 결과입니다.
         </div>}
     </>);
 });

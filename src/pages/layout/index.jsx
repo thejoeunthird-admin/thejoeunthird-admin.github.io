@@ -1,5 +1,5 @@
 
-import { Outlet, useLoaderData, useLocation, useNavigate, useNavigation, useParams, useSearchParams } from 'react-router-dom';
+import { Outlet, useLoaderData, useLocation, useNavigate, useNavigation, useParams, useRevalidator, useSearchParams } from 'react-router-dom';
 import { FaSearch } from "react-icons/fa";
 import {
     useRegion,
@@ -16,7 +16,7 @@ import { useImage } from '../../hooks';
 
 export { loader } from './loader'
 export function Layout() {
-    const loading = useNavigation().state === 'loading';
+    const { state:loading } = useRevalidator();
     const navigate = useNavigate();
     const hoverTimer = useRef(null);
     const searchBar = useRef();
@@ -78,6 +78,8 @@ export function Layout() {
 
     const handleNavigate = useCallback((e, path) => {
         e.preventDefault();
+        console.log(searchParams.toString())
+        searchParams.set('keyword','')
         navigate({
             pathname: path,
             search: searchParams.toString() ? `?${searchParams.toString()}` : '',
@@ -150,17 +152,17 @@ export function Layout() {
                                 </select>
                             </div>
                             {[0].map(() => {
-                                const out = ['', 'my'].includes(location[1]);
+                                const out = ['', 'my'].includes(location[1]) || searchParams.get('keyword') === 'false';
                                 if (out) return <Fragment key='only'></Fragment>
                                 return (<S.SearchButton
                                     key='only'
                                     $active={atTop}
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        if (refInput.current) {
-                                            refInput.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                        if (searchBar.current) {
+                                            searchBar.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                             setTimeout(() => {
-                                                refInput.current.focus();
+                                                searchBar.current.focus();
                                             }, 100);
                                         }
                                     }}
@@ -231,7 +233,7 @@ export function Layout() {
                     return (<S.Container key='only' $flex={out}>
                         <div className='grid'>
                             {menu && <Menu location={location} board={findByUrl(location[1])} />}
-                            { loading ?<>로딩중입니다.</> 
+                            { !loading ?<>로딩중입니다.</> 
                             :(<>
                                 <main style={{ width: '100%' }}>
                                     {out && <SearchBar ref={searchBar} />}

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useLoaderData, useLocation, useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useLoaderData, useLocation, useNavigate, useParams, useRouteLoaderData, useSearchParams } from "react-router-dom";
 import { supabase } from '@/supabase';
 import { useImage } from "@hooks";
 import './WritePage.css'; // CSS 파일 import
@@ -14,25 +14,23 @@ export function Write() {
     const location = useLocation();
     const navigate = useNavigate();
     const user = useRouteLoaderData('user');
-    const { categorie } = useCategories();
+    const { categorie, findById } = useCategories();
     const { images, initImage, getImages, setImages } = useImage();
     const [mainImage, setMainImge] = useState(null);
     const [isLoading, setIsloading] = useState(true);
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    useEffect(() => {
-        if (edit) {
-            console.log(edit)
-            initImage([
-                edit.main_img,
-                edit.detail_img1,
-                edit.detail_img2,
-                edit.detail_img3,
-                edit.detail_img4,
-            ].filter(Boolean));
-            setMainImge(edit.main_img)
+    const initSearchParams = useCallback((searchs) => {
+        let change = false;
+        let init = Object.fromEntries(searchParams.entries());
+        for (let search of searchs) {
+            if (!searchParams.has(search)) {
+                change = true;
+                init[search] = '';
+            }
         }
-        setIsloading(true);
-    }, [])
+        if (change) { setSearchParams(init); }
+    }, [setSearchParams]);
 
     const handleFileChange = (e) => {
         e.preventDefault();
@@ -45,13 +43,13 @@ export function Write() {
         const categorie = formRef.current.querySelector('#category').value;
         const title = formRef.current.querySelector('#title').value;
         const content = formRef.current.querySelector('#content').value;
-        let id = edit ?edit.id: null; 
+        let id = edit ? edit.id : null;
         // 이부분 통합으로 바꿔주기
         if (!categorie.trim()) { return alert('카테고리를 선택 해주세요.') }
         if (!title.trim()) { return alert('타이틀을 입력 해주세요.') }
         if (!content.trim()) { return alert('내용을 입력 해주세요.') }
         try {
-            const mainImg = !mainImage ?images[0] :mainImage;
+            const mainImg = !mainImage ? images[0] : mainImage;
             if (edit) {
                 const { error } = await supabase.rpc("update_board", {
                     p_id: Number(edit.id),
@@ -70,7 +68,7 @@ export function Write() {
             else {
                 const { data, error } = await supabase.from("boards").insert([{
                     title,
-                    contents:content,
+                    contents: content,
                     category_id: Number(categorie),
                     user_id: user.id,
                     main_img: mainImg ?? null,
@@ -84,8 +82,30 @@ export function Write() {
             }
         } catch (error) { return; }
         alert(edit ? "수정되었습니다!" : "등록되었습니다!");
-        navigate(`/life/detail/${id}${location.search}`);
+        navigate(`/life/${findById(Number(categorie)).url}/${id}${location.search}`);
     }
+
+    useEffect(() => {
+        if (edit) {
+            initImage([
+                edit.main_img,
+                edit.detail_img1,
+                edit.detail_img2,
+                edit.detail_img3,
+                edit.detail_img4,
+            ].filter(Boolean));
+            setMainImge(edit.main_img)
+        }
+        setIsloading(true);
+    }, [])
+
+    useEffect(() => {
+        if (searchParams.get('keyword') !== 'false') {
+            const newParams = new URLSearchParams(searchParams.toString());
+            newParams.set('keyword', 'false');
+            setSearchParams(newParams);
+        }
+    }, [searchParams, setSearchParams]);
 
     if (!isLoading) { return <>가져오는 중입니다.</> }
     return (

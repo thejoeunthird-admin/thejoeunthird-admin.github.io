@@ -201,7 +201,7 @@ export function Detail() {
                 {detail.user_id === user.id && (
                     <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
                         <button
-                            onClick={() => navigate(`/life/${findById(detail.category_id).url}/write/${detail.id}?keyword=`)}
+                            onClick={() => navigate(`/life/${findById(detail.category_id).url}/write/${detail.id}?keyword=false`)}
                             style={{
                                 padding: "8px 16px",
                                 border: "1px solid #0d6efd",

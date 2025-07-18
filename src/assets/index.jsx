@@ -1,8 +1,8 @@
 export { default as chat } from './chat.png';
 export { default as chatLog } from './chatLog.png';
 export { default as fullLogo } from './fullLogo.png';
-export { default as Loading } from './Loading.png';
-export { default as Loadingfail } from './Loadingfail.png';
+export { default as loading } from './Loading.png';
+export { default as loadingfail } from './Loadingfail.png';
 export { default as loginRedirectBee } from './loginRedirectBee.png';
 export { default as loginRedirectHoney } from './loginRedirectHoney.png';
 export { default as logo } from './logo.png';
