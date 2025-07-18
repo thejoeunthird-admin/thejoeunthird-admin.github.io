@@ -5,16 +5,13 @@ import { getUser } from '../utils';
 
 export const useToken = () => {
     const [token, setToken] = useAtom(userTokenAtom);
-    const [ready, setReady] = useState(false);
 
     const init = useCallback(() => {
-        console.log('ddd'); // ✅ 여기 반드시 찍힘
         setToken({ ...initUserToken });  // ❗️ 꼭 새 객체로
-        setReady(false);
     }, [setToken]);
 
     useEffect(() => {
-        if (!token.data && !ready) {
+        if (!token.data && !token.state) {
             const fetchToken = async () => {
                 const result = { ...initUserToken };
 
@@ -26,18 +23,17 @@ export const useToken = () => {
                 } catch (err) {
                     console.warn("getUser() 오류:", err);
                 } finally {
+                    result.state = true;
                     setToken(result);
-                    setReady(true);
                 }
             };
-
             fetchToken();
         }
-    }, [token.data, ready]); // 정확한 의존성 사용
+    }, [token.data]);
 
     return {
-        token,
-        ready,
+        token: token.data,
+        ready: token.state,
         init,
     };
 };

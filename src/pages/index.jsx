@@ -19,3 +19,7 @@ export {
     Write as CommunityWrite,
     loader as communityWriteLoader,
 } from './community/write'
+export {
+    Notifications,
+    loader as notificationsLoader
+} from './notifications'

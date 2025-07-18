@@ -11,6 +11,7 @@ export function Side({ location, board }) {
         const newSearch = searchParams.toString() ? `?${searchParams.toString()}` : '';
         navigate(`${path}?keyword=`);
     }, [navigate, searchParams, setSearchParams, location]);
+    console.log(board)
     return (
         <S.Container>
             <S.Tabs

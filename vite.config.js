@@ -15,6 +15,7 @@ export default defineConfig({
       '@utils': path.resolve(__dirname, 'src/utils'),
       '@img': path.resolve(__dirname, 'src/assets'), 
       '@components': path.resolve(__dirname, 'src/component'), // 임시 component 나중에 components로 변경
+      '@provider': path.resolve(__dirname, 'src/provider'),
     },
   },
 })

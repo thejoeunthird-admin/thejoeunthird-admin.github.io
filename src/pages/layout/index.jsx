@@ -78,8 +78,7 @@ export function Layout() {
 
     const handleNavigate = useCallback((e, path) => {
         e.preventDefault();
-        console.log(searchParams.toString())
-        searchParams.set('keyword','')
+        searchParams.set('keyword', path.includes('/my')?'false':'')
         navigate({
             pathname: path,
             search: searchParams.toString() ? `?${searchParams.toString()}` : '',
@@ -122,7 +121,7 @@ export function Layout() {
                             <p>오생꿀</p>
                         </ div>
                         <div className='topCategorie'>
-                            {categorie.map((o, k) => (
+                            {categorie.filter(c => c.isHeader).map((o, k) => (
                                 <S.TopCategorieTabs
                                     key={k}
                                     $select={location[1] === o.url ? 'true' : 'false'}
@@ -152,7 +151,7 @@ export function Layout() {
                                 </select>
                             </div>
                             {[0].map(() => {
-                                const out = ['', 'my'].includes(location[1]) || searchParams.get('keyword') === 'false';
+                                const out = ['', 'my'].includes(location[1]) || searchParams.get('keyword') === 'false' || !searchBar.current
                                 if (out) return <Fragment key='only'></Fragment>
                                 return (<S.SearchButton
                                     key='only'
@@ -193,7 +192,7 @@ export function Layout() {
                                         <b onClick={(e) => { handleNavigate(e, '/my/talk') }}>
                                             채팅
                                         </b>
-                                        <b onClick={(e) => { handleNavigate(e, '/notification') }}>
+                                        <b onClick={(e) => { handleNavigate(e, '/my/notification') }}>
                                             알림
                                         </b>
                                         <b onClick={handleLogout}>
@@ -225,10 +224,10 @@ export function Layout() {
                             ))}
                         </div>
                     </S.Breakpoint>
-                    {findByUrl(location[1])?.children && (<MenuTop location={location} board={findByUrl(location[1])} />)}
+                    { findByUrl(location[1])?.children && (<MenuTop location={location} board={findByUrl(location[1])} />) }
                 </S.Header>
                 {[0].map(() => {
-                    const out = !['', 'login', 'my'].includes(location[1]);
+                    const out = !['', 'login' ].includes(location[1]);
                     const menu = !['', 'login'].includes(location[1]);
                     return (<S.Container key='only' $flex={out}>
                         <div className='grid'>

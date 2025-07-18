@@ -3,6 +3,8 @@ import { useAtom } from 'jotai';
 import { categorieAtom } from '@jotai';
 import { supabase } from '@/supabase';
 
+// 슈퍼베이스에 대가리인지 확인하는 컴포넌트가 필요함
+
 export const useCategories = () => {
   const [categorie, setCategorie] = useAtom(categorieAtom);
   const [error, setError] = useState(null);
@@ -95,7 +97,7 @@ export const useCategories = () => {
   );
 
   return {
-    categorie: Array.isArray(categorie) ? categorie.filter(c => c.id !== 16) : categorie,
+    categorie,
     error,
     findByUrl,
     findById,

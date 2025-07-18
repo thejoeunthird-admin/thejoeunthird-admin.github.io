@@ -11,8 +11,9 @@ import {
   CommunityDetail, communityDetailLoader,
   CommunityWrite, communityWriteLoader,
   Login, LoginRedirect, loginRedirectLoader,
+  Notifications, notificationsLoader,
 } from '@pages'
-// import { LoadingCircle } from './components/LoadingCircle';
+import { NotificationProvider } from '@provider'
 import {
   useToken,
   useCategories,
@@ -60,6 +61,17 @@ const router = createHashRouter([
         element: <LoginRedirect />
       },
       {
+        path: 'my',
+        element:<Outlet />,
+        children:[
+          {
+            path:':category?',
+            loader: notificationsLoader,
+            element:<Notifications/>,
+          }
+        ]
+      },
+      {
         path: 'life',
         id: 'community',
         loader: communityLoader,
@@ -92,14 +104,10 @@ function App() {
   const { ready } = useToken();
   const { categorie } = useCategories();
   if (!categorie || !ready || !region) { return; }
-
-  // if(navigation.state === 'loading'){
-  //   return <div>로딩중입니다...</div>;
-  // }
   return (<>
-    {/* <NotificationProvider> */}
-    <RouterProvider router={router} />
-    {/* </NotificationProvider> */}
+    <NotificationProvider>
+      <RouterProvider router={router} />
+    </NotificationProvider>
   </>)
 }
 
